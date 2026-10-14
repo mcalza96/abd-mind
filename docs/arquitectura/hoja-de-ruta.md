@@ -9,7 +9,7 @@ Cada fase termina con algo que funciona y se puede probar. Ninguna fase depende 
 | 0 — Base del proyecto | ✅ |
 | 1 — Núcleo determinista | ✅ |
 | 2 — Observadores, proyecciones y experimentos sintéticos | ✅ |
-| 3 — Roles LLM del motor | Pendiente |
+| 3 — Roles LLM del motor | ✅ |
 | 4 — Motor de casos y persistencia | Pendiente |
 | 5 — Servidor MCP | Pendiente |
 | 6 — Integración con Hermes | Pendiente |
@@ -54,6 +54,14 @@ Notas de implementación: `seleccionar_mejor_explicacion` devuelve `None` si nin
 
 **Término:** el experimento del cilindro corre con hipótesis **generadas** por LLM y sigue eligiendo "cilindro"; la línea base (una llamada) se mide con el mismo verificador.
 
+Notas de implementación:
+- Roles por defecto (`config/abd-mind.example.yaml`): generadores Muse Spark 1.3 y 1.2 Contributor (endpoint `/responses`, salida `json_schema`); córtex y verificador DeepSeek V4.1 Flash (`/chat/completions`, salida `json_object`: no acepta `json_schema`). El verificador es de otra familia que los generadores (ADR-0002).
+- OpenCode Go exige `x-opencode-session` y un user agent propio; la pasarela corta a los ~30 s las respuestas sin streaming, por eso los modelos se configuran con `streaming: true` (SSE).
+- P cuenta también las entidades afirmadas en variables de tipo `entidad` del dominio (`rules/*.yaml` declara ahora sus variables), aunque el generador no las declare latentes (D2).
+- Experimentos `cilindro-llm` y `expansion-llm`: la consiliencia se sigue calculando por proyección exacta, el LLM solo propone. `VerificadorLLM` queda listo para el dominio financiero (fase 4).
+
+**Hallazgo.** En la primera corrida, los tres modelos de la línea base respondieron "cilindro" en una sola llamada (C = 2/2): el caso canónico es demasiado fácil para mostrar la falla inductiva con modelos actuales. La comparación con la línea base necesita casos más difíciles (fase 7).
+
 ## Fase 4 — Motor de casos y persistencia
 
 - `engine/store.py` (SQLite, [ADR-0007](adr/0007-persistencia-sqlite.md)), `engine/case_service.py`.
@@ -79,6 +87,7 @@ Notas de implementación: `seleccionar_mejor_explicacion` devuelve `None` si nin
 
 ## Fase 7 — Benchmarks y calibración
 
+- Casos sintéticos más difíciles que el cilindro (más observadores, marcos no geométricos, catálogos sin la respuesta), porque la línea base ya resuelve el caso canónico.
 - Las cuatro pruebas del Plan Maestro ([05 §5.5](../marco-teorico/05-experimentos-canonicos.md#55-pruebas-que-derivan-de-estos-experimentos)) contra línea base.
 - Sensibilidad a $\alpha$, $\gamma$, $\tau$.
 - Métrica de racionalización (declarado vs. verificado) por modelo.

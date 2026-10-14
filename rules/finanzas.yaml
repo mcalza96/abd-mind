@@ -1,7 +1,23 @@
 # Reglas invariantes del dominio financiero (experimento 5.4).
 # Solo lectura para el agente: se editan aquí y se revisan como cualquier cambio de código (ADR-0004).
 dominio: finanzas
-version: 1
+version: 2
+descripcion: >-
+  Informes de analistas y otras fuentes sobre una empresa que se contradicen. Se busca el
+  mecanismo económico que explica todos los hechos reportados.
+variables:
+  tasa_descuento: { tipo: numero, descripcion: Tasa de descuento usada en la valoración (fracción) }
+  dividendos_pagados: { tipo: numero, descripcion: Dividendos pagados en el período }
+  caja_disponible: { tipo: numero, descripcion: Caja disponible en el período }
+  tendencia_precio:
+    descripcion: Tendencia del precio de venta
+    valores: [alza, estable, baja, baja_sostenida]
+  tendencia_margen_bruto:
+    descripcion: Tendencia del margen bruto
+    valores: [alza, estable, estable_con_compensacion, baja]
+  tendencia_volumen:
+    descripcion: Tendencia del volumen de unidades vendidas
+    valores: [alza, estable, baja]
 reglas:
   - id: tasa_descuento_no_negativa
     tipo: dura

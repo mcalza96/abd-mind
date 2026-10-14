@@ -22,3 +22,9 @@ def test_cli_experimentos(capsys: pytest.CaptureFixture[str]) -> None:
 def test_cli_subcomando_pendiente(capsys: pytest.CaptureFixture[str]) -> None:
     assert main(["serve"]) == 2
     assert "fase 5" in capsys.readouterr().err
+
+
+def test_cli_doctor_sin_red(capsys: pytest.CaptureFixture[str]) -> None:
+    assert main(["doctor", "--sin-red"]) == 0
+    salida = capsys.readouterr().out
+    assert "sintetico v2" in salida and "finanzas v2" in salida
