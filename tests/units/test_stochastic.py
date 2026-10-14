@@ -159,3 +159,32 @@ def test_origen_registra_el_modelo_que_respondio() -> None:
         _contexto(), 1, ModoGeneracion.CONTRASTIVO
     )
     assert [h.origen for h in resultado.hipotesis] == ["motor:gen-chat"]
+
+
+def test_duplicados_en_dominio_llm_consideran_el_mecanismo() -> None:
+    def hip(mecanismo: str) -> JSON:
+        return {
+            "mecanismo_latente": mecanismo,
+            "entidades_latentes": [],
+            "afirmaciones": [{"variable": "tendencia_volumen", "valor": "alza"}],
+            "predicados_de_consistencia": [],
+            "observaciones_explicadas": [],
+        }
+
+    respuesta = {
+        "hipotesis": [hip("Crece la demanda"), hip("Cambia la mezcla"), hip("crece  la demanda")]
+    }
+    config = config_prueba()
+    contexto = ContextoGeneracion(
+        dominio=cargar_reglas("finanzas"),
+        observadores={},
+        observaciones=[],
+    )
+    resultado = Generador(
+        ClienteLLM(config, TransporteFalso(lambda r, c: json.dumps(respuesta))),
+        [ConfigRol(modelo="gen-chat")],
+    ).generar(contexto, 3, ModoGeneracion.CONTRASTIVO)
+    assert [h.mecanismo_latente for h in resultado.hipotesis] == [
+        "Crece la demanda",
+        "Cambia la mezcla",
+    ]

@@ -167,7 +167,7 @@ def finanzas_llm(
     if evidencia.evaluacion.expansion_sugerida or evidencia.evaluacion.h_estrella is None:
         generacion = servicio.generar_hipotesis(caso, modo="expansion")
         resultado.notas += generacion.avisos
-        final = servicio.evaluar(caso)
+        final = servicio.evaluar(caso) if generacion.hipotesis else evidencia.evaluacion
     else:
         final = evidencia.evaluacion
     resultado.tablas.append(_tabla("Tras el comunicado (y generación si hizo falta)", final))

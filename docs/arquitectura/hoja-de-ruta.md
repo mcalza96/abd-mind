@@ -10,7 +10,7 @@ Cada fase termina con algo que funciona y se puede probar. Ninguna fase depende 
 | 1 — Núcleo determinista | ✅ |
 | 2 — Observadores, proyecciones y experimentos sintéticos | ✅ |
 | 3 — Roles LLM del motor | ✅ |
-| 4 — Motor de casos y persistencia | Pendiente |
+| 4 — Motor de casos y persistencia | ✅ |
 | 5 — Servidor MCP | Pendiente |
 | 6 — Integración con Hermes | Pendiente |
 | 7 — Benchmarks y calibración | Pendiente |
@@ -69,6 +69,13 @@ Notas de implementación:
 - Experimento 5.4.
 
 **Término:** un caso se crea, sobrevive a un reinicio, recibe evidencia nueva, derrota y reactiva hipótesis, y produce auditoría.
+
+Notas de implementación:
+- El estado de un caso es un registro de eventos append-only; el árbol se reconstruye reproduciéndolo. Los veredictos se guardan aparte, así que reconstruir o reevaluar no vuelve a llamar al verificador. Cada caso guarda una copia de sus reglas: cambiar el YAML no altera casos existentes (solo genera un aviso).
+- Cada dominio declara su verificador (`proyeccion` o `llm`). La detección de hipótesis duplicadas considera el mecanismo en dominios con verificador LLM.
+- `corregir_observacion` retracta el hecho y registra la versión corregida sin usarla como prueba.
+
+**Resultado de `finanzas-llm`** (21 llamadas): el córtex separó hechos de opiniones; ganó la estrategia de reducción de precios (C=3/3); la regla de dividendos descartó su hipótesis; la postura intermedia obtuvo C=0; el comunicado derrotó a la ganadora. Después, la expansión produjo **cuatro hipótesis empatadas** (C=4/4, P=1, score 15.0) y H* se eligió por el id: un caso real de subdeterminación que el sistema todavía no reconoce (ver la fase 5 bis).
 
 ## Fase 5 — Servidor MCP
 

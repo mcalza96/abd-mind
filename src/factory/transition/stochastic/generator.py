@@ -5,7 +5,7 @@ from enum import StrEnum
 from pydantic import BaseModel, Field
 
 from factory.config import ConfigRol
-from factory.contracts.abduction import HipotesisCandidata, Valor
+from factory.contracts.abduction import HipotesisCandidata
 from factory.contracts.observation import Observacion, Observador
 from factory.contracts.rules import ConjuntoReglas
 from factory.organ.texto import normalizar
@@ -68,8 +68,23 @@ class ResultadoGeneracion(BaseModel):
     avisos: list[str] = Field(default_factory=list)
 
 
-def _firma(afirmaciones: dict[str, Valor]) -> frozenset[tuple[str, str]]:
-    return frozenset((normalizar(k), normalizar(str(v))) for k, v in afirmaciones.items())
+Firma = frozenset[tuple[str, str]]
+
+
+def _firma(h: HipotesisCandidata, dominio: ConjuntoReglas) -> Firma | None:
+    """Clave para detectar hipótesis repetidas.
+
+    Con verificación por proyección, las afirmaciones determinan por completo lo que predice
+    la hipótesis: dos con las mismas afirmaciones son la misma. Con verificador LLM, el
+    mecanismo también cuenta: "crece la demanda" y "cambia la mezcla de ventas" pueden afirmar
+    lo mismo y aun así ser explicaciones distintas.
+    """
+    claves = {(normalizar(k), normalizar(str(v))) for k, v in h.afirmaciones.items()}
+    if dominio.verificador == "llm":
+        claves.add(("mecanismo", normalizar(h.mecanismo_latente)))
+    elif not claves:
+        return None
+    return frozenset(claves)
 
 
 class Generador:
@@ -81,9 +96,11 @@ class Generador:
         self, contexto: ContextoGeneracion, n_por_modelo: int, modo: ModoGeneracion
     ) -> ResultadoGeneracion:
         resultado = ResultadoGeneracion()
-        firmas = {
-            _firma(h.afirmaciones): h.id_hipotesis for h in contexto.existentes if h.afirmaciones
-        }
+        firmas: dict[Firma, str] = {}
+        for existente in contexto.existentes:
+            firma_existente = _firma(existente, contexto.dominio)
+            if firma_existente is not None:
+                firmas[firma_existente] = existente.id_hipotesis
         ids = {h.id_hipotesis for h in contexto.existentes}
 
         for rol in self.roles:
@@ -99,14 +116,14 @@ class Generador:
             for propuesta in bruto.hipotesis:
                 h, avisos = self._convertir(propuesta, modelo, contexto.dominio, ids)
                 resultado.avisos += avisos
-                firma = _firma(h.afirmaciones)
-                if h.afirmaciones and firma in firmas:
+                firma = _firma(h, contexto.dominio)
+                if firma is not None and firma in firmas:
                     resultado.avisos.append(
-                        f"{modelo}: hipótesis descartada por repetir las afirmaciones de "
-                        f"{firmas[firma]} ({h.mecanismo_latente})"
+                        f"{modelo}: hipótesis descartada por repetir {firmas[firma]} "
+                        f"({h.mecanismo_latente})"
                     )
                     continue
-                if h.afirmaciones:
+                if firma is not None:
                     firmas[firma] = h.id_hipotesis
                 ids.add(h.id_hipotesis)
                 resultado.hipotesis.append(h)
