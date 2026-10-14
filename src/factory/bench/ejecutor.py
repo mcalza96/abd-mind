@@ -279,11 +279,12 @@ def informe_markdown(resultados: list[ResultadoCaso]) -> str:
         aciertos = sum(acierto(elegir(r), r) for r in validos)
         return f"{aciertos}/{len(validos)}"
 
+    hay_motor = any(r.motor is not None for r in resultados)
     grupos = ["todos", "originales", "variantes", "contaminación alta", "contaminación baja"]
-    cabecera = ["Grupo", "Motor", *modelos]
+    cabecera = ["Grupo", *(["Motor"] if hay_motor else []), *modelos]
     lineas += ["| " + " | ".join(cabecera) + " |", "|" + "---|" * len(cabecera)]
     for g in grupos:
-        fila = [g, precision(_tipo_motor, g)]
+        fila = [g, *([precision(_tipo_motor, g)] if hay_motor else [])]
         for modelo in modelos:
             fila.append(precision(functools.partial(_tipo_base, modelo=modelo), g))
         lineas.append("| " + " | ".join(fila) + " |")
