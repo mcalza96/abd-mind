@@ -18,6 +18,7 @@ Este directorio es la referencia conceptual del proyecto. Todo módulo de códig
 | 08 | [Decisiones y limitaciones](08-decisiones-y-limitaciones.md) | Correcciones a la especificación original y límites asumidos |
 | 09 | [Robustez epistémica](09-robustez-epistemica.md) | Observadores falibles (Duhem-Quine), subdeterminación, correlación, tiempo, reglas falibles |
 | 10 | [Validación: caída de una acción](10-validacion-caida-accion.md) | Ejercicio mental con una pregunta financiera real y brechas encontradas |
+| 11 | [Explicación en dominios abiertos](11-explicacion-en-dominios-abiertos.md) | Veredicto de tres valores, explananda, pregunta del caso, margen, predicciones; protocolo contra el sobreajuste |
 | — | [Glosario](glosario.md) | Términos y notación |
 
 ## Lectura rápida

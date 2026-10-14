@@ -27,6 +27,9 @@ Este directorio define **cómo** se construye el sistema descrito en el [marco t
 | [0008](adr/0008-presupuestos-y-trabajos-largos.md) | Presupuestos por caso y trabajos largos |
 | [0009](adr/0009-observadores-falibles.md) | Observadores falibles y atribución de error |
 | [0010](adr/0010-subdeterminacion.md) | Subdeterminación y abducción activa |
+| [0011](adr/0011-veredicto-ternario-y-explananda.md) | Veredicto de tres valores y explananda |
+| [0012](adr/0012-pregunta-y-margen.md) | Pregunta del caso y margen de victoria |
+| [0013](adr/0013-predicciones.md) | Predicciones y cierre del ciclo |
 
 ## Visión general
 

@@ -114,12 +114,33 @@ Se evaluó usarla solo como desempate. Se rechaza: favorecería sistemáticament
 - Observaciones con fecha y cambio de régimen como hipótesis candidata (§9.4).
 - Naturaleza de las reglas (axiomática o empírica) y alerta de revisión (§9.5).
 
+## Decisiones para dominios abiertos
+
+Ver [11](11-explicacion-en-dominios-abiertos.md), que también fija un protocolo contra el sobreajuste.
+
+### D15 — El veredicto tiene tres valores
+
+`explica` / `neutral` / `contradice`. Solo lo contradicho cuesta residuo o derrota. ([ADR-0011](../arquitectura/adr/0011-veredicto-ternario-y-explananda.md))
+
+### D16 — Explanandum y evidencia
+
+Solo los explananda exigen explicación; la evidencia neutral no pesa. Por defecto, todo es explanandum.
+
+### D17 — La respuesta es contrastiva
+
+El caso puede declarar una pregunta. La respuesta se decide entre clases de hipótesis, no entre mecanismos. ([ADR-0012](../arquitectura/adr/0012-pregunta-y-margen.md))
+
+### D18 — Se informa el margen
+
+El resultado lleva su margen en veredictos de LLM y se marca como frágil si un solo veredicto lo invierte.
+
+### D19 — Las predicciones no puntúan
+
+Sirven para vigilar y para cerrar el ciclo de calibración. ([ADR-0013](../arquitectura/adr/0013-predicciones.md))
+
 ### Pendientes (encontrados en 10)
 
-- Veredicto de tres valores (explica / neutral / contradice) y explananda distintos de la evidencia (B1, B2).
-- Pregunta del caso y margen de victoria (B3, B10).
-- Predicciones con horizonte y revisión programada (B4).
-- Magnitudes, vaguedad, atomización, hechos sobre creencias, tasas base, dominio `mercado` (B5–B12).
+- Magnitudes y observadores derivados deterministas (B5); prueba contrafactual contra hipótesis vagas (B6); atomización (B7); hechos sobre creencias (B8); tasas base (B9); dominio `mercado` (B11); selección de evidencia en la skill de Hermes (B12).
 
 ### L7 — La confiabilidad por defecto es una suposición
 

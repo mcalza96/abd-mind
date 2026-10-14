@@ -12,6 +12,7 @@ Cada fase termina con algo que funciona y se puede probar. Ninguna fase depende 
 | 3 — Roles LLM del motor | ✅ |
 | 4 — Motor de casos y persistencia | ✅ |
 | 4b — Robustez epistémica | ✅ |
+| 4c — Explicación en dominios abiertos | En curso |
 | 5 — Servidor MCP | Pendiente |
 | 6 — Integración con Hermes | Pendiente |
 | 7 — Benchmarks y calibración | Pendiente |
@@ -94,6 +95,20 @@ Resultados:
 - `finanzas-llm` (46 llamadas, ~7 min): los analistas usan ω = 0.9 del dominio y el comunicado oficial ω = 0.98, que sí derrota. Tras la expansión, cinco hipótesis empatan; el sistema lo informa y propone medir la evolución del precio efectivo medio, que las separa en 4 clases.
 
 Después (propuestos en 09 §9.3–9.5): observadores correlacionados, observaciones con fecha y alerta de revisión de reglas.
+
+## Fase 4c — Explicación en dominios abiertos
+
+Origen: el ejercicio mental de [10](../marco-teorico/10-validacion-caida-accion.md). Teoría en [11](../marco-teorico/11-explicacion-en-dominios-abiertos.md); ADR-0011 a ADR-0013.
+
+1. Veredicto de tres valores y rol de la observación (B1, B2).
+2. Pregunta del caso, respuesta contrastiva y margen en veredictos (B3, B10).
+3. Predicciones, `que_vigilar` y `cerrar_caso` con verdad (B4).
+
+**Criterio de cierre** (protocolo de 11 §11.0):
+- los experimentos anteriores dan los mismos números;
+- se cumplen las propiedades de invarianza;
+- el caso reservado (11 §11.6) cumple sus cinco propiedades sin modificarlo;
+- `finanzas-llm` corre en vivo con el verificador de tres valores.
 
 ## Fase 5 — Servidor MCP
 
