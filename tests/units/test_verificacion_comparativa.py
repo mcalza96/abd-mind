@@ -130,3 +130,48 @@ def test_juez_de_parsimonia_comparativo() -> None:
         update={"entidades_latentes": ["Conexión clandestina"], "entidades_juzgadas": juicio["h1"]}
     )
     assert arbol.parsimonia(h) == 2  # declarada y juzgada coinciden: no se cuenta dos veces
+
+
+def test_parametros_de_razonamiento() -> None:
+    from factory.transition.stochastic.llm_client import parametros_razonamiento
+
+    assert parametros_razonamiento("responses", "bajo") == {"reasoning": {"effort": "low"}}
+    assert parametros_razonamiento("responses", "desactivado") == {
+        "reasoning": {"effort": "minimal"}
+    }
+    assert parametros_razonamiento("chat", "desactivado") == {"thinking": {"type": "disabled"}}
+    assert parametros_razonamiento("chat", "alto") == {"reasoning_effort": "high"}
+
+
+def test_precalificacion_en_paralelo_una_llamada_por_observacion() -> None:
+    from factory.engine.case_service import ServicioCasos
+    from factory.engine.modelos import EntradaHipotesis, EntradaObservador
+    from factory.engine.store import Store
+
+    def responder(ruta: str, cuerpo: JSON) -> str:
+        prompt = ultimo_prompt(cuerpo)
+        if "juez de parsimonia" in json.dumps(cuerpo, ensure_ascii=False):
+            return json.dumps({"juicios": []})
+        ids = re.findall(r"- (h\d+): ", prompt)
+        return json.dumps(
+            {
+                "calificaciones": [
+                    {"id_hipotesis": i, "justificacion": "", "nivel": "esperable"} for i in ids
+                ]
+            }
+        )
+
+    transporte = TransporteFalso(responder)
+    servicio = ServicioCasos(Store(":memory:"), config_prueba(), transporte=transporte)
+    caso = servicio.crear_caso("x", "abierto").caso_id
+    for i in range(5):
+        servicio.agregar_observacion(
+            caso, EntradaObservador(nombre=f"O{i}"), f"hecho {i}", extraer=False
+        )
+    servicio.proponer_hipotesis(
+        caso, [EntradaHipotesis(mecanismo=f"mecanismo {i}") for i in range(3)]
+    )
+    antes = len(transporte.llamadas)
+    evaluacion = servicio.evaluar(caso)
+    assert len(transporte.llamadas) - antes == 5  # una calificación por observación
+    assert evaluacion.subdeterminada  # las tres empatan: todo "esperable"

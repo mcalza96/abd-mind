@@ -54,6 +54,10 @@ class ConfigRol(_Estricto):
     )
     temperatura: float | None = None
     max_tokens: int = Field(default=8000, gt=0)
+    razonamiento: Literal["desactivado", "minimo", "bajo", "medio", "alto"] | None = Field(
+        default=None,
+        description="Nivel de razonamiento interno; None deja el valor por defecto del proveedor",
+    )
 
     def modelos(self) -> list[str]:
         return [self.modelo, *([self.fallback] if self.fallback else [])]
@@ -99,6 +103,9 @@ class ConfigPresupuestos(_Estricto):
     reintentos_json: int = Field(default=2, ge=0)
     llamadas_por_operacion: int = Field(default=60, gt=0)
     llamadas_por_caso: int = Field(default=500, gt=0)
+    llamadas_paralelas: int = Field(
+        default=4, gt=0, description="Observaciones que se califican a la vez al evaluar"
+    )
 
 
 class Config(_Estricto):

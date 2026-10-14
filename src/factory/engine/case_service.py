@@ -8,6 +8,7 @@ obtienen, así que un caso se reconstruye sin volver a llamar al verificador.
 import hashlib
 import uuid
 from collections.abc import Iterator
+from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -126,6 +127,7 @@ class _Contexto:
     reglas: ConjuntoReglas
     arbol: ArbolHipotesis
     cliente: ClienteLLM | None
+    verificador: Verificador | None = None
     opiniones: dict[str, list[str]] = field(default_factory=dict)
     grupos_observacion: int = 0
     avisos: list[str] = field(default_factory=list)
@@ -708,7 +710,9 @@ class ServicioCasos:
             veredictos_fragil=pesos.veredictos_fragil,
         )
         arboles.append(arbol)
-        ctx = _Contexto(registro=registro, reglas=reglas, arbol=arbol, cliente=cliente)
+        ctx = _Contexto(
+            registro=registro, reglas=reglas, arbol=arbol, cliente=cliente, verificador=base
+        )
 
         for evento in self.store.eventos(registro.id):
             datos = evento.datos
@@ -958,8 +962,39 @@ class ServicioCasos:
             )
         return cupo
 
+    def _precalificar(self, ctx: _Contexto) -> None:
+        """Califica en paralelo las observaciones que tienen hipótesis vivas sin veredicto.
+
+        Las calificaciones de distintas observaciones son independientes; hacerlas a la vez no
+        cambia el resultado, solo la latencia. Quedan en la memoria del verificador comparativo
+        y el árbol las persiste al pedirlas.
+        """
+        verificador = ctx.verificador
+        if not isinstance(verificador, VerificadorComparativo):
+            return
+        arbol = ctx.arbol
+        vivas = [
+            h
+            for h in arbol.todas_las_hipotesis()
+            if arbol.estado(h.id_hipotesis) is EstadoHipotesis.VIVA
+        ]
+        pendientes = []
+        for o in arbol.observaciones_activas():
+            faltan = [
+                h
+                for h in vivas
+                if self.store.veredicto(ctx.registro.id, h.id_hipotesis, o.id) is None
+            ]
+            if faltan:
+                pendientes.append((faltan[0], o, arbol.observadores[o.observador_id]))
+        if len(pendientes) < 2:
+            return
+        with ThreadPoolExecutor(max_workers=self.config.presupuestos.llamadas_paralelas) as grupo:
+            list(grupo.map(lambda p: verificador.verificar(*p), pendientes))
+
     def _evaluar(self, ctx: _Contexto, permitir_vacio: bool = False) -> ResultadoEvaluacionCaso:
         arbol = ctx.arbol
+        self._precalificar(ctx)
         if not permitir_vacio:
             if not arbol.observaciones_activas():
                 raise ErrorCaso(CodigoError.SIN_OBSERVACIONES, "el caso no tiene observaciones")

@@ -7,6 +7,7 @@ caso nunca vuelva a llamar al LLM. También aloja la caché de respuestas LLM de
 
 import json
 import sqlite3
+import threading
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -160,18 +161,24 @@ class Store:
 
 
 class CacheSQLite:
-    """Caché de respuestas LLM en la misma base de datos (implementa `llm_client.Cache`)."""
+    """Caché de respuestas LLM en la misma base de datos (implementa `llm_client.Cache`).
+
+    Las calificaciones en paralelo la usan desde varios hilos: un candado serializa el acceso.
+    """
 
     def __init__(self, store: Store) -> None:
         self.store = store
+        self.candado = threading.Lock()
 
     def leer(self, clave: str) -> str | None:
-        fila = self.store.conexion.execute(
-            "SELECT texto FROM llm_cache WHERE clave = ?", (clave,)
-        ).fetchone()
+        with self.candado:
+            fila = self.store.conexion.execute(
+                "SELECT texto FROM llm_cache WHERE clave = ?", (clave,)
+            ).fetchone()
         return str(fila[0]) if fila else None
 
     def guardar(self, clave: str, texto: str) -> None:
-        self.store.conexion.execute(
-            "INSERT OR REPLACE INTO llm_cache (clave, texto) VALUES (?, ?)", (clave, texto)
-        )
+        with self.candado:
+            self.store.conexion.execute(
+                "INSERT OR REPLACE INTO llm_cache (clave, texto) VALUES (?, ?)", (clave, texto)
+            )
