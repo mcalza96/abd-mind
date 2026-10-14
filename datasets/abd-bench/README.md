@@ -56,7 +56,7 @@ Son 50 casos: 40 reales y 10 variantes. Tipos de causa de los 40 reales:
 | `entidad_nueva` | 10 |
 | `ley_incorrecta` | 5 |
 
-Contaminación: 29 alta, 8 media, 13 baja (todas las variantes y E07–E08).
+Contaminación: 29 alta, 8 media, 13 baja (las 10 variantes, D06, E07 y E08).
 
 ## Casos débiles
 
