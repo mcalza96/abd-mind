@@ -31,5 +31,19 @@ Se mantienen E1 a E7 de EXP-009 sin cambios, más:
 ## Diseño
 Prueba de humo con `--casos V02`; después `--casos pares --paralelo 5`.
 
+## Prueba de humo (V02, antes de la corrida grande)
+
+**Primer intento: falla.** El juez comparativo ya cuenta bien (0 a 3 postulados por hipótesis), pero el verificador comparativo se trunca. DeepSeek V4.1 Flash razona antes de responder, y esos tokens cuentan en la salida. Una calificación de 5 hipótesis usó 11 608 tokens, por encima del límite de 8000.
+
+**Cambio de ingeniería, declarado:** `max_tokens` del rol `verificador` sube de 8000 a 32 000, y la justificación se limita a una frase. No es un parámetro epistémico: no cambia ningún peso ni umbral.
+
+**Segundo intento:** 7 llamadas, unos 4 minutos.
+
+- **Postulados juzgados por hipótesis:** 0, 2, 1, 1 y 3. La hipótesis de la derivación clandestina recibe 3, incluido "informante_que_avisa_inspecciones".
+- **Niveles del verificador:** ahora hay `indiferente` e `inesperado`. La derivación clandestina queda `indiferente` en 5 de 6 hechos e `inesperado` en el ensayo de laboratorio.
+- **Resultado:** el motor responde **ley_incorrecta**, que es la correcta, con margen de 1 veredicto (frágil). DeepSeek, como línea base, falla.
+
+V02 motivó la propuesta, así que esto **no** cuenta como validación; solo confirma que la mecánica funciona.
+
 ## Resultado
-*(pendiente)*
+*(pendiente: corrida de pares)*

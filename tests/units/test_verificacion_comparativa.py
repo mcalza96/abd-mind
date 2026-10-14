@@ -94,28 +94,39 @@ def test_consiliencia_ponderada_por_peso() -> None:
     assert abs((s1 - s2) - 1.5 * 0.9 * 0.5) < 1e-9  # "esperable" aporta la mitad
 
 
-def test_juez_de_parsimonia() -> None:
+def test_juez_de_parsimonia_comparativo() -> None:
     def responder(ruta: str, cuerpo: JSON) -> str:
+        prompt = ultimo_prompt(cuerpo)
+        assert "ya juzgadas" in prompt and "h0" in prompt  # referencia de granularidad
         return json.dumps(
             {
-                "postulados": [
-                    {"nombre": "Conexión clandestina", "descripcion": ""},
-                    {"nombre": "sin huella visual", "descripcion": "cláusula de acomodo"},
-                    {"nombre": "conexion_clandestina", "descripcion": "repetido"},
+                "juicios": [
+                    {
+                        "id_hipotesis": "h1",
+                        "postulados": [
+                            "Conexión clandestina",
+                            "sin huella visual",
+                            "conexion_clandestina",
+                        ],
+                    },
+                    {"id_hipotesis": "h0", "postulados": ["no debe usarse"]},
+                    {"id_hipotesis": "otra", "postulados": ["ignorada"]},
                 ]
             }
         )
 
-    postulados = juzgar_postulados(
+    referencia = _h("h0").model_copy(update={"entidades_juzgadas": ["falla_de_sensor"]})
+    juicio = juzgar_postulados(
         ClienteLLM(config_prueba(), TransporteFalso(responder)),
         ConfigRol(modelo="verif"),
-        _h("h1"),
+        [_h("h1"), _h("h2")],
         {"O": Observador(id="O", nombre="O")},
         [Observacion(id="y1", observador_id="O", contenido="x")],
+        juzgadas=[referencia],
     )
-    assert postulados == ["conexion_clandestina", "sin_huella_visual"]
+    assert juicio == {"h1": ["conexion_clandestina", "sin_huella_visual"], "h2": []}
     arbol = ArbolHipotesis(IBEEvaluator(), VerificadorTabla({}), set())
     h = _h("h1").model_copy(
-        update={"entidades_latentes": ["Conexión clandestina"], "entidades_juzgadas": postulados}
+        update={"entidades_latentes": ["Conexión clandestina"], "entidades_juzgadas": juicio["h1"]}
     )
     assert arbol.parsimonia(h) == 2  # declarada y juzgada coinciden: no se cuenta dos veces

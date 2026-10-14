@@ -89,10 +89,10 @@ class ComparacionLLM(BaseModel):
     calificaciones: list[CalificacionLLM]
 
 
-class PostuladoLLM(BaseModel):
-    nombre: str
-    descripcion: str
+class JuicioHipotesisLLM(BaseModel):
+    id_hipotesis: str
+    postulados: list[str]
 
 
 class JuicioParsimoniaLLM(BaseModel):
-    postulados: list[PostuladoLLM]
+    juicios: list[JuicioHipotesisLLM]

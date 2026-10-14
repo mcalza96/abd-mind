@@ -50,7 +50,7 @@ def _responder(ruta: str, cuerpo: JSON) -> str:
         ]
         return json.dumps({"calificaciones": calificaciones})
     if "juez de parsimonia" in sistema:
-        return json.dumps({"postulados": []})
+        return json.dumps({"juicios": []})
     raise AssertionError(f"petición inesperada: {sistema[:60]}")
 
 

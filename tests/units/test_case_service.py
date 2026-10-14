@@ -88,7 +88,7 @@ def responder(ruta: str, cuerpo: JSON) -> str:
     if "verificador independiente" in sistema:
         return _verificador(usuario)
     if "juez de parsimonia" in sistema:
-        return json.dumps({"postulados": []})
+        return json.dumps({"juicios": []})
     if "generador de hipótesis" in sistema:
         return _generador()
     raise AssertionError(f"petición inesperada: {sistema[:60]}")

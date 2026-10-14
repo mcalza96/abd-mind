@@ -391,7 +391,7 @@ class ServicioCasos:
         with self._operacion(caso_id) as ctx:
             self._exigir_cupo(ctx, len(hipotesis))
             avisos: list[str] = []
-            nuevas = []
+            nuevas: list[HipotesisCandidata] = []
             pregunta = ctx.registro.pregunta
             for entrada in hipotesis:
                 afirmaciones = dict(entrada.afirmaciones)
@@ -408,7 +408,9 @@ class ServicioCasos:
                         f"{pregunta.valores}: no cuenta para la respuesta"
                     )
                 h = HipotesisCandidata(
-                    id_hipotesis=self._siguiente_id_hipotesis(ctx),
+                    id_hipotesis=self._siguiente_id_hipotesis(
+                        ctx, {c.id_hipotesis for c in nuevas}
+                    ),
                     mecanismo_latente=entrada.mecanismo,
                     entidades_latentes=entrada.entidades_latentes,
                     afirmaciones=afirmaciones,
@@ -417,7 +419,8 @@ class ServicioCasos:
                     predicciones=entrada.predicciones,
                     origen=origen,
                 )
-                nuevas.append(self._registrar_hipotesis(ctx, h))
+                nuevas.append(h)
+            nuevas = [self._registrar_hipotesis(ctx, h) for h in self._juzgar(ctx, nuevas)]
             return ResultadoHipotesis(
                 caso_id=caso_id, hipotesis=[_hipotesis_registrada(h) for h in nuevas], avisos=avisos
             )
@@ -450,7 +453,10 @@ class ServicioCasos:
                 n,
                 modo_real,
             )
-            registradas = [self._registrar_hipotesis(ctx, h) for h in generacion.hipotesis[:cupo]]
+            registradas = [
+                self._registrar_hipotesis(ctx, h)
+                for h in self._juzgar(ctx, generacion.hipotesis[:cupo])
+            ]
             avisos = [f"modo: {modo_real.value}", *generacion.avisos, *ctx.cliente.avisos]
             if len(generacion.hipotesis) > cupo:
                 avisos.append(f"se descartaron {len(generacion.hipotesis) - cupo} por el límite")
@@ -904,27 +910,33 @@ class ServicioCasos:
                 )
         return consultas
 
-    def _siguiente_id_hipotesis(self, ctx: _Contexto) -> str:
-        existentes = {h.id_hipotesis for h in ctx.arbol.todas_las_hipotesis()}
+    def _siguiente_id_hipotesis(self, ctx: _Contexto, reservados: set[str] | None = None) -> str:
+        existentes = {h.id_hipotesis for h in ctx.arbol.todas_las_hipotesis()} | (
+            reservados or set()
+        )
         n = len(existentes) + 1
         while f"h{n}" in existentes:
             n += 1
         return f"h{n}"
 
+    def _juzgar(self, ctx: _Contexto, nuevas: list[HipotesisCandidata]) -> list[HipotesisCandidata]:
+        """Parsimonia juzgada (ADR-0015): un juez independiente lista los postulados del lote."""
+        if ctx.reglas.verificador != "llm" or ctx.cliente is None or not nuevas:
+            return nuevas
+        juicio = juzgar_postulados(
+            ctx.cliente,
+            self.config.roles.verificador,
+            nuevas,
+            ctx.arbol.observadores,
+            ctx.arbol.observaciones_activas(),
+            juzgadas=ctx.arbol.todas_las_hipotesis(),
+        )
+        return [
+            h.model_copy(update={"entidades_juzgadas": juicio.get(h.id_hipotesis, [])})
+            for h in nuevas
+        ]
+
     def _registrar_hipotesis(self, ctx: _Contexto, h: HipotesisCandidata) -> HipotesisCandidata:
-        if ctx.reglas.verificador == "llm" and ctx.cliente is not None:
-            # Parsimonia juzgada (ADR-0015): P no depende solo de lo que la hipótesis declara.
-            h = h.model_copy(
-                update={
-                    "entidades_juzgadas": juzgar_postulados(
-                        ctx.cliente,
-                        self.config.roles.verificador,
-                        h,
-                        ctx.arbol.observadores,
-                        ctx.arbol.observaciones_activas(),
-                    )
-                }
-            )
         ctx.arbol.agregar_hipotesis(h)
         self.store.agregar_evento(
             ctx.registro.id, "hipotesis_registrada", {"hipotesis": h.model_dump(mode="json")}

@@ -99,8 +99,8 @@ Reglas:
 ninguna; reserva "muy_esperable" para las que la predicen mejor que sus rivales.
 - No juzgues si la hipótesis es plausible; solo cuán esperable hace esta observación.
 - Considera el marco del observador: lo que puede ver o medir desde su posición o método.
-- Califica TODAS las hipótesis, una vez cada una, usando su id. Primero razona brevemente en \
-'justificacion'."""
+- Califica TODAS las hipótesis, una vez cada una, usando su id. En 'justificacion' escribe una \
+sola frase."""
 
 RELACION_DE_NIVEL = {
     "muy_esperable": Relacion.EXPLICA,
