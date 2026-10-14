@@ -20,8 +20,9 @@ infer the hidden cause. Your job is to COLLECT DOCUMENTED REAL CASES, not to ana
 WHAT TO COLLECT — four sets, 15 cases each (60 total)
 
 Set R — Recent resolved cases (most important).
-Real incidents whose RESOLUTION was published on or after 2025-07-01. They must not appear in
-model training data. Domains: infrastructure/IT outages with public post-mortems, aviation and
+Real incidents whose RESOLUTION was published on or after 2026-05-01. They must not appear in
+model training data. If you cannot find 15, complete the set with cases resolved between
+2025-07-01 and 2026-04-30 and mark them with "antes_de_mayo_2026": true. Domains: infrastructure/IT outages with public post-mortems, aviation and
 rail incident reports (NTSB, BEA, AAIB, TSB), product recalls, outbreak investigations, data or
 measurement errors in published science (corrections, retractions), industrial accidents.
 Requirement: before resolution, at least two sources reported things that seemed incompatible.
@@ -79,11 +80,13 @@ Keys (Spanish, as below):
   "evidencia_que_decidiria": "set U only",
   "resultado_12_24_meses": "set F only: what happened, with source",
   "quizas_famoso": true|false,
+  "antes_de_mayo_2026": true|false,   // set R only
   "notas": "anything the builder should know"
 }
 
 Before finishing, check: 60 lines; every observation has fecha and fuente; no observation
-contains the resolution; set R resolutions are dated 2025-07-01 or later.
+contains the resolution; set R resolutions are dated 2026-05-01 or later (or marked
+"antes_de_mayo_2026").
 ```
 
 ---
@@ -92,7 +95,7 @@ contains the resolution; set R resolutions are dated 2025-07-01 or later.
 
 | Conjunto | Experimento | Qué mide |
 |---|---|---|
-| R | Precisión sin contaminación | ¿Motor y línea base razonan igual de bien cuando el caso no está en el entrenamiento? |
+| R | Precisión sin contaminación (resueltos desde mayo de 2026; los marcados como anteriores se analizan aparte) | ¿Motor y línea base razonan igual de bien cuando el caso no está en el entrenamiento? |
 | S | Revisión secuencial (`nueva_evidencia`, derrota) | ¿Se ancla al primer dato o revisa? |
 | U | Abstención con casos reales | Complementa la serie U sintética de EXP-012 |
 | F | Dominio `mercado` y predicciones (10 §B4, B11) | La pregunta "¿estructural o rebote?" con resultado conocido |
