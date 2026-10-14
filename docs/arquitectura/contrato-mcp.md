@@ -6,7 +6,7 @@ Herramientas que el servidor MCP expone a Hermes (o a cualquier cliente MCP). Lo
 
 - Los nombres están en español, en `snake_case`, igual que los contratos de la especificación.
 - Toda respuesta incluye `caso_id` cuando aplica y un campo `avisos: list[str]` (presupuesto agotado, predicados no verificables, configuración dudosa, etc.).
-- Los errores se devuelven como error MCP con un `codigo` estable (tabla al final) y un mensaje legible para que Hermes lo explique al usuario.
+- Los errores se devuelven como resultado de herramienta con `isError: true` y un texto que termina en `{"codigo": "...", "mensaje": "..."}`: un `codigo` estable (tabla al final) y un mensaje legible para que Hermes lo explique al usuario.
 - **Ninguna herramienta acepta como entrada valores de $C$, $P$, $K$ o score** ([ADR-0002](adr/0002-verificacion-interna.md)).
 - **Ninguna herramienta modifica reglas** ([ADR-0004](adr/0004-reglas-solo-lectura.md)).
 
@@ -203,7 +203,7 @@ Reglas del dominio del caso (solo lectura).
 
 ### `estado_trabajo`
 
-Para operaciones asíncronas: `{trabajo_id, estado: "en_curso"|"terminado"|"fallido", progreso, resultado?}`.
+*Pendiente (ADR-0008): por ahora todas las operaciones son síncronas.* Para operaciones asíncronas: `{trabajo_id, estado: "en_curso"|"terminado"|"fallido", progreso, resultado?}`.
 
 ## Códigos de error
 

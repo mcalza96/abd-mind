@@ -64,7 +64,9 @@ class Store:
             ruta.parent.mkdir(parents=True, exist_ok=True)
         # Autocommit: cada escritura queda guardada al instante (los veredictos ya pagados no
         # se pierden si una operación falla a medio camino).
-        self.conexion = sqlite3.connect(str(ruta), isolation_level=None)
+        # check_same_thread=False: el servidor MCP ejecuta las herramientas en hilos; el acceso
+        # se serializa con un candado en la capa de interfaz.
+        self.conexion = sqlite3.connect(str(ruta), isolation_level=None, check_same_thread=False)
         self.conexion.execute("PRAGMA foreign_keys = ON")
         self.conexion.executescript(_ESQUEMA)
 

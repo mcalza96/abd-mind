@@ -11,6 +11,7 @@ uv sync
 uv run abd-mind experimento todos   # experimentos canónicos (sin LLM)
 uv run abd-mind doctor              # valida configuración y acceso a los modelos
 uv run abd-mind experimento cilindro-llm   # con LLM (requiere OPENCODE_API_KEY)
+uv run abd-mind serve               # servidor MCP por stdio (para Hermes); --transport http con ABD_MIND_TOKEN
 uv run pytest                        # tests
 uv run ruff check && uv run mypy     # lint y tipos
 ```

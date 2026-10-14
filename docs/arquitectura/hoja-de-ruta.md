@@ -13,7 +13,7 @@ Cada fase termina con algo que funciona y se puede probar. Ninguna fase depende 
 | 4 — Motor de casos y persistencia | ✅ |
 | 4b — Robustez epistémica | ✅ |
 | 4c — Explicación en dominios abiertos | ✅ |
-| 5 — Servidor MCP | Pendiente |
+| 5 — Servidor MCP | ✅ |
 | 6 — Integración con Hermes | Pendiente |
 | 7 — Benchmarks y calibración | Pendiente |
 
@@ -128,6 +128,16 @@ Efecto visible: las hipótesis de un solo hecho (demanda, costos) ya no pagan re
 - Tests de integración con un cliente MCP genérico en ambos transportes.
 
 **Término:** el flujo completo del caso financiero funciona desde un cliente MCP de prueba.
+
+**Resultado:** término cumplido. `abd-mind serve --transport stdio|http` expone 17 herramientas con el SDK oficial `mcp` 2.3 (`MCPServer`, el antiguo FastMCP). Tests de integración con el cliente genérico del SDK:
+- flujo sintético en memoria, por stdio (subproceso real) y por HTTP con token;
+- flujo financiero completo en memoria con LLM simulado;
+- HTTP sin token o con token incorrecto: 401.
+
+Notas:
+- **Ejecución:** las herramientas son síncronas. El SDK las ejecuta en hilos, y un candado serializa el acceso al motor, porque SQLite admite un solo escritor.
+- **Errores:** `isError` con `{codigo, mensaje}`.
+- **Operaciones asíncronas** (`estado_trabajo`, ADR-0008): pendientes hasta que el tiempo límite de Hermes lo exija. Mientras tanto se sube ese límite (despliegue-pc §4).
 
 ## Fase 6 — Integración con Hermes
 

@@ -19,9 +19,7 @@ from factory.organ.rule_engine import cargar_reglas, directorio_reglas
 from factory.transition.stochastic.llm_client import ClienteLLM, ErrorLLM
 
 # Subcomandos documentados en docs/arquitectura que llegan en fases posteriores.
-PENDIENTES = {
-    "serve": "fase 5 (servidor MCP)",
-}
+PENDIENTES: dict[str, str] = {}
 
 
 class _Ping(BaseModel):
@@ -51,6 +49,11 @@ def _parser() -> argparse.ArgumentParser:
     auditoria = sub.add_parser("auditoria", help="historia completa de un caso")
     auditoria.add_argument("caso_id")
     auditoria.add_argument("--formato", choices=["markdown", "json"], default="markdown")
+
+    serve = sub.add_parser("serve", help="servidor MCP para Hermes u otro cliente")
+    serve.add_argument("--transport", choices=["stdio", "http"], default="stdio")
+    serve.add_argument("--host", default="127.0.0.1", help="solo HTTP")
+    serve.add_argument("--port", type=int, default=8765, help="solo HTTP")
 
     for nombre, fase in PENDIENTES.items():
         sub.add_parser(nombre, help=f"no implementado: {fase}")
@@ -111,6 +114,39 @@ def _casos(args: argparse.Namespace) -> int:
                 f"obs={c.resumen.n_observaciones} vivas={c.resumen.n_hipotesis_vivas} "
                 f"{mejor} · {c.descripcion[:40]}"
             )
+        return 0
+    finally:
+        store.cerrar()
+
+
+def _serve(args: argparse.Namespace) -> int:
+    from factory.interfaces.mcp_server import app_http, crear_servidor, token_de_entorno
+
+    config = cargar_config(args.config)
+    for aviso in config.avisos():
+        print(f"aviso: {aviso}", file=sys.stderr)
+    token = ""
+    if args.transport == "http":
+        try:
+            token = token_de_entorno()
+        except ValueError as e:
+            print(f"Error: {e}", file=sys.stderr)
+            return 2
+    store = Store(config.base_datos)
+    try:
+        servidor = crear_servidor(ServicioCasos(store, config))
+        if args.transport == "stdio":
+            servidor.run("stdio")
+        else:
+            import uvicorn
+
+            try:
+                app = app_http(servidor, token, args.host)
+            except ValueError as e:
+                print(f"Error: {e}", file=sys.stderr)
+                return 2
+            print(f"abd-mind MCP en http://{args.host}:{args.port}/mcp", file=sys.stderr)
+            uvicorn.run(app, host=args.host, port=args.port, log_level="warning")
         return 0
     finally:
         store.cerrar()
@@ -182,6 +218,8 @@ def main(argv: Sequence[str] | None = None) -> int:
             return _modelos(args)
         if args.comando in ("casos", "auditoria"):
             return _casos(args)
+        if args.comando == "serve":
+            return _serve(args)
         return _doctor(args)
     except ErrorLLM as e:
         print(f"Error del proveedor LLM: {e}", file=sys.stderr)
