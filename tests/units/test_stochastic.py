@@ -107,7 +107,9 @@ def test_generador_sigue_si_un_modelo_falla() -> None:
 
 def test_verificador_llm() -> None:
     t = TransporteFalso(
-        lambda r, c: '{"justificacion": "un cilindro de frente es un rectángulo", "explica": true}'
+        lambda r, c: (
+            '{"justificacion": "un cilindro de frente es un rectángulo", "relacion": "explica"}'
+        )
     )
     verificador = VerificadorLLM(ClienteLLM(config_prueba(), t), ConfigRol(modelo="verif"))
     veredicto = verificador.verificar(

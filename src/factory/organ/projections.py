@@ -7,7 +7,7 @@ hipótesis y la vista de un observador, la silueta se calcula sin ningún LLM.
 from collections.abc import Callable, Iterable, Mapping
 
 from factory.contracts.abduction import HipotesisCandidata, Valor
-from factory.contracts.case import Veredicto
+from factory.contracts.case import Relacion, Veredicto
 from factory.contracts.observation import Observacion, Observador
 from factory.organ.texto import normalizar
 
@@ -85,16 +85,17 @@ class VerificadorProyeccion:
             observado = observacion.variables[self.variable_observada]
         predicho = self.proyeccion(hipotesis, observador)
         if predicho is None:
-            explica = False
+            relacion = Relacion.NEUTRAL
             justificacion = "la hipótesis no permite proyectar lo que vería este observador"
         else:
             explica = self.relacion.consistente(predicho, observado, observador.tolerancia)
+            relacion = Relacion.EXPLICA if explica else Relacion.CONTRADICE
             simbolo = "≈" if explica else "≉"
             justificacion = f"π({observador.id}) = {predicho} {simbolo} {observado}"
         return Veredicto(
             id_hipotesis=hipotesis.id_hipotesis,
             id_observacion=observacion.id,
-            explica=explica,
+            relacion=relacion,
             fuente=self.fuente,
             justificacion=justificacion,
         )

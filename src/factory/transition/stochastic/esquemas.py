@@ -1,5 +1,7 @@
 """Esquemas de salida que se piden a los modelos. Planos y estrictos para json_schema."""
 
+from typing import Literal
+
 from pydantic import BaseModel
 
 from factory.contracts.abduction import Valor
@@ -46,7 +48,7 @@ class GeneracionLLM(BaseModel):
 
 class VeredictoLLM(BaseModel):
     justificacion: str
-    explica: bool
+    relacion: Literal["explica", "neutral", "contradice"]
 
 
 class RespuestaDirectaLLM(BaseModel):

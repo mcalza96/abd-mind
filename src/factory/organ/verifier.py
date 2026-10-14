@@ -9,7 +9,7 @@ from typing import Protocol
 
 from factory.config import ConfigRol
 from factory.contracts.abduction import HipotesisCandidata
-from factory.contracts.case import Veredicto
+from factory.contracts.case import Relacion, Veredicto
 from factory.contracts.observation import Observacion, Observador
 from factory.transition.stochastic.contexto import describir_observador
 from factory.transition.stochastic.esquemas import VeredictoLLM
@@ -25,15 +25,21 @@ class Verificador(Protocol):
 SISTEMA_VERIFICADOR = """Eres un verificador independiente en un sistema de razonamiento \
 abductivo. Recibes UNA hipótesis, UN observador con su marco y UNA observación de ese observador.
 
-Decide si, suponiendo que la hipótesis es verdadera, este observador, desde su marco, habría \
-reportado esta observación (explica = true) o no (explica = false).
+Suponiendo que la hipótesis es verdadera, decide qué relación tiene con esta observación:
+- "explica": la hipótesis hace esperable que este observador, desde su marco, reporte \
+exactamente esto.
+- "contradice": la hipótesis hace esperar que este observador reporte otra cosa; la observación \
+es difícil de conciliar con ella.
+- "neutral": la hipótesis no dice nada sobre lo que este observador reportaría; la observación \
+sería igual de esperable con o sin ella.
 
 Reglas:
-- No juzgues si la hipótesis es plausible o probable; solo su consistencia con esta observación.
-- Responde explica = false si la hipótesis contradice la observación o no da razones para \
-esperarla.
+- No juzgues si la hipótesis es plausible o probable; solo su relación con esta observación.
+- Que la observación sea compatible con la hipótesis no basta para "explica": la hipótesis debe \
+dar razones para esperarla. Si no las da y tampoco la vuelve improbable, es "neutral".
+- Reserva "contradice" para cuando la hipótesis predice algo distinto de lo observado.
 - Considera el marco del observador: lo que puede ver o medir desde su posición o método.
-- Primero razona brevemente en 'justificacion' y luego da el veredicto."""
+- Primero razona brevemente en 'justificacion' y luego da la relación."""
 
 
 class VerificadorLLM:
@@ -66,7 +72,7 @@ class VerificadorLLM:
         return Veredicto(
             id_hipotesis=hipotesis.id_hipotesis,
             id_observacion=observacion.id,
-            explica=bruto.explica,
+            relacion=Relacion(bruto.relacion),
             fuente=self.fuente,
             justificacion=bruto.justificacion,
         )

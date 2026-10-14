@@ -15,7 +15,12 @@ from pathlib import Path
 from factory.config import Config, ConfigPesos
 from factory.contracts.abduction import HipotesisCandidata, Valor
 from factory.contracts.case import EstadoHipotesis, ResultadoEvaluacion, Veredicto
-from factory.contracts.observation import EstadoObservacion, Observacion, Observador
+from factory.contracts.observation import (
+    EstadoObservacion,
+    Observacion,
+    Observador,
+    RolObservacion,
+)
 from factory.contracts.rules import ConjuntoReglas
 from factory.engine.modelos import (
     Auditoria,
@@ -193,14 +198,16 @@ class ServicioCasos:
         *,
         fuente: str | None = None,
         valor: Valor | None = None,
+        rol: RolObservacion = RolObservacion.EXPLANANDUM,
     ) -> ResultadoObservacion:
         """Registra lo que reportó un observador.
 
         Con `valor` el hecho se registra tal cual; si no, el córtex separa hechos de opiniones.
         Los hechos nuevos ponen a prueba a las hipótesis existentes (pueden derrotarlas).
+        `rol`: explanandum (exige explicación) o evidencia (solo discrimina), ADR-0011.
         """
         with self._operacion(caso_id) as ctx:
-            return self._agregar_observacion(ctx, observador, contenido, fuente, valor)
+            return self._agregar_observacion(ctx, observador, contenido, fuente, valor, rol)
 
     def corregir_observacion(
         self,
@@ -248,6 +255,7 @@ class ServicioCasos:
                 contenido=texto,
                 valor=valor if valor is not None else original.valor,
                 variables=original.variables,
+                rol=original.rol,
             )
             ctx.arbol.agregar_observacion(corregida, como_prueba=False)
             self.store.agregar_evento(
@@ -278,10 +286,11 @@ class ServicioCasos:
         *,
         fuente: str | None = None,
         valor: Valor | None = None,
+        rol: RolObservacion = RolObservacion.EXPLANANDUM,
     ) -> ResultadoEvidencia:
         with self._operacion(caso_id) as ctx:
             anterior = ctx.registro.resumen.h_estrella
-            observacion = self._agregar_observacion(ctx, observador, contenido, fuente, valor)
+            observacion = self._agregar_observacion(ctx, observador, contenido, fuente, valor, rol)
             evaluacion = self._evaluar(ctx, permitir_vacio=True)
             return ResultadoEvidencia(
                 observacion=observacion, h_estrella_anterior=anterior, evaluacion=evaluacion
@@ -413,14 +422,14 @@ class ServicioCasos:
             else:
                 tau = ctx.registro.pesos.tau
                 motivo = f"ninguna hipótesis alcanza el umbral de aceptación τ = {tau}"
-            if h is not None and h.consiliencia_c < evaluacion.m:
-                motivo += (
-                    f"; no explica todas las observaciones ({h.consiliencia_c}/{evaluacion.m}): "
-                    "conviene generar hipótesis en modo expansión"
-                )
-            residuo = por_id[h.id_hipotesis].atribuidas_a_error if h is not None else {}
+            entrada = por_id[h.id_hipotesis] if h is not None else None
+            if entrada is not None and entrada.sin_explicar:
+                motivo += f"; deja sin explicar {', '.join(entrada.sin_explicar)}"
+            residuo = entrada.atribuidas_a_error if entrada is not None else {}
             if residuo:
                 motivo += f"; supone que {', '.join(sorted(residuo))} son errores de observación"
+            if evaluacion.expansion_sugerida:
+                motivo += "; conviene generar hipótesis en modo expansión"
             return ResultadoMejorExplicacion(
                 caso_id=caso_id,
                 h_estrella=h,
@@ -650,13 +659,20 @@ class ServicioCasos:
         contenido: str,
         fuente: str | None,
         valor: Valor | None,
+        rol: RolObservacion = RolObservacion.EXPLANANDUM,
     ) -> ResultadoObservacion:
         observador = self._registrar_observador(ctx, entrada)
         grupo = f"o{ctx.grupos_observacion + 1}"
         avisos: list[str] = []
         if valor is not None:
             hechos = [
-                Observacion(id=grupo, observador_id=observador.id, contenido=contenido, valor=valor)
+                Observacion(
+                    id=grupo,
+                    observador_id=observador.id,
+                    contenido=contenido,
+                    valor=valor,
+                    rol=rol,
+                )
             ]
             opiniones: list[str] = []
         else:
@@ -664,7 +680,7 @@ class ServicioCasos:
             extraccion = Cortex(ctx.cliente, self.config.roles.cortex).extraer(
                 observador, contenido, ctx.reglas
             )
-            hechos = extraccion.a_observaciones(observador.id, grupo)
+            hechos = extraccion.a_observaciones(observador.id, grupo, rol)
             opiniones = extraccion.opiniones
             avisos += [f"duda: {d}" for d in extraccion.dudas]
             if not hechos:
@@ -861,6 +877,7 @@ class ServicioCasos:
             coherencia_k=e.coherencia_k,
             score_final=e.score_final,
             atribuidas_a_error=r.atribuidas_a_error,
+            sin_explicar=r.sin_explicar,
             veredictos=r.veredictos,
             declaradas_no_verificadas=r.declaradas_no_verificadas,
         )
@@ -868,7 +885,12 @@ class ServicioCasos:
 
 def _registrada(o: Observacion) -> ObservacionRegistrada:
     return ObservacionRegistrada(
-        id=o.id, contenido=o.contenido, valor=o.valor, variables=o.variables, estado=o.estado
+        id=o.id,
+        contenido=o.contenido,
+        valor=o.valor,
+        variables=o.variables,
+        estado=o.estado,
+        rol=o.rol,
     )
 
 

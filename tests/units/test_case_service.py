@@ -50,7 +50,8 @@ def _verificador(usuario: str) -> str:
         explica = True
     else:
         explica = False
-    return json.dumps({"justificacion": "regla de prueba", "explica": explica})
+    relacion = "explica" if explica else "contradice"
+    return json.dumps({"justificacion": "regla de prueba", "relacion": relacion})
 
 
 def _generador() -> str:

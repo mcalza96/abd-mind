@@ -3,7 +3,7 @@
 import json
 import math
 
-from factory.contracts.case import EstadoHipotesis
+from factory.contracts.case import EstadoHipotesis, Relacion
 from factory.engine.modelos import Auditoria
 
 
@@ -44,19 +44,30 @@ def auditoria_markdown(a: Auditoria) -> str:
         for opinion in a.opiniones.get(o.id, []):
             lineas.append(f"  - opinión (no es evidencia): {opinion}")
 
-    lineas += ["", "## Hechos", "", "| Id | Observador | Hecho | Estado |", "|---|---|---|---|"]
+    lineas += [
+        "",
+        "## Hechos",
+        "",
+        "| Id | Observador | Hecho | Rol | Estado |",
+        "|---|---|---|---|---|",
+    ]
     for obs in a.observaciones:
-        lineas.append(f"| {obs.id} | {obs.observador_id} | {obs.contenido} | {obs.estado.value} |")
+        lineas.append(
+            f"| {obs.id} | {obs.observador_id} | {obs.contenido} | {obs.rol.value} "
+            f"| {obs.estado.value} |"
+        )
 
-    veredictos: dict[str, dict[str, bool]] = {}
+    veredictos: dict[str, dict[str, Relacion]] = {}
     for v in a.veredictos:
-        veredictos.setdefault(v.id_hipotesis, {})[v.id_observacion] = v.explica
+        veredictos.setdefault(v.id_hipotesis, {})[v.id_observacion] = v.relacion
     lineas += ["", "## Hipótesis", ""]
     for hip in a.hipotesis:
         estado = hip.estado.value
         if hip.estado is EstadoHipotesis.DERROTADA:
             estado += f" por {', '.join(hip.derrotada_por)}"
-        explica = sorted(i for i, ok in veredictos.get(hip.id_hipotesis, {}).items() if ok)
+        propios = veredictos.get(hip.id_hipotesis, {})
+        explica = sorted(i for i, r in propios.items() if r is Relacion.EXPLICA)
+        contradice = sorted(i for i, r in propios.items() if r is Relacion.CONTRADICE)
         lineas += [
             f"### {hip.id_hipotesis} — {estado}",
             "",
@@ -66,15 +77,16 @@ def auditoria_markdown(a: Auditoria) -> str:
             f"- Entidades latentes: {', '.join(hip.entidades_latentes) or '—'}",
             f"- Afirmaciones: `{json.dumps(hip.afirmaciones, ensure_ascii=False)}`",
             f"- Explica: {', '.join(explica) or '—'}",
+            f"- Contradice: {', '.join(contradice) or '—'}",
             "",
         ]
 
-    lineas += ["## Veredictos", "", "| Hipótesis | Hecho | Explica | Fuente | Justificación |"]
+    lineas += ["## Veredictos", "", "| Hipótesis | Hecho | Relación | Fuente | Justificación |"]
     lineas.append("|---|---|---|---|---|")
     for v in a.veredictos:
         justificacion = v.justificacion.replace("|", "\\|").replace("\n", " ")
         lineas.append(
-            f"| {v.id_hipotesis} | {v.id_observacion} | {'sí' if v.explica else 'no'} "
+            f"| {v.id_hipotesis} | {v.id_observacion} | {v.relacion.value} "
             f"| {v.fuente} | {justificacion} |"
         )
 

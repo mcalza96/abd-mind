@@ -11,7 +11,7 @@ from pydantic import BaseModel, Field
 from factory.config import ConfigPesos
 from factory.contracts.abduction import Valor
 from factory.contracts.case import EstadoHipotesis, Veredicto
-from factory.contracts.observation import EstadoObservacion, Observador
+from factory.contracts.observation import EstadoObservacion, Observador, RolObservacion
 
 
 class CodigoError(StrEnum):
@@ -121,6 +121,7 @@ class ObservacionRegistrada(BaseModel):
     valor: Valor | None = None
     variables: dict[str, Valor] = Field(default_factory=dict)
     estado: EstadoObservacion = EstadoObservacion.ACTIVA
+    rol: RolObservacion = RolObservacion.EXPLANANDUM
 
 
 class ResultadoObservacion(BaseModel):
@@ -133,7 +134,7 @@ class ResultadoObservacion(BaseModel):
     )
     en_tension: list[str] = Field(
         default_factory=list,
-        description="No explican estos hechos pero siguen vivas: el observador no alcanza ω_d",
+        description="Contradicen estos hechos pero siguen vivas: el observador no alcanza ω_d",
     )
     avisos: list[str] = Field(default_factory=list)
 
@@ -161,7 +162,11 @@ class EntradaRanking(BaseModel):
     coherencia_k: float
     score_final: float
     atribuidas_a_error: dict[str, float] = Field(
-        default_factory=dict, description="Hechos que esta hipótesis supone erróneos, con su costo"
+        default_factory=dict,
+        description="Hechos que esta hipótesis contradice y supone erróneos, con su costo",
+    )
+    sin_explicar: list[str] = Field(
+        default_factory=list, description="Explananda ante los que es neutral"
     )
     veredictos: list[Veredicto]
     declaradas_no_verificadas: list[str] = Field(

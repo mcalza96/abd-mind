@@ -4,14 +4,18 @@ Implementa docs/marco-teorico/03 §3.5–3.6 y las decisiones D1, D2 y D6:
 - C se cuenta con veredictos de un verificador, no con lo que declara la hipótesis.
 - P cuenta las entidades (declaradas o afirmadas en variables de tipo entidad) que no están en
   el vocabulario verificado V.
-- Una observación que llega cuando ya hay hipótesis es una prueba: toda hipótesis que no la
-  explica queda derrotada. Retractar esa observación reactiva a las que derrotó solo ella.
+- Una observación que llega cuando ya hay hipótesis es una prueba: toda hipótesis que la
+  contradice queda derrotada. Retractar esa observación reactiva a las que derrotó solo ella.
 
 Con observadores falibles (09 §9.1–9.2, ADR-0009 y ADR-0010):
 - Solo derrota una observación con confiabilidad ω ≥ ω_d; las demás dejan la hipótesis en
   tensión y entran en su residuo.
-- El score pondera lo explicado por ω y cobra c(ω) por cada hecho no explicado.
-- La expansión se sugiere si el residuo de la mejor hipótesis cuesta más que una entidad nueva.
+- El score pondera lo explicado por ω y cobra c(ω) por cada hecho contradicho.
+- La expansión se sugiere si lo que la mejor hipótesis no explica cuesta más que una entidad.
+
+En dominios abiertos (11 §11.1–11.2, ADR-0011) el veredicto tiene tres valores: lo neutral no
+suma, no cuesta y no derrota; un explanandum neutral queda sin explicar y cuenta para la
+expansión. Con un verificador de dos valores todo lo anterior se mantiene igual.
 - Si varias hipótesis empatan (diferencia ≤ δ) no hay H*: el caso está subdeterminado.
 """
 
@@ -20,8 +24,13 @@ from dataclasses import dataclass, field
 from pydantic import BaseModel, Field
 
 from factory.contracts.abduction import HipotesisCandidata
-from factory.contracts.case import EstadoHipotesis, ResultadoEvaluacion, Veredicto
-from factory.contracts.observation import EstadoObservacion, Observacion, Observador
+from factory.contracts.case import EstadoHipotesis, Relacion, ResultadoEvaluacion, Veredicto
+from factory.contracts.observation import (
+    EstadoObservacion,
+    Observacion,
+    Observador,
+    RolObservacion,
+)
 from factory.organ.texto import normalizar
 from factory.organ.verifier import Verificador
 from factory.transition.deterministic.ibe_evaluator import (
@@ -93,7 +102,7 @@ class ArbolHipotesis:
         """Registra y_k y la usa como prueba de las hipótesis existentes.
 
         Devuelve los ids de las hipótesis vivas que quedaron derrotadas. Si el observador no
-        alcanza ω_d, las que no explican y_k quedan en tensión (ver `en_tension`). Con
+        alcanza ω_d, las que contradicen y_k quedan en tensión (ver `en_tension`). Con
         `como_prueba=False` (p. ej. al corregir un hecho mal transcrito) solo se registra.
         """
         if observacion.id in self.observaciones:
@@ -107,7 +116,7 @@ class ArbolHipotesis:
         derrota = self.confiabilidad(observacion) >= self.omega_derrota
         derrotadas = []
         for registro in self._hipotesis.values():
-            if self._veredicto(registro.hipotesis, observacion).explica:
+            if self._veredicto(registro.hipotesis, observacion).relacion is not Relacion.CONTRADICE:
                 continue
             if not derrota:
                 registro.en_tension_por.add(observacion.id)
@@ -118,7 +127,7 @@ class ArbolHipotesis:
         return derrotadas
 
     def en_tension(self, id_observacion: str) -> list[str]:
-        """Hipótesis que no explican la observación pero no quedaron derrotadas por ella."""
+        """Hipótesis que contradicen la observación pero no quedaron derrotadas por ella."""
         return [i for i, r in self._hipotesis.items() if id_observacion in r.en_tension_por]
 
     def retractar_observacion(self, id_observacion: str) -> list[str]:
@@ -190,10 +199,18 @@ class ArbolHipotesis:
         h = registro.hipotesis
         activas = self.observaciones_activas()
         veredictos = [self._veredicto(h, o) for o in activas]
-        explicadas = {v.id_observacion for v in veredictos if v.explica}
+        relacion = {v.id_observacion: v.relacion for v in veredictos}
+        explicadas = {i for i, r in relacion.items() if r is Relacion.EXPLICA}
         residuo = {
-            o.id: costo_error(self.confiabilidad(o)) for o in activas if o.id not in explicadas
+            o.id: costo_error(self.confiabilidad(o))
+            for o in activas
+            if relacion[o.id] is Relacion.CONTRADICE
         }
+        sin_explicar = [
+            o.id
+            for o in activas
+            if relacion[o.id] is Relacion.NEUTRAL and o.rol is RolObservacion.EXPLANANDUM
+        ]
         evaluacion, coherencia = self.evaluador.evaluar_con_detalle(
             h,
             consiliencia=len(explicadas),
@@ -209,6 +226,7 @@ class ArbolHipotesis:
             derrotada_por=sorted(registro.derrotada_por),
             en_tension_por=sorted(registro.en_tension_por),
             atribuidas_a_error=residuo,
+            sin_explicar=sin_explicar,
             veredictos=veredictos,
             violaciones=coherencia.violaciones,
             declaradas_no_verificadas=sorted(
@@ -266,12 +284,18 @@ class ArbolHipotesis:
     # --- interno --------------------------------------------------------------------------
 
     def _perdida_residuo(self, r: ResultadoEvaluacion) -> float:
-        """L(H) = Σ_{j∈R(H)} (α·ω_j + λ·c(ω_j)): lo que se gana si se explicara el residuo."""
-        return sum(
-            self.evaluador.alpha * self.confiabilidad(self.observaciones[j])
+        """Lo que se ganaría explicando lo pendiente (11 §11.2).
+
+        L(H) = Σ_{contradichas} (α·ω + λ·c(ω)) + Σ_{explananda neutrales} α·ω.
+        """
+        alpha = self.evaluador.alpha
+        contradichas = sum(
+            alpha * self.confiabilidad(self.observaciones[j])
             + self.evaluador.lambda_residuo * costo
             for j, costo in r.atribuidas_a_error.items()
         )
+        neutrales = sum(alpha * self.confiabilidad(self.observaciones[j]) for j in r.sin_explicar)
+        return contradichas + neutrales
 
     def _veredicto(self, hipotesis: HipotesisCandidata, observacion: Observacion) -> Veredicto:
         clave = (hipotesis.id_hipotesis, observacion.id)
