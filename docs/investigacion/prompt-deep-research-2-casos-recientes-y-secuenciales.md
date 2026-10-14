@@ -9,6 +9,8 @@ Segundo encargo de investigación. Aplica las lecciones de la bitácora:
 
 Se pega tal cual, en inglés.
 
+**Criterio de fecha:** la **respuesta** de cada caso (resolución o resultado) es posterior al 1 de mayo de 2026, para que los modelos no la conozcan. Los hechos de entrada pueden ser anteriores. El conjunto U no tiene respuesta todavía.
+
 ---
 
 ```text
@@ -30,20 +32,22 @@ Requirement: before resolution, at least two sources reported things that seemed
 Set S — Sequential cases.
 Real cases with a dated TIMELINE of evidence, where early evidence pointed to a wrong explanation
 and later evidence reversed it. Examples: an outage status page that blamed X and a post-mortem
-that found Y; a preliminary accident report vs the final report. Any date is fine, but prefer
-obscure cases.
+that found Y; a preliminary accident report vs the final report. The FINAL resolution must be
+published on or after 2026-05-01; if you cannot find 15, complete with earlier ones marked
+"antes_de_mayo_2026": true.
 
 Set U — Open cases.
 Real cases that are STILL UNRESOLVED as of today, where at least two explanations remain
 seriously proposed by credible sources and the public evidence does not decide between them.
 These test whether the engine abstains. For each, name the evidence that would decide it.
 
-Set F — Equity drawdowns with known outcome.
-Listed companies whose share price fell 30% or more within 3 months between 2016 and 2023.
-For each: what was publicly known within 30 days of the low (earnings, guidance, sector moves,
-insider trades, short interest, news), AND what happened in the following 12–24 months (recovered
-or not, and the documented reason). Mix of structural declines and rebounds, about half each.
-Avoid household-name crises (e.g. famous bankruptcies) — prefer mid-caps.
+Set F — Equity drawdowns whose outcome is recent.
+Listed companies whose share price fell 30% or more within 3 months, with the LOW between
+2025-05-01 and 2025-10-31, so that the 12-month outcome falls after 2026-05-01. For each: what was
+publicly known within 30 days of the low (earnings, guidance, sector moves, insider trades, short
+interest, news), AND what happened in the following 12 months (recovered or not, and the
+documented reason, with sources dated after the low). Mix of structural declines and rebounds,
+about half each. Avoid household-name crises; prefer mid-caps.
 
 STRICT RULES
 1. No hindsight in observations. Each observation must be something an observer reported AT THE
@@ -80,13 +84,13 @@ Keys (Spanish, as below):
   "evidencia_que_decidiria": "set U only",
   "resultado_12_24_meses": "set F only: what happened, with source",
   "quizas_famoso": true|false,
-  "antes_de_mayo_2026": true|false,   // set R only
+  "antes_de_mayo_2026": true|false,   // sets R and S
   "notas": "anything the builder should know"
 }
 
 Before finishing, check: 60 lines; every observation has fecha and fuente; no observation
-contains the resolution; set R resolutions are dated 2026-05-01 or later (or marked
-"antes_de_mayo_2026").
+contains the resolution; set R and S resolutions are dated 2026-05-01 or later (or marked
+"antes_de_mayo_2026"); set F lows are between 2025-05-01 and 2025-10-31.
 ```
 
 ---
@@ -98,6 +102,6 @@ contains the resolution; set R resolutions are dated 2026-05-01 or later (or mar
 | R | Precisión sin contaminación (resueltos desde mayo de 2026; los marcados como anteriores se analizan aparte) | ¿Motor y línea base razonan igual de bien cuando el caso no está en el entrenamiento? |
 | S | Revisión secuencial (`nueva_evidencia`, derrota) | ¿Se ancla al primer dato o revisa? |
 | U | Abstención con casos reales | Complementa la serie U sintética de EXP-012 |
-| F | Dominio `mercado` y predicciones (10 §B4, B11) | La pregunta "¿estructural o rebote?" con resultado conocido |
+| F | Dominio `mercado` y predicciones (10 §B4, B11) | La pregunta "¿estructural o rebote?" con un resultado posterior a mayo de 2026 |
 
 La conversión al formato de abd-bench la hacemos nosotros. La resolución entra como verdad con fuente, fecha y estado (12 §12.1). La evaluación se hará **por mecanismo**, con un juez independiente, y no por etiqueta de tipo (EXP-010).
