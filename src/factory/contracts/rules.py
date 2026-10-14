@@ -69,6 +69,10 @@ class ConjuntoReglas(BaseModel):
     dominio: str
     version: int
     descripcion: str = ""
+    verificador: Literal["llm", "proyeccion"] = Field(
+        default="llm",
+        description="Cómo se decide π_i(H) ≈ y_i: proyección computable o verificador LLM",
+    )
     variables: dict[str, VariableDominio] = Field(default_factory=dict)
     reglas: list[Regla]
 

@@ -1,6 +1,7 @@
 # Entorno sintético de sólidos (experimentos 5.1–5.3).
 dominio: sintetico
-version: 2
+version: 3
+verificador: proyeccion   # las siluetas se calculan; no hace falta un LLM para C
 descripcion: >-
   Un objeto físico es observado desde distintas vistas (frontal, cenital, lateral). Cada
   observador reporta la silueta que ve. Se busca qué objeto proyecta todas las siluetas.
@@ -10,6 +11,9 @@ variables:
     descripcion: >-
       Nombre del sólido, en minúsculas, sin tildes y con guiones bajos
       (p. ej. cilindro, esfera, cubo, cono, elipsoide, tapon_universal)
+  silueta:
+    descripcion: Silueta que reporta un observador
+    valores: [circulo, rectangulo, cuadrado, triangulo, elipse]
   dimension:
     tipo: numero
     descripcion: Número de dimensiones del objeto (2 si es una figura plana, 3 si es un sólido)

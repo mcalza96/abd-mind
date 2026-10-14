@@ -75,6 +75,7 @@ class ConfigPesos(_Estricto):
 
 class ConfigPresupuestos(_Estricto):
     hipotesis_por_ronda: int = Field(default=5, gt=0)
+    hipotesis_vivas_max: int = Field(default=20, gt=0)
     reintentos_json: int = Field(default=2, ge=0)
     llamadas_por_operacion: int = Field(default=60, gt=0)
     llamadas_por_caso: int = Field(default=500, gt=0)
@@ -88,6 +89,9 @@ class Config(_Estricto):
     presupuestos: ConfigPresupuestos = Field(default_factory=ConfigPresupuestos)
     cache_dir: Path | None = Field(
         default=None, description="Directorio de caché de respuestas LLM; None la desactiva"
+    )
+    base_datos: Path = Field(
+        default=Path("~/.abd-mind/abd-mind.db"), description="SQLite de casos (ADR-0007)"
     )
 
     def modelo(self, nombre: str) -> ConfigModelo:
@@ -121,4 +125,5 @@ def cargar_config(ruta: Path | None = None) -> Config:
         config = Config.model_validate(yaml.safe_load(f))
     if config.cache_dir is not None:
         config.cache_dir = config.cache_dir.expanduser()
+    config.base_datos = config.base_datos.expanduser()
     return config

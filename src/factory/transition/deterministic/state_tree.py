@@ -66,17 +66,18 @@ class ArbolHipotesis:
             raise ValueError(f"la hipótesis '{hipotesis.id_hipotesis}' ya existe")
         self._hipotesis[hipotesis.id_hipotesis] = _Registro(hipotesis)
 
-    def agregar_observacion(self, observacion: Observacion) -> list[str]:
+    def agregar_observacion(self, observacion: Observacion, como_prueba: bool = True) -> list[str]:
         """Registra y_k y la usa como prueba de las hipótesis existentes.
 
-        Devuelve los ids de las hipótesis vivas que quedaron derrotadas.
+        Devuelve los ids de las hipótesis vivas que quedaron derrotadas. Con
+        `como_prueba=False` (p. ej. al corregir un hecho mal transcrito) solo se registra.
         """
         if observacion.id in self.observaciones:
             raise ValueError(f"la observación '{observacion.id}' ya existe")
         if observacion.observador_id not in self.observadores:
             raise ValueError(f"el observador '{observacion.observador_id}' no está registrado")
         self.observaciones[observacion.id] = observacion
-        if observacion.estado is not EstadoObservacion.ACTIVA:
+        if observacion.estado is not EstadoObservacion.ACTIVA or not como_prueba:
             return []
 
         derrotadas = []
@@ -120,6 +121,9 @@ class ArbolHipotesis:
 
     def estado(self, id_hipotesis: str) -> EstadoHipotesis:
         return self._hipotesis[id_hipotesis].estado
+
+    def derrotada_por(self, id_hipotesis: str) -> list[str]:
+        return sorted(self._hipotesis[id_hipotesis].derrotada_por)
 
     def observaciones_activas(self) -> list[Observacion]:
         return [o for o in self.observaciones.values() if o.estado is EstadoObservacion.ACTIVA]

@@ -3,7 +3,7 @@
 from collections.abc import Callable
 
 from factory.config import Config
-from factory.experiments import cilindro, con_llm, expansion, tercer_observador
+from factory.experiments import cilindro, con_llm, expansion, finanzas, tercer_observador
 from factory.experiments.base import ResultadoExperimento
 from factory.transition.stochastic.llm_client import ClienteLLM
 
@@ -18,4 +18,7 @@ EXPERIMENTOS: dict[str, Callable[[], ResultadoExperimento]] = {
 EXPERIMENTOS_LLM: dict[str, Callable[[Config, ClienteLLM], ResultadoExperimento]] = {
     "cilindro-llm": con_llm.cilindro_llm,
     "expansion-llm": con_llm.expansion_llm,
+    "finanzas-llm": lambda config, cliente: finanzas.finanzas_llm(
+        config, cliente.transporte, cliente.cache
+    ),
 }

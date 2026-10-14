@@ -33,8 +33,10 @@ pesos: { alpha: 1.5, beta: 10.0, gamma: 1.0, tau: null }   # tau se calibra en l
 
 presupuestos:
   hipotesis_por_ronda: 5
+  hipotesis_vivas_max: 20
   reintentos_json: 2
   llamadas_por_operacion: 60
   llamadas_por_caso: 500
 
-cache_dir: ~/.abd-mind/cache
+cache_dir: ~/.abd-mind/cache     # caché de los experimentos por CLI
+base_datos: ~/.abd-mind/abd-mind.db   # casos (el motor guarda ahí también su caché LLM)
