@@ -252,15 +252,19 @@ class ServicioCasos:
         fuente: str | None = None,
         valor: Valor | None = None,
         rol: RolObservacion = RolObservacion.EXPLANANDUM,
+        extraer: bool = True,
     ) -> ResultadoObservacion:
         """Registra lo que reportó un observador.
 
-        Con `valor` el hecho se registra tal cual; si no, el córtex separa hechos de opiniones.
+        Con `valor`, o con `extraer=False`, el contenido se registra tal cual como un único hecho;
+        si no, el córtex separa hechos de opiniones.
         Los hechos nuevos ponen a prueba a las hipótesis existentes (pueden derrotarlas).
         `rol`: explanandum (exige explicación) o evidencia (solo discrimina), ADR-0011.
         """
         with self._operacion(caso_id) as ctx:
-            return self._agregar_observacion(ctx, observador, contenido, fuente, valor, rol)
+            return self._agregar_observacion(
+                ctx, observador, contenido, fuente, valor, rol, extraer
+            )
 
     def corregir_observacion(
         self,
@@ -763,11 +767,12 @@ class ServicioCasos:
         fuente: str | None,
         valor: Valor | None,
         rol: RolObservacion = RolObservacion.EXPLANANDUM,
+        extraer: bool = True,
     ) -> ResultadoObservacion:
         observador = self._registrar_observador(ctx, entrada)
         grupo = f"o{ctx.grupos_observacion + 1}"
         avisos: list[str] = []
-        if valor is not None:
+        if valor is not None or not extraer:
             hechos = [
                 Observacion(
                     id=grupo,

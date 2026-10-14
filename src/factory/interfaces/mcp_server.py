@@ -167,6 +167,7 @@ def crear_servidor(servicio: ServicioCasos) -> MCPServer:
         fuente: str | None = None,
         valor: Valor | None = None,
         rol: RolObservacion = RolObservacion.EXPLANANDUM,
+        extraer: bool = True,
     ) -> ResultadoObservacion:
         """Registra lo que reportó un observador; el motor separa hechos de opiniones.
 
@@ -174,10 +175,17 @@ def crear_servidor(servicio: ServicioCasos) -> MCPServer:
         instrumento). `confiabilidad` del observador solo si hay calibración independiente.
         `rol`: 'explanandum' (lo que se quiere entender) o 'evidencia' (ayuda a decidir).
         `valor`: solo para registrar un hecho ya estructurado, sin pasar por el córtex.
+        `extraer=false`: el contenido ya es un único hecho atómico; no pasa por el córtex.
         """
         return llamar(
             lambda: servicio.agregar_observacion(
-                caso_id, observador, contenido, fuente=fuente, valor=valor, rol=rol
+                caso_id,
+                observador,
+                contenido,
+                fuente=fuente,
+                valor=valor,
+                rol=rol,
+                extraer=extraer,
             )
         )
 

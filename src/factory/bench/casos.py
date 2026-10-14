@@ -126,6 +126,19 @@ class Caso(BaseModel):
         return self
 
 
+def directorio_bench() -> Path:
+    """La carpeta `datasets/abd-bench/` del repositorio."""
+    return Path(__file__).resolve().parents[3] / "datasets" / "abd-bench"
+
+
+def cargar_todos(directorio: Path | None = None) -> list[Caso]:
+    return [
+        c
+        for r in sorted((directorio or directorio_bench()).glob("*.jsonl"))
+        for c in cargar_casos(r)
+    ]
+
+
 def cargar_casos(ruta: Path) -> list[Caso]:
     """Lee un archivo JSONL de casos (una línea por caso; líneas vacías se ignoran)."""
     casos = []

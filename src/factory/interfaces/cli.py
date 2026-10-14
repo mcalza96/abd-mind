@@ -50,6 +50,18 @@ def _parser() -> argparse.ArgumentParser:
     auditoria.add_argument("caso_id")
     auditoria.add_argument("--formato", choices=["markdown", "json"], default="markdown")
 
+    bench = sub.add_parser("bench", help="corre el motor y la línea base sobre abd-bench")
+    bench.add_argument(
+        "--casos", help="ids separados por coma; 'pares' = variantes y sus originales"
+    )
+    bench.add_argument("--series", help="series separadas por coma (A,B,C,D,E,V)")
+    bench.add_argument("--paralelo", type=int, default=1, help="casos simultáneos")
+    bench.add_argument("--sin-motor", action="store_true")
+    bench.add_argument("--sin-linea-base", action="store_true")
+    bench.add_argument("--sin-cache", action="store_true")
+    bench.add_argument("--salida", type=Path, help="carpeta de resultados")
+    bench.add_argument("--listar", action="store_true", help="solo lista los casos elegidos")
+
     serve = sub.add_parser("serve", help="servidor MCP para Hermes u otro cliente")
     serve.add_argument("--transport", choices=["stdio", "http"], default="stdio")
     serve.add_argument("--host", default="127.0.0.1", help="solo HTTP")
@@ -152,6 +164,59 @@ def _serve(args: argparse.Namespace) -> int:
         store.cerrar()
 
 
+def _bench(args: argparse.Namespace) -> int:
+    from datetime import datetime
+
+    from factory.bench.casos import cargar_todos
+    from factory.bench.ejecutor import EjecutorBench, ResultadoCaso, informe_markdown, seleccionar
+    from factory.transition.stochastic.llm_client import CacheArchivos
+
+    ids = args.casos.split(",") if args.casos else None
+    series = args.series.upper().split(",") if args.series else None
+    casos = seleccionar(cargar_todos(), ids, series)
+    if not casos:
+        print("Ningún caso coincide con la selección", file=sys.stderr)
+        return 2
+    if args.listar:
+        for c in casos:
+            print(f"{c.id:<4} {c.solucion.tipo_de_causa.value:<21} {c.contaminacion:<6} {c.titulo}")
+        return 0
+
+    config = cargar_config(args.config)
+    marca = datetime.now().strftime("%Y%m%d-%H%M%S")
+    salida = args.salida or config.base_datos.parent / "bench" / marca
+    cache = None if args.sin_cache or config.cache_dir is None else CacheArchivos(config.cache_dir)
+    ejecutor = EjecutorBench(
+        config,
+        salida,
+        cache=cache,
+        motor=not args.sin_motor,
+        linea_base=not args.sin_linea_base,
+    )
+    print(f"{len(casos)} casos → {salida}", file=sys.stderr)
+
+    def progreso(r: ResultadoCaso) -> None:
+        m = r.motor
+        motor = (
+            ""
+            if m is None
+            else f" motor={m.tipo.value if m.tipo else '—'} "
+            f"({m.llamadas} llamadas, {m.segundos:.0f}s)"
+        )
+        if m and m.error:
+            motor = f" motor=ERROR {m.error[:60]}"
+        bases = " ".join(f"{b.modelo}={b.tipo.value if b.tipo else '—'}" for b in r.linea_base)
+        print(f"  {r.id}: verdad={r.tipo_verdad.value}{motor} {bases}", file=sys.stderr)
+
+    resultados = ejecutor.ejecutar(casos, paralelo=args.paralelo, progreso=progreso)
+    with (salida / "resultados.jsonl").open("w", encoding="utf-8") as f:
+        for r in resultados:
+            f.write(r.model_dump_json() + "\n")
+    (salida / "informe.md").write_text(informe_markdown(resultados), encoding="utf-8")
+    print(f"Informe: {salida / 'informe.md'}")
+    return 0
+
+
 def _roles(config: Config) -> list[ConfigRol]:
     r = config.roles
     return [r.cortex, *r.generadores, r.verificador, *r.linea_base]
@@ -220,6 +285,8 @@ def main(argv: Sequence[str] | None = None) -> int:
             return _casos(args)
         if args.comando == "serve":
             return _serve(args)
+        if args.comando == "bench":
+            return _bench(args)
         return _doctor(args)
     except ErrorLLM as e:
         print(f"Error del proveedor LLM: {e}", file=sys.stderr)
