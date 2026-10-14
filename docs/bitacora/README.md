@@ -42,6 +42,7 @@ Incluye qué resultado contaría como fracaso.
 | [EXP-008](EXP-008-bench-motor-v01-v02.md) | abd-bench: motor sobre V01/V02 | El motor no decide: el verificador acepta casi todo |
 | [EXP-009](EXP-009-verificacion-comparativa.md) | Verificación comparativa y parsimonia juzgada | Abortado: el juez sobrecuenta (8,3 postulados por hipótesis) y se trunca |
 | [EXP-010](EXP-010-juez-comparativo.md) | Juez de parsimonia comparativo | El motor decide (18 de 20), pero acierta 10 de 20 frente a 18 de 19 de Muse; al menos 2 errores son de etiqueta |
+| [EXP-013](EXP-013-seleccion-holistica.md) | Selección holística en dominios abiertos (A) | Registrado antes de implementar |
 | [EXP-012](EXP-012-bench-v2-perturbaciones-y-sin-respuesta.md) | abd-bench v2: perturbaciones y casos sin respuesta | Fracasa: el motor no se abstiene más que la línea base y acierta menos |
 
 ## Lecciones transversales
