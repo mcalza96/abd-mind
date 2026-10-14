@@ -21,6 +21,7 @@ Este directorio es la referencia conceptual del proyecto. Todo módulo de códig
 | 11 | [Explicación en dominios abiertos](11-explicacion-en-dominios-abiertos.md) | Veredicto de tres valores, explananda, pregunta del caso, margen, predicciones; protocolo contra el sobreajuste |
 | 12 | [Verdad y entrenamiento](12-verdad-y-entrenamiento.md) | Datos sintéticos válidos e inválidos, verdad de cierre falible, cuestionar lo establecido con contabilidad, circularidad |
 | 13 | [Verificación comparativa](13-verificacion-comparativa.md) | Calificar cada hecho contra todas las rivales; parsimonia juzgada por un tercero |
+| 14 | [Rumbo: estado y proyección](14-rumbo-estado-y-proyeccion.md) | Qué hace el motor tras EXP-010 y EXP-012: juicio holístico en dominios abiertos, verificación exacta donde hay estructura |
 | — | [Glosario](glosario.md) | Términos y notación |
 
 ## Lectura rápida

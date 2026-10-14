@@ -32,6 +32,7 @@ Este directorio define **cómo** se construye el sistema descrito en el [marco t
 | [0013](adr/0013-predicciones.md) | Predicciones y cierre del ciclo |
 | [0014](adr/0014-verdad-como-observacion.md) | La verdad de cierre es una observación |
 | [0015](adr/0015-verificacion-comparativa.md) | Verificación comparativa y parsimonia juzgada |
+| [0016](adr/0016-seleccion-holistica-y-proyeccion.md) | Selección holística en dominios abiertos y proyección calculable |
 
 ## Visión general
 

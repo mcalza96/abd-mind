@@ -143,6 +143,15 @@ Notas:
 
 `datasets/abd-bench/` reúne 40 casos frontera de la investigación, convertidos con separación entre lo que ve el motor y la solución, más 10 variantes disfrazadas. El esquema está en `src/factory/bench/casos.py`. Todavía no hay un ejecutor que corra el motor sobre los casos; queda para la fase 7, junto con la línea base y la comparación entre originales y variantes.
 
+## Fase 5b — Rumbo A + C
+
+Decisión de [14](../marco-teorico/14-rumbo-estado-y-proyeccion.md) y [ADR-0016](adr/0016-seleccion-holistica-y-proyeccion.md), después de EXP-010 y EXP-012.
+
+1. **A:** selección holística en dominios abiertos. Se comprueba en abd-bench que no degrada respecto de la línea base (experimento registrado).
+2. **A:** casos secuenciales para medir anclaje y revisión. Primero sintéticos derivados de las variantes; después, el conjunto S de la segunda investigación.
+3. **C:** verificación híbrida por variables y dominio `mercado`, validado con el conjunto F.
+4. **Comunicación:** README y skill de Hermes dejan de prometer más precisión que un LLM en dominios abiertos.
+
 ## Fase 6 — Integración con Hermes
 
 - `hermes/skills/razonamiento-abductivo/SKILL.md` final.
