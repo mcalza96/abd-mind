@@ -48,8 +48,15 @@ class ConfigModelo(_Estricto):
 
 class ConfigRol(_Estricto):
     modelo: str
+    fallback: str | None = Field(
+        default=None,
+        description="Modelo a usar si el principal falla (error del proveedor o JSON inválido)",
+    )
     temperatura: float | None = None
     max_tokens: int = Field(default=8000, gt=0)
+
+    def modelos(self) -> list[str]:
+        return [self.modelo, *([self.fallback] if self.fallback else [])]
 
 
 class ConfigRoles(_Estricto):
@@ -89,13 +96,14 @@ class Config(_Estricto):
     def avisos(self) -> list[str]:
         """Problemas de configuración que no impiden funcionar pero conviene corregir."""
         avisos = []
-        generadores = {g.modelo for g in self.roles.generadores}
-        if self.roles.verificador.modelo in generadores:
-            avisos.append(
-                f"el verificador ({self.roles.verificador.modelo}) también genera hipótesis: "
-                "se pierde la independencia generador/verificador (ADR-0002)"
-            )
-        if len(generadores) < 2:
+        generadores = {m for g in self.roles.generadores for m in g.modelos()}
+        for modelo in self.roles.verificador.modelos():
+            if modelo in generadores:
+                avisos.append(
+                    f"el verificador ({modelo}) también genera hipótesis: "
+                    "se pierde la independencia generador/verificador (ADR-0002)"
+                )
+        if len({g.modelo for g in self.roles.generadores}) < 2:
             avisos.append("con un solo modelo generador hay menos diversidad de hipótesis")
         return avisos
 

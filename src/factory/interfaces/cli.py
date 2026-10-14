@@ -73,7 +73,7 @@ def _experimento(args: argparse.Namespace) -> int:
 
 def _modelos(args: argparse.Namespace) -> int:
     config = cargar_config(args.config)
-    configurados = {r.modelo for r in _roles(config)}
+    configurados = {m for r in _roles(config) for m in r.modelos()}
     for modelo in _cliente(config, sin_cache=True).listar_modelos():
         print(f"{'*' if modelo in configurados else ' '} {modelo}")
     print("\n* = usado en la configuración")
@@ -114,16 +114,19 @@ def _doctor(args: argparse.Namespace) -> int:
     }
     probados: set[str] = set()
     for nombre, rol in roles.items():
-        if rol.modelo in probados:
-            print(f"  {nombre}: {rol.modelo} (ya probado)")
-            continue
-        probados.add(rol.modelo)
-        try:
-            cliente.completar_json(rol, "Responde en JSON.", 'Devuelve {"ok": true}.', _Ping)
-            print(f"  {nombre}: {rol.modelo} OK")
-        except ErrorLLM as e:
-            ok = False
-            print(f"  {nombre}: {rol.modelo} ERROR {e}")
+        for modelo in rol.modelos():
+            etiqueta = nombre if modelo == rol.modelo else f"{nombre} (fallback)"
+            if modelo in probados:
+                print(f"  {etiqueta}: {modelo} (ya probado)")
+                continue
+            probados.add(modelo)
+            prueba = rol.model_copy(update={"modelo": modelo, "fallback": None})
+            try:
+                cliente.completar_json(prueba, "Responde en JSON.", 'Devuelve {"ok": true}.', _Ping)
+                print(f"  {etiqueta}: {modelo} OK")
+            except ErrorLLM as e:
+                ok = False
+                print(f"  {etiqueta}: {modelo} ERROR {e}")
     return 0 if ok else 1
 
 

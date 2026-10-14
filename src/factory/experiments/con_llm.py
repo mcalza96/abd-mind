@@ -128,6 +128,7 @@ def _ejecutar(
         )
     )
 
+    resultado.notas += cliente.avisos
     for modelo, uso in sorted(cliente.uso.por_modelo.items()):
         resultado.notas.append(
             f"uso {modelo}: {uso.llamadas} llamadas, {uso.desde_cache} desde caché, "

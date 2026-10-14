@@ -145,3 +145,17 @@ def test_experimento_cilindro_llm_con_transporte_falso() -> None:
     assert resultado.exito, [c.descripcion for c in resultado.comprobaciones if not c.ok]
     base = resultado.tablas[1].filas[0]
     assert base[1] == "ovalo" and base[2] == "0/2"
+
+
+def test_origen_registra_el_modelo_que_respondio() -> None:
+    def responder(ruta: str, cuerpo: JSON) -> str:
+        if cuerpo["model"] == "gen-responses":
+            return "no json"
+        return json.dumps({"hipotesis": [_hip("cilindro")]})
+
+    config = config_prueba()
+    rol = ConfigRol(modelo="gen-responses", fallback="gen-chat")
+    resultado = Generador(ClienteLLM(config, TransporteFalso(responder)), [rol]).generar(
+        _contexto(), 1, ModoGeneracion.CONTRASTIVO
+    )
+    assert [h.origen for h in resultado.hipotesis] == ["motor:gen-chat"]

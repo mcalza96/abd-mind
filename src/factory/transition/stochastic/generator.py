@@ -90,19 +90,19 @@ class Generador:
             # Cada modelo ve también lo que propusieron los anteriores en esta ronda.
             vistas = [*contexto.existentes, *resultado.hipotesis]
             try:
-                bruto = self.cliente.completar_json(
+                bruto, modelo = self.cliente.completar_json_con_modelo(
                     rol, SISTEMA, self._prompt(contexto, vistas, n_por_modelo, modo), GeneracionLLM
                 )
             except ErrorLLM as e:
                 resultado.avisos.append(f"{rol.modelo}: {e}")
                 continue
             for propuesta in bruto.hipotesis:
-                h, avisos = self._convertir(propuesta, rol.modelo, contexto.dominio, ids)
+                h, avisos = self._convertir(propuesta, modelo, contexto.dominio, ids)
                 resultado.avisos += avisos
                 firma = _firma(h.afirmaciones)
                 if h.afirmaciones and firma in firmas:
                     resultado.avisos.append(
-                        f"{rol.modelo}: hipótesis descartada por repetir las afirmaciones de "
+                        f"{modelo}: hipótesis descartada por repetir las afirmaciones de "
                         f"{firmas[firma]} ({h.mecanismo_latente})"
                     )
                     continue

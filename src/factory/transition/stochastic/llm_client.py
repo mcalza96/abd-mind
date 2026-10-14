@@ -263,6 +263,7 @@ class ClienteLLM:
         self.sesion = sesion or f"abd-mind-{uuid.uuid4()}"
         self.max_llamadas = max_llamadas
         self.uso = Uso()
+        self.avisos: list[str] = []
 
     def encabezados(self) -> dict[str, str]:
         encabezados = {
@@ -283,6 +284,30 @@ class ClienteLLM:
         self, rol: ConfigRol, sistema: str, usuario: str, esquema: type[T]
     ) -> T:
         """Pide al modelo del rol un JSON que cumpla `esquema` y lo devuelve validado."""
+        return self.completar_json_con_modelo(rol, sistema, usuario, esquema)[0]
+
+    def completar_json_con_modelo[T: BaseModel](
+        self, rol: ConfigRol, sistema: str, usuario: str, esquema: type[T]
+    ) -> tuple[T, str]:
+        """Como `completar_json`, y además informa qué modelo respondió.
+
+        Si el modelo principal falla y el rol tiene `fallback`, se reintenta con ese modelo.
+        Un presupuesto agotado no activa el fallback.
+        """
+        try:
+            return self._completar_json(rol, sistema, usuario, esquema), rol.modelo
+        except PresupuestoAgotado:
+            raise
+        except ErrorLLM as e:
+            if not rol.fallback:
+                raise
+            self.avisos.append(f"{rol.modelo} falló ({e}); se usó el fallback {rol.fallback}")
+            respaldo = rol.model_copy(update={"modelo": rol.fallback, "fallback": None})
+            return self._completar_json(respaldo, sistema, usuario, esquema), rol.fallback
+
+    def _completar_json[T: BaseModel](
+        self, rol: ConfigRol, sistema: str, usuario: str, esquema: type[T]
+    ) -> T:
         modo = self.config.modelo(rol.modelo).salida_json
         if modo == "json_object":
             esquema_json = json.dumps(esquema_estricto(esquema), ensure_ascii=False)

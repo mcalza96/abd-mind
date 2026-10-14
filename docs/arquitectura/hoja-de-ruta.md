@@ -55,7 +55,7 @@ Notas de implementación: `seleccionar_mejor_explicacion` devuelve `None` si nin
 **Término:** el experimento del cilindro corre con hipótesis **generadas** por LLM y sigue eligiendo "cilindro"; la línea base (una llamada) se mide con el mismo verificador.
 
 Notas de implementación:
-- Roles por defecto (`config/abd-mind.example.yaml`): generadores Muse Spark 1.3 y 1.2 Contributor (endpoint `/responses`, salida `json_schema`); córtex y verificador DeepSeek V4.1 Flash (`/chat/completions`, salida `json_object`: no acepta `json_schema`). El verificador es de otra familia que los generadores (ADR-0002).
+- Roles por defecto (`config/abd-mind.example.yaml`): generador Muse Spark 1.3 Contributor con Muse Spark 1.2 Contributor como `fallback` si falla (endpoint `/responses`, salida `json_schema`); córtex y verificador DeepSeek V4.1 Flash (`/chat/completions`, salida `json_object`: no acepta `json_schema`). El verificador es de otra familia que los generadores (ADR-0002).
 - OpenCode Go exige `x-opencode-session` y un user agent propio; la pasarela corta a los ~30 s las respuestas sin streaming, por eso los modelos se configuran con `streaming: true` (SSE).
 - P cuenta también las entidades afirmadas en variables de tipo `entidad` del dominio (`rules/*.yaml` declara ahora sus variables), aunque el generador no las declare latentes (D2).
 - Experimentos `cilindro-llm` y `expansion-llm`: la consiliencia se sigue calculando por proyección exacta, el LLM solo propone. `VerificadorLLM` queda listo para el dominio financiero (fase 4).
@@ -87,7 +87,7 @@ Notas de implementación:
 
 ## Fase 7 — Benchmarks y calibración
 
-- Casos sintéticos más difíciles que el cilindro (más observadores, marcos no geométricos, catálogos sin la respuesta), porque la línea base ya resuelve el caso canónico.
+- Casos más difíciles que el cilindro, porque la línea base ya resuelve el caso canónico: dataset de casos frontera documentados (encargo de investigación en [docs/investigacion](../investigacion/prompt-deep-research-casos-frontera.md)), con controles negativos y variantes ofuscadas contra la memorización.
 - Las cuatro pruebas del Plan Maestro ([05 §5.5](../marco-teorico/05-experimentos-canonicos.md#55-pruebas-que-derivan-de-estos-experimentos)) contra línea base.
 - Sensibilidad a $\alpha$, $\gamma$, $\tau$.
 - Métrica de racionalización (declarado vs. verificado) por modelo.

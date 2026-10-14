@@ -138,10 +138,47 @@ def test_listar_modelos() -> None:
 
 def test_config_de_ejemplo_y_avisos() -> None:
     config = cargar_config(Path(__file__).resolve().parents[2] / "config/abd-mind.example.yaml")
-    assert config.avisos() == []
+    assert config.roles.generadores[0].modelos() == [
+        "muse-spark-1.3-contributor",
+        "muse-spark-1.2-contributor",
+    ]
+    # Un solo generador (con fallback) reduce la diversidad: se avisa, no es un error.
+    assert [a for a in config.avisos() if "diversidad" not in a] == []
     assert config.modelo("muse-spark-1.3-contributor").api == "responses"
     assert config.modelo("desconocido") == ConfigModelo()
 
     misma = config_prueba()
     misma.roles.verificador = ConfigRol(modelo="gen-chat")
     assert any("independencia" in a for a in misma.avisos())
+
+
+def test_fallback_si_el_principal_falla() -> None:
+    def responder(ruta: str, cuerpo: dict[str, object]) -> str:
+        return "no json" if cuerpo["model"] == "gen-responses" else '{"forma": "a", "lados": 2}'
+
+    t = TransporteFalso(responder)
+    cliente = _cliente(t)
+    rol = ConfigRol(modelo="gen-responses", fallback="gen-chat", temperatura=0.7)
+    figura, modelo = cliente.completar_json_con_modelo(rol, "s", "u", Figura)
+    assert (figura.lados, modelo) == (2, "gen-chat")
+    assert t.llamadas[-1][1]["temperature"] == 0.7  # el fallback hereda los parámetros del rol
+    assert "fallback gen-chat" in cliente.avisos[0]
+
+
+def test_sin_fallback_el_error_se_propaga() -> None:
+    with pytest.raises(RespuestaInvalida):
+        _cliente(TransporteFalso(lambda r, c: "x")).completar_json(RESPONSES, "s", "u", Figura)
+
+
+def test_presupuesto_agotado_no_usa_fallback() -> None:
+    t = TransporteFalso(lambda r, c: '{"forma": "a", "lados": 2}')
+    cliente = _cliente(t, max_llamadas=0)
+    with pytest.raises(PresupuestoAgotado):
+        cliente.completar_json(ConfigRol(modelo="gen-chat", fallback="verif"), "s", "u", Figura)
+    assert t.llamadas == []
+
+
+def test_aviso_si_el_fallback_del_verificador_genera() -> None:
+    config = config_prueba()
+    config.roles.verificador = ConfigRol(modelo="verif", fallback="gen-chat")
+    assert any("gen-chat" in a and "independencia" in a for a in config.avisos())
