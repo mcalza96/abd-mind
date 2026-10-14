@@ -45,7 +45,11 @@ SISTEMA_BASE = "Responde la pregunta del usuario con tu mejor respuesta, de form
 
 class RespuestaBaseLLM(BaseModel):
     tipo_de_causa: Literal[
-        "entidad_nueva", "error_del_observador", "ley_incorrecta", "mecanismo_conocido"
+        "entidad_nueva",
+        "error_del_observador",
+        "ley_incorrecta",
+        "mecanismo_conocido",
+        "indeterminado",
     ]
     mecanismo: str
 
@@ -69,6 +73,7 @@ class ResultadoMotor(BaseModel):
 class ResultadoBase(BaseModel):
     modelo: str
     respondio: str | None = Field(default=None, description="Modelo que respondió (fallback)")
+    abstuvo: bool = Field(default=False, description="Respondió 'indeterminado'")
     tipo: TipoCausa | None = None
     mecanismo: str | None = None
     error: str | None = None
@@ -82,6 +87,7 @@ class ResultadoCaso(BaseModel):
     estado_verdad: str
     tipo_verdad: TipoCausa
     tipo_secundario: TipoCausa | None
+    determinable: bool = True
     motor: ResultadoMotor | None = None
     linea_base: list[ResultadoBase] = Field(default_factory=list)
 
@@ -146,6 +152,7 @@ class EjecutorBench:
             estado_verdad=caso.verdad.estado,
             tipo_verdad=caso.solucion.tipo_de_causa,
             tipo_secundario=caso.solucion.tipo_secundario,
+            determinable=caso.determinable,
         )
         if self.con_motor:
             resultado.motor = self._motor(caso)
@@ -233,7 +240,8 @@ class EjecutorBench:
                 describir_observaciones(observadores, observaciones),
                 describir_pregunta(PREGUNTA_TIPO_CAUSA),
                 "Da una única respuesta: el tipo de causa y, en 'mecanismo', la explicación "
-                "concreta en una o dos frases.",
+                "concreta en una o dos frases. Si la evidencia no permite distinguir entre "
+                "tipos de causa, responde 'indeterminado' y explica en 'mecanismo' qué falta.",
             ]
         )
         try:
@@ -244,6 +252,7 @@ class EjecutorBench:
                 modelo=rol.modelo,
                 respondio=respondio,
                 tipo=_tipo(bruto.tipo_de_causa),
+                abstuvo=bruto.tipo_de_causa == "indeterminado",
                 mecanismo=bruto.mecanismo,
             )
         except ErrorLLM as e:
@@ -252,101 +261,161 @@ class EjecutorBench:
 
 # --- informe -------------------------------------------------------------------------------
 
+ABSTENCION = "indeterminado"
 
-def acierto(tipo: TipoCausa | None, r: ResultadoCaso, aceptar_secundario: bool = False) -> bool:
-    if tipo is None:
+
+def respuesta_motor(r: ResultadoCaso) -> str | None:
+    """Tipo de causa, 'indeterminado' si el motor no decidió, o None si falló o no corrió."""
+    m = r.motor
+    if m is None or m.error:
+        return None
+    return m.tipo.value if m.tipo else ABSTENCION
+
+
+def respuesta_base(r: ResultadoCaso, modelo: str) -> str | None:
+    b = next((b for b in r.linea_base if b.modelo == modelo), None)
+    if b is None or b.error:
+        return None
+    if b.abstuvo:
+        return ABSTENCION
+    return b.tipo.value if b.tipo else None
+
+
+def correcta(r: ResultadoCaso, respuesta: str | None) -> bool:
+    """En casos sin respuesta posible lo correcto es abstenerse; en los demás, el tipo verdadero."""
+    if respuesta is None:
         return False
-    return tipo is r.tipo_verdad or (aceptar_secundario and tipo is r.tipo_secundario)
+    if not r.determinable:
+        return respuesta == ABSTENCION
+    return respuesta == r.tipo_verdad.value
 
 
-def _celda(tipo: TipoCausa | None, r: ResultadoCaso) -> str:
-    if tipo is None:
-        return "—"
-    marca = "✓" if acierto(tipo, r) else ("½" if acierto(tipo, r, True) else "✗")
-    return f"{marca} {tipo.value}"
+def _celda(r: ResultadoCaso, respuesta: str | None) -> str:
+    if respuesta is None:
+        return "error"
+    if correcta(r, respuesta):
+        return f"✓ {respuesta}"
+    if r.tipo_secundario is not None and respuesta == r.tipo_secundario.value:
+        return f"½ {respuesta}"
+    return f"✗ {respuesta}"
+
+
+GRUPOS: dict[str, Callable[[ResultadoCaso], bool]] = {
+    "reales (A–E)": lambda r: r.serie in "ABCDE",
+    "variantes (V)": lambda r: r.serie == "V",
+    "perturbaciones (P)": lambda r: r.serie == "P",
+    "sin respuesta (U): se abstiene": lambda r: r.serie == "U",
+    "contaminación alta": lambda r: r.contaminacion == "alta" and r.determinable,
+    "contaminación baja": lambda r: r.contaminacion == "baja" and r.determinable,
+}
 
 
 def informe_markdown(resultados: list[ResultadoCaso]) -> str:
     modelos = sorted({b.modelo for r in resultados for b in r.linea_base})
+    hay_motor = any(r.motor is not None for r in resultados)
+    sistemas: list[tuple[str, Callable[[ResultadoCaso], str | None]]] = []
+    if hay_motor:
+        sistemas.append(("Motor", respuesta_motor))
+    sistemas += [(m, functools.partial(respuesta_base, modelo=m)) for m in modelos]
+
     lineas = ["# Resultados de abd-bench", ""]
     lineas += [
-        "Precisión sobre el tipo de causa, solo con verdad `establecida`. ✓ acierta el tipo "
-        "principal, ½ el secundario, ✗ falla, — sin respuesta determinada. Sirve para "
-        "encontrar fallas, no como puntaje (datasets/abd-bench/README.md).",
+        "Respuestas correctas sobre el tipo de causa, solo con verdad `establecida`. En los "
+        "casos sin respuesta posible (U) lo correcto es abstenerse ('indeterminado'). ✓ "
+        "correcta, ½ acierta el tipo secundario, ✗ incorrecta. Sirve para encontrar fallas, no "
+        "como puntaje (datasets/abd-bench/README.md).",
         "",
     ]
-
-    def precision(elegir: Callable[[ResultadoCaso], TipoCausa | None], grupo: str) -> str:
-        validos = [
-            r for r in resultados if r.estado_verdad == "establecida" and _en_grupo(r, grupo)
-        ]
-        if not validos:
-            return "—"
-        aciertos = sum(acierto(elegir(r), r) for r in validos)
-        return f"{aciertos}/{len(validos)}"
-
-    hay_motor = any(r.motor is not None for r in resultados)
-    grupos = ["todos", "originales", "variantes", "contaminación alta", "contaminación baja"]
-    cabecera = ["Grupo", *(["Motor"] if hay_motor else []), *modelos]
+    cabecera = ["Grupo", *[n for n, _ in sistemas]]
     lineas += ["| " + " | ".join(cabecera) + " |", "|" + "---|" * len(cabecera)]
-    for g in grupos:
-        fila = [g, *([precision(_tipo_motor, g)] if hay_motor else [])]
-        for modelo in modelos:
-            fila.append(precision(functools.partial(_tipo_base, modelo=modelo), g))
+    for nombre, en_grupo in GRUPOS.items():
+        validos = [r for r in resultados if r.estado_verdad == "establecida" and en_grupo(r)]
+        if not validos:
+            continue
+        fila = [nombre]
+        for _, responder in sistemas:
+            fila.append(f"{sum(correcta(r, responder(r)) for r in validos)}/{len(validos)}")
         lineas.append("| " + " | ".join(fila) + " |")
 
-    con_motor = [r for r in resultados if r.motor is not None]
+    determinables = [r for r in resultados if r.determinable and r.estado_verdad == "establecida"]
+    if determinables:
+        lineas += ["", "Abstenciones en casos que sí tenían respuesta (falsas abstenciones):", ""]
+        lineas += [
+            f"- {n}: {sum(1 for r in determinables if f(r) == ABSTENCION)}/{len(determinables)}"
+            for n, f in sistemas
+        ]
+
+    con_motor = [r for r in resultados if r.motor is not None and not r.motor.error]
     if con_motor:
         propuso = sum(
-            r.tipo_verdad in r.motor.tipos_propuestos for r in con_motor if r.motor is not None
+            r.tipo_verdad in r.motor.tipos_propuestos
+            for r in con_motor
+            if r.motor is not None and r.determinable
         )
-        frágiles = sum(1 for r in con_motor if r.motor is not None and r.motor.fragil)
-        indeterminadas = sum(
-            1 for r in con_motor if r.motor is not None and not r.motor.determinada
-        )
+        firmes = [
+            r
+            for r in con_motor
+            if r.motor and r.determinable and r.motor.determinada and not r.motor.fragil
+        ]
+        fragiles = [
+            r
+            for r in con_motor
+            if r.motor and r.determinable and r.motor.determinada and r.motor.fragil
+        ]
+
+        def tasa(grupo: list[ResultadoCaso]) -> str:
+            if not grupo:
+                return "—"
+            return f"{sum(correcta(r, respuesta_motor(r)) for r in grupo)}/{len(grupo)}"
+
         lineas += [
             "",
-            f"- El generador propuso el tipo verdadero en {propuso}/{len(con_motor)} casos "
-            "(si no lo propone, el motor no puede elegirlo: falla de generación, no de selección).",
-            f"- Respuestas frágiles: {frágiles}; sin determinar: {indeterminadas}.",
+            "## Motor",
+            "",
+            f"- El generador propuso el tipo verdadero en {propuso}/"
+            f"{sum(1 for r in con_motor if r.determinable)} casos con respuesta (si no lo "
+            "propone, el motor no puede elegirlo: falla de generación, no de selección).",
+            f"- Respuestas firmes correctas: {tasa(firmes)}; respuestas frágiles correctas: "
+            f"{tasa(fragiles)}. Si la fragilidad sirve, las firmes aciertan más.",
         ]
 
     lineas += ["", "## Por caso", ""]
-    cabecera = ["Caso", "Verdad", "Contam.", "Motor", "Margen", *modelos]
+    cabecera = ["Caso", "Verdad", "Contam.", "Margen", *[n for n, _ in sistemas]]
     lineas += ["| " + " | ".join(cabecera) + " |", "|" + "---|" * len(cabecera)]
     for r in resultados:
         mo = r.motor
-        motor = "error" if mo and mo.error else (_celda(mo.tipo, r) if mo else "")
-        if mo and mo.fragil and mo.determinada:
-            motor += " (frágil)"
-        margen = "∞" if mo and mo.determinada and mo.margen_veredictos is None else ""
-        if mo and mo.margen_veredictos is not None:
-            margen = str(mo.margen_veredictos)
-        verdad = r.tipo_verdad.value + ("" if r.estado_verdad == "establecida" else " (no est.)")
-        fila = [r.id, verdad, r.contaminacion, motor, margen]
-        fila += [_celda(_tipo_base(r, mod), r) for mod in modelos]
+        margen = ""
+        if mo and mo.determinada:
+            margen = "∞" if mo.margen_veredictos is None else str(mo.margen_veredictos)
+            margen += " (frágil)" if mo.fragil else ""
+        verdad = r.tipo_verdad.value if r.determinable else ABSTENCION
+        if r.estado_verdad != "establecida":
+            verdad += " (no est.)"
+        fila = [r.id, verdad, r.contaminacion, margen]
+        fila += [_celda(r, responder(r)) for _, responder in sistemas]
         lineas.append("| " + " | ".join(fila) + " |")
 
-    pares = [
-        (r, o) for r in resultados if r.variante_de for o in resultados if o.id == r.variante_de
-    ]
-    if pares:
-        lineas += ["", "## Originales frente a variantes", ""]
-        lineas += ["| Variante | Original | Motor (var / orig) | Línea base (var / orig) |"]
-        lineas.append("|---|---|---|---|")
-        for v, o in pares:
-            motor = f"{_celda(v.motor.tipo if v.motor else None, v)} / " + _celda(
-                o.motor.tipo if o.motor else None, o
-            )
-            bases = "; ".join(
-                f"{m}: {_celda(_tipo_base(v, m), v)} / {_celda(_tipo_base(o, m), o)}"
-                for m in modelos
-            )
-            lineas.append(f"| {v.id} | {o.id} | {motor} | {bases} |")
+    por_id = {r.id: r for r in resultados}
+    derivados = [(r, por_id[r.variante_de]) for r in resultados if r.variante_de in por_id]
+    if derivados:
+        lineas += ["", "## Casos derivados frente a su origen", ""]
+        lineas += [
+            "| Derivado | Origen | " + " | ".join(f"{n} (der. / orig.)" for n, _ in sistemas) + " |"
+        ]
+        lineas.append("|---|---|" + "---|" * len(sistemas))
+        for d, o in derivados:
+            celdas = [
+                f"{_celda(d, responder(d))} / {_celda(o, responder(o))}"
+                for _, responder in sistemas
+            ]
+            lineas.append(f"| {d.id} | {o.id} | " + " | ".join(celdas) + " |")
         lineas += [
             "",
-            "Si un sistema acierta el original y falla la variante, probablemente recuerda el "
-            "caso en vez de razonarlo.",
+            "- Variante (V): si un sistema acierta el original y falla la variante, "
+            "probablemente recuerda el caso.",
+            "- Perturbación (P): un sistema que da la misma respuesta en ambos no sigue la "
+            "evidencia que cambió.",
+            "- Sin respuesta (U): lo correcto es abstenerse.",
         ]
 
     errores = [(r.id, r.motor.error) for r in resultados if r.motor and r.motor.error]
@@ -359,33 +428,24 @@ def informe_markdown(resultados: list[ResultadoCaso]) -> str:
     return "\n".join(lineas) + "\n"
 
 
-def _tipo_motor(r: ResultadoCaso) -> TipoCausa | None:
-    return r.motor.tipo if r.motor else None
-
-
-def _tipo_base(r: ResultadoCaso, modelo: str) -> TipoCausa | None:
-    return next((b.tipo for b in r.linea_base if b.modelo == modelo), None)
-
-
-def _en_grupo(r: ResultadoCaso, grupo: str) -> bool:
-    return {
-        "todos": True,
-        "originales": r.serie != "V",
-        "variantes": r.serie == "V",
-        "contaminación alta": r.contaminacion == "alta",
-        "contaminación baja": r.contaminacion == "baja",
-    }[grupo]
-
-
 def seleccionar(casos: list[Caso], ids: list[str] | None, series: list[str] | None) -> list[Caso]:
-    """Filtra por id o serie. `pares` en ids agrega cada variante con su original."""
+    """Filtra por id o serie. En ids, `pares` agrega cada variante con su original y `v2` las
+    perturbaciones y casos sin respuesta con sus variantes."""
     elegidos = casos
     if series:
         elegidos = [c for c in elegidos if c.serie in series]
     if ids:
         pedidos = {normalizar(i).upper() for i in ids}
         if "PARES" in pedidos:
-            originales = {c.variante_de for c in casos if c.variante_de}
-            pedidos |= {c.id for c in casos if c.serie == "V"} | {o for o in originales if o}
+            variantes = [c for c in casos if c.serie == "V"]
+            pedidos |= {c.id for c in variantes} | {
+                c.variante_de for c in variantes if c.variante_de
+            }
+        if "V2" in pedidos:
+            # Perturbaciones y casos sin respuesta, con las variantes de las que derivan.
+            derivados = [c for c in casos if c.serie in ("P", "U")]
+            pedidos |= {c.id for c in derivados} | {
+                c.variante_de for c in derivados if c.variante_de
+            }
         elegidos = [c for c in elegidos if c.id.upper() in pedidos]
     return elegidos

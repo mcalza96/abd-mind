@@ -24,6 +24,7 @@ def test_variantes_apuntan_a_casos_existentes() -> None:
     for c in casos:
         if c.variante_de is not None:
             assert c.variante_de in ids, c.id
+        if c.serie == "V" and c.variante_de is not None:
             original = next(o for o in casos if o.id == c.variante_de)
             # La variante conserva la estructura: el mismo tipo de causa que su original.
             assert c.solucion.tipo_de_causa is original.solucion.tipo_de_causa, c.id

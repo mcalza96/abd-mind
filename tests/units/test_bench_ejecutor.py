@@ -83,11 +83,37 @@ def test_ejecutor_sobre_un_par(tmp_path: Path) -> None:
             assert oculto not in prompts, oculto
 
     informe = informe_markdown(resultados)
-    assert "| todos | 2/2 | 0/2 |" in informe
-    assert "| V03 | B04 |" in informe  # sección de originales frente a variantes
+    assert "| reales (A–E) | 1/1 | 0/1 |" in informe
+    assert "| variantes (V) | 1/1 | 0/1 |" in informe
+    assert "| V03 | B04 |" in informe  # sección de casos derivados
 
 
 def test_seleccion_de_pares() -> None:
     casos = seleccionar(cargar_todos(), ["pares"], None)
     ids = {c.id for c in casos}
     assert len([i for i in ids if i.startswith("V")]) == 10 and "A01" in ids and "A06" in ids
+
+
+def test_seleccion_v2_y_abstencion() -> None:
+    from factory.bench.ejecutor import ResultadoBase, ResultadoCaso, ResultadoMotor, correcta
+
+    casos = seleccionar(cargar_todos(), ["v2"], None)
+    series = {c.serie for c in casos}
+    assert series == {"P", "U", "V"} and len([c for c in casos if c.serie == "U"]) == 10
+
+    u = ResultadoCaso(
+        id="U01",
+        serie="U",
+        variante_de="V01",
+        contaminacion="baja",
+        estado_verdad="establecida",
+        tipo_verdad=TipoCausa.ENTIDAD_NUEVA,
+        tipo_secundario=None,
+        determinable=False,
+        motor=ResultadoMotor(tipo=None, determinada=False),
+        linea_base=[ResultadoBase(modelo="m", tipo=TipoCausa.ENTIDAD_NUEVA)],
+    )
+    from factory.bench.ejecutor import respuesta_base, respuesta_motor
+
+    assert correcta(u, respuesta_motor(u))  # abstenerse es lo correcto
+    assert not correcta(u, respuesta_base(u, "m"))  # elegir un tipo, no

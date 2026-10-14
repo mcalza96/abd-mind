@@ -10,6 +10,8 @@ Casos para poner a prueba el motor abductivo. El esquema está en `src/factory/b
 | `casos-D.jsonl` | D01–D08 | Ciencias de la Tierra, historia e inteligencia |
 | `casos-E.jsonl` | E01–E08 | Percepción y cognición |
 | `variantes.jsonl` | V01–V10 | Variantes disfrazadas de casos reales |
+| `perturbaciones.jsonl` | P01–P10 (8) | Variantes con un hecho decisivo cambiado: el tipo de causa correcto cambia ([EXP-012](../../docs/bitacora/EXP-012-bench-v2-perturbaciones-y-sin-respuesta.md)) |
+| `sin-respuesta.jsonl` | U01–U10 | Variantes sin los hechos que discriminan: lo correcto es abstenerse |
 | `fuentes/` | — | Notas originales de la investigación (sin modificar) |
 
 ## Cómo se usa
@@ -24,6 +26,17 @@ Cada caso separa:
 La `verdad` es una observación falible: tiene fuente, confiabilidad y estado (`establecida`, `tentativa` o `disputada`). En los casos A–E proviene de la historia documentada. En las variantes, de la construcción del caso.
 
 **La pregunta es común a todos los casos:** `tipo_de_causa`. Sus valores son `entidad_nueva`, `error_del_observador`, `ley_incorrecta` y `mecanismo_conocido`. Mide qué clase de abducción hace falta y permite comparar casos de dominios distintos.
+
+## Versión 2: perturbaciones y casos sin respuesta
+
+La pregunta del tipo de causa resultó fácil para la línea base ([EXP-007](../../docs/bitacora/EXP-007-bench-linea-base.md)). La versión 2 mide dos cosas que un LLM en una sola llamada suele hacer mal:
+
+- **Seguir la evidencia (serie P):** el mismo caso con uno o dos hechos cambiados, de modo que la respuesta correcta cambia.
+- **Abstenerse (serie U):** el caso sin los hechos que permiten decidir. El campo `determinable` es falso y `tipos_compatibles` lista los tipos que quedan igual de sostenidos.
+
+Para no comparar en desventaja, la línea base recibe en todos los casos la opción `indeterminado`.
+
+Comando: `abd-mind bench --casos v2` corre P, U y las variantes de las que derivan.
 
 ## Contaminación
 

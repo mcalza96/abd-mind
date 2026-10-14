@@ -91,9 +91,20 @@ class VerdadCaso(BaseModel):
 
 class Caso(BaseModel):
     id: str
-    serie: Literal["A", "B", "C", "D", "E", "V"]
+    serie: Literal["A", "B", "C", "D", "E", "V", "P", "U"]
     titulo: str
-    variante_de: str | None = Field(default=None, description="Caso real del que es variante")
+    variante_de: str | None = Field(
+        default=None,
+        description="Caso del que deriva: real (serie V) o variante (series P y U)",
+    )
+    determinable: bool = Field(
+        default=True,
+        description="False (serie U): la evidencia no alcanza; lo correcto es abstenerse",
+    )
+    tipos_compatibles: list[TipoCausa] = Field(
+        default_factory=list,
+        description="Serie U: tipos de causa que la evidencia deja igual de sostenidos",
+    )
     pregunta: Pregunta = PREGUNTA_TIPO_CAUSA
     observadores: list[ObservadorCaso] = Field(min_length=2)
     observaciones: list[ObservacionCaso] = Field(min_length=2)
@@ -121,8 +132,12 @@ class Caso(BaseModel):
             raise ValueError(f"{self.id}: falta al menos un explanandum")
         if set(self.solucion.mapeo) - ids:
             raise ValueError(f"{self.id}: el mapeo nombra observadores desconocidos")
-        if (self.serie == "V") != (self.variante_de is not None):
-            raise ValueError(f"{self.id}: solo la serie V es variante, y siempre de un caso")
+        if (self.serie in ("V", "P", "U")) != (self.variante_de is not None):
+            raise ValueError(f"{self.id}: las series V, P y U derivan siempre de otro caso")
+        if (self.serie == "U") == self.determinable:
+            raise ValueError(f"{self.id}: solo la serie U es no determinable")
+        if self.serie == "U" and len(self.tipos_compatibles) < 2:
+            raise ValueError(f"{self.id}: un caso U necesita al menos dos tipos compatibles")
         return self
 
 
