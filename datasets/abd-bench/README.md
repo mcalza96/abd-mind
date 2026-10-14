@@ -45,6 +45,31 @@ Pares de interés:
 
 Las notas originales describen las observaciones sabiendo la respuesta. Al convertirlas se quitaron o reformularon las frases que revelaban la solución; el campo `saneamiento` de cada caso dice qué se cambió. La conversión la hizo un LLM y la revisó otro: puede quedar algún indicio. Si un caso resulta trivial para la línea base, conviene revisar primero su saneamiento.
 
+## Composición
+
+Son 50 casos: 40 reales y 10 variantes. Tipos de causa de los 40 reales:
+
+| Tipo | Casos |
+|---|---|
+| `mecanismo_conocido` | 14 |
+| `error_del_observador` | 11 |
+| `entidad_nueva` | 10 |
+| `ley_incorrecta` | 5 |
+
+Contaminación: 29 alta, 8 media, 13 baja (todas las variantes y E07–E08).
+
+## Casos débiles
+
+Lo señalaron los propios conversores. Conviene excluirlos o tratarlos aparte al leer resultados:
+
+- **Se resuelven por memoria:** E01, E02 y E04, de una sola pieza y muy famosos.
+- **Casi delatan la respuesta en la evidencia** (útiles como casos fáciles de control): A05, B02, B07, C01, C06, D06 y E05.
+- **Imposibles de anonimizar dentro del caso original:** D07 y D08.
+- **Tipo de causa discutible:** A08, B05, B06, C07 y D04. Por eso llevan `tipo_secundario`.
+- **Verdad débil:** D01 (`tentativa`, 0,75). D02 y D03 tienen una parte de su verdad disputada.
+- **Fuentes:** A08 conserva las URL de K–Ar aunque esa parte se dejó fuera. Varios casos tienen hechos agregados desde conocimiento general, sin URL; cada conversor los detalla en `saneamiento` o en su informe.
+- **Caso pendiente:** el exceso de argón (K–Ar) podría formar un caso propio de `error_del_observador`.
+
 ## Limitaciones
 
 - **URL:** las de la serie A y otras se copiaron de las notas sin verificar que funcionen.

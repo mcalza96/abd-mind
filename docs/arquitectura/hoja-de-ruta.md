@@ -139,6 +139,10 @@ Notas:
 - **Errores:** `isError` con `{codigo, mensaje}`.
 - **Operaciones asíncronas** (`estado_trabajo`, ADR-0008): pendientes hasta que el tiempo límite de Hermes lo exija. Mientras tanto se sube ese límite (despliegue-pc §4).
 
+### Complemento: abd-bench
+
+`datasets/abd-bench/` reúne 40 casos frontera de la investigación, convertidos con separación entre lo que ve el motor y la solución, más 10 variantes disfrazadas. El esquema está en `src/factory/bench/casos.py`. Todavía no hay un ejecutor que corra el motor sobre los casos; queda para la fase 7, junto con la línea base y la comparación entre originales y variantes.
+
 ## Fase 6 — Integración con Hermes
 
 - `hermes/skills/razonamiento-abductivo/SKILL.md` final.
