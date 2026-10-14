@@ -28,6 +28,8 @@ def describir_observador(o: Observador) -> str:
         partes.append(f"marco: {o.marco}")
     if o.parametros:
         partes.append(f"parámetros: {json.dumps(o.parametros, ensure_ascii=False)}")
+    if o.confiabilidad < 1:
+        partes.append(f"confiabilidad: {o.confiabilidad:g} (puede cometer errores)")
     return "; ".join(partes)
 
 

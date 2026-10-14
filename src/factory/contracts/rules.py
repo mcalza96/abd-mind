@@ -63,6 +63,16 @@ class VariableDominio(BaseModel):
     )
 
 
+class MarcoPosible(BaseModel):
+    """Un marco desde el que se podría observar (para sugerir observaciones, ADR-0010)."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    nombre: str
+    marco: str
+    parametros: dict[str, Valor] = Field(default_factory=dict)
+
+
 class ConjuntoReglas(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -74,6 +84,13 @@ class ConjuntoReglas(BaseModel):
         description="Cómo se decide π_i(H) ≈ y_i: proyección computable o verificador LLM",
     )
     variables: dict[str, VariableDominio] = Field(default_factory=dict)
+    vocabulario: list[str] = Field(
+        default_factory=list, description="Entidades verificadas del dominio: no cuentan en P"
+    )
+    confiabilidad_por_defecto: float = Field(
+        default=1.0, gt=0.0, le=1.0, description="ω de un observador sin calibración propia"
+    )
+    marcos_posibles: list[MarcoPosible] = Field(default_factory=list)
     reglas: list[Regla]
 
     def variables_entidad(self) -> set[str]:

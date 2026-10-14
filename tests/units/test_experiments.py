@@ -27,4 +27,4 @@ def test_cli_subcomando_pendiente(capsys: pytest.CaptureFixture[str]) -> None:
 def test_cli_doctor_sin_red(capsys: pytest.CaptureFixture[str]) -> None:
     assert main(["doctor", "--sin-red"]) == 0
     salida = capsys.readouterr().out
-    assert "sintetico v3" in salida and "finanzas v2" in salida
+    assert "sintetico v4" in salida and "finanzas v3" in salida

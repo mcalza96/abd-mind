@@ -11,7 +11,7 @@ Cada fase termina con algo que funciona y se puede probar. Ninguna fase depende 
 | 2 — Observadores, proyecciones y experimentos sintéticos | ✅ |
 | 3 — Roles LLM del motor | ✅ |
 | 4 — Motor de casos y persistencia | ✅ |
-| 4b — Robustez epistémica | Pendiente |
+| 4b — Robustez epistémica | ✅ |
 | 5 — Servidor MCP | Pendiente |
 | 6 — Integración con Hermes | Pendiente |
 | 7 — Benchmarks y calibración | Pendiente |
@@ -87,6 +87,11 @@ Implementa [09 §9.1–9.2](../marco-teorico/09-robustez-epistemica.md), antes d
 - Experimentos: errata de un observador poco confiable (no debe derrotar ni disparar expansión) y empate sintético (el sistema debe pedir la vista que separa).
 
 **Término:** los experimentos sintéticos anteriores no cambian; los nuevos pasan; `finanzas-llm` informa el empate en lugar de elegir por id.
+
+Resultados:
+- `errata`: con ω = 0.3 el triángulo lateral queda como error del observador (el cilindro sigue vivo, en tensión, y no se expande la ontología); con ω ≥ 0.6 postular el tapón universal sale más barato que culpar al observador; con ω = 1 la derrota es inmediata, como en la versión base. Coincide con la tabla de [09 §9.1.6](../marco-teorico/09-robustez-epistemica.md#916-culpar-al-observador-o-ampliar-la-ontología).
+- `empate`: con solo la vista cenital, esfera, cilindro, cono y elipsoide empatan; el sistema no elige y sugiere la vista frontal o lateral (4 clases); al agregarla gana el cilindro.
+- `finanzas-llm` (46 llamadas, ~7 min): los analistas usan ω = 0.9 del dominio y el comunicado oficial ω = 0.98, que sí derrota. Tras la expansión, cinco hipótesis empatan; el sistema lo informa y propone medir la evolución del precio efectivo medio, que las separa en 4 clases.
 
 Después (propuestos en 09 §9.3–9.5): observadores correlacionados, observaciones con fecha y alerta de revisión de reglas.
 

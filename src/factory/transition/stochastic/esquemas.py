@@ -52,3 +52,19 @@ class VeredictoLLM(BaseModel):
 class RespuestaDirectaLLM(BaseModel):
     respuesta: str
     afirmaciones: list[ParVariable]
+
+
+class PrediccionLLM(BaseModel):
+    id_hipotesis: str
+    prediccion: str
+
+
+class ConsultaLLM(BaseModel):
+    observador_sugerido: str
+    marco: str
+    que_observar: str
+    predicciones: list[PrediccionLLM]
+
+
+class ConsultasLLM(BaseModel):
+    consultas: list[ConsultaLLM]

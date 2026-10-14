@@ -52,6 +52,8 @@ class ResumenCaso(BaseModel):
     n_hipotesis_derrotadas: int = 0
     h_estrella: ResumenHipotesis | None = None
     expansion_sugerida: bool = False
+    subdeterminada: bool = False
+    empatadas: list[str] = Field(default_factory=list)
     evaluado_en_evento: int | None = Field(
         default=None, description="Cantidad de eventos cuando se evaluó por última vez"
     )
@@ -80,6 +82,12 @@ class EntradaObservador(BaseModel):
     marco: str | None = None
     parametros: dict[str, Valor] = Field(default_factory=dict)
     tolerancia: float = 0.0
+    confiabilidad: float | None = Field(
+        default=None,
+        gt=0.0,
+        le=1.0,
+        description="Solo con calibración independiente; si no, la del dominio (ADR-0009)",
+    )
 
 
 class EntradaHipotesis(BaseModel):
@@ -123,6 +131,10 @@ class ResultadoObservacion(BaseModel):
     derrotadas: list[str] = Field(
         default_factory=list, description="Hipótesis vivas que estos hechos derrotaron"
     )
+    en_tension: list[str] = Field(
+        default_factory=list,
+        description="No explican estos hechos pero siguen vivas: el observador no alcanza ω_d",
+    )
     avisos: list[str] = Field(default_factory=list)
 
 
@@ -148,6 +160,9 @@ class EntradaRanking(BaseModel):
     parsimonia_p: int
     coherencia_k: float
     score_final: float
+    atribuidas_a_error: dict[str, float] = Field(
+        default_factory=dict, description="Hechos que esta hipótesis supone erróneos, con su costo"
+    )
     veredictos: list[Veredicto]
     declaradas_no_verificadas: list[str] = Field(
         default_factory=list, description="Declaró explicarlas y el verificador lo negó"
@@ -167,13 +182,35 @@ class ResultadoEvaluacionCaso(BaseModel):
     descartadas_por_reglas: list[Descartada]
     h_estrella: ResumenHipotesis | None
     expansion_sugerida: bool
+    subdeterminada: bool = False
+    empatadas: list[str] = Field(default_factory=list)
     avisos: list[str] = Field(default_factory=list)
 
 
 class ResultadoMejorExplicacion(BaseModel):
     caso_id: str
     h_estrella: ResumenHipotesis | None
+    empatadas: list[ResumenHipotesis] = Field(default_factory=list)
+    atribuidas_a_error: dict[str, float] = Field(default_factory=dict)
     motivo: str
+
+
+class ConsultaDiscriminante(BaseModel):
+    observador_sugerido: str
+    marco: str
+    parametros: dict[str, Valor] = Field(
+        default_factory=dict, description="Parámetros del marco, si el dominio los define"
+    )
+    que_observar: str
+    predicciones: dict[str, str] = Field(description="Predicción de cada hipótesis empatada")
+    clases: int = Field(description="Cuántas predicciones distintas: más es más discriminante")
+
+
+class ResultadoSugerencias(BaseModel):
+    caso_id: str
+    empatadas: list[str]
+    consultas: list[ConsultaDiscriminante]
+    avisos: list[str] = Field(default_factory=list)
 
 
 class ResultadoEvidencia(BaseModel):

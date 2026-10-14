@@ -71,6 +71,15 @@ class ConfigPesos(_Estricto):
     beta: float = 10.0
     gamma: float = 1.0
     tau: float | None = None
+    lambda_residuo: float = Field(
+        default=1.0, ge=0.0, description="λ: peso del costo de atribuir hechos a error (09 §9.1)"
+    )
+    omega_derrota: float = Field(
+        default=0.95, gt=0.0, le=1.0, description="ω mínimo para que un hecho derrote solo"
+    )
+    delta_empate: float = Field(
+        default=1e-6, ge=0.0, description="δ: diferencia de score que cuenta como empate"
+    )
 
 
 class ConfigPresupuestos(_Estricto):
