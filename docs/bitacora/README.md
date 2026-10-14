@@ -40,7 +40,8 @@ Incluye qué resultado contaría como fracaso.
 | [EXP-006](EXP-006-deep-research-1.md) | Primera investigación de casos frontera | Salida fuera de tema: no sirve |
 | [EXP-007](EXP-007-bench-linea-base.md) | abd-bench: línea base sobre 50 casos | 36–39 de 49; las variantes no les resultan más difíciles |
 | [EXP-008](EXP-008-bench-motor-v01-v02.md) | abd-bench: motor sobre V01/V02 | El motor no decide: el verificador acepta casi todo |
-| [EXP-009](EXP-009-verificacion-comparativa.md) | Verificación comparativa y parsimonia juzgada | Registrado antes de correr |
+| [EXP-009](EXP-009-verificacion-comparativa.md) | Verificación comparativa y parsimonia juzgada | Abortado: el juez sobrecuenta (8,3 postulados por hipótesis) y se trunca |
+| [EXP-010](EXP-010-juez-comparativo.md) | Juez de parsimonia comparativo | Registrado antes de correr |
 
 ## Lecciones transversales
 
@@ -54,3 +55,5 @@ Patrones de error que ya ocurrieron. Antes de diseñar un experimento, revisar e
 6. **Etiquetas propias como verdad** (12, EXP-007). Las variantes y los casos convertidos los escribió un LLM; su "verdad" es una construcción o una fuente secundaria.
 7. **Conclusiones propias apresuradas** (EXP-004 §B2). Una brecha que parece defecto puede ser una respuesta legítima. Antes de corregir la función objetivo, preguntar si lo "malo" podría ser verdad.
 8. **Encargos a agentes externos sin verificar la salida** (EXP-006). Comprobar formato y tema antes de usar el resultado.
+9. **Corridas grandes sin prueba de humo** (EXP-009). Todo rol o prompt nuevo se prueba en uno o dos casos reales antes de lanzar muchos en paralelo.
+10. **Juicios de LLM sin punto de comparación** (EXP-008, EXP-009). Un LLM sin rivales a la vista no tiene escala estable: puede ser indulgente (verificador) o exhaustivo (juez).
