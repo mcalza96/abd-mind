@@ -68,6 +68,7 @@ class ResultadoMotor(BaseModel):
 
 class ResultadoBase(BaseModel):
     modelo: str
+    respondio: str | None = Field(default=None, description="Modelo que respondió (fallback)")
     tipo: TipoCausa | None = None
     mecanismo: str | None = None
     error: str | None = None
@@ -236,9 +237,14 @@ class EjecutorBench:
             ]
         )
         try:
-            bruto = cliente.completar_json(rol, SISTEMA_BASE, usuario, RespuestaBaseLLM)
+            bruto, respondio = cliente.completar_json_con_modelo(
+                rol, SISTEMA_BASE, usuario, RespuestaBaseLLM
+            )
             return ResultadoBase(
-                modelo=rol.modelo, tipo=_tipo(bruto.tipo_de_causa), mecanismo=bruto.mecanismo
+                modelo=rol.modelo,
+                respondio=respondio,
+                tipo=_tipo(bruto.tipo_de_causa),
+                mecanismo=bruto.mecanismo,
             )
         except ErrorLLM as e:
             return ResultadoBase(modelo=rol.modelo, error=str(e))

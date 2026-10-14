@@ -25,9 +25,9 @@ roles:
   verificador: { modelo: deepseek-v4.1-flash, temperatura: 0.0, max_tokens: 32000 }
   # Línea base: una sola llamada, sin pipeline (D10).
   linea_base:
-    - { modelo: muse-spark-1.3-contributor, max_tokens: 16000 }
-    - { modelo: muse-spark-1.2-contributor, max_tokens: 16000 }
-    - { modelo: deepseek-v4.1-flash, max_tokens: 8000 }
+    # Muse 1.2 solo como respaldo de Muse 1.3, nunca como modelo principal.
+    - { modelo: muse-spark-1.3-contributor, fallback: muse-spark-1.2-contributor, max_tokens: 16000 }
+    - { modelo: deepseek-v4.1-flash, max_tokens: 32000 }
 
 pesos:
   alpha: 1.5
