@@ -11,6 +11,7 @@
 """
 
 import hashlib
+import http.client
 import json
 import os
 import re
@@ -108,7 +109,13 @@ class TransporteHTTP:
                 detalle = e.read().decode(errors="replace")[:500]
                 if e.code < 500 or intento == self.reintentos:
                     raise ErrorProveedor(e.code, detalle) from e
-            except (urllib.error.URLError, TimeoutError) as e:
+            except (
+                urllib.error.URLError,
+                TimeoutError,
+                ConnectionError,
+                http.client.HTTPException,
+            ) as e:
+                # Incluye conexiones cortadas por el proveedor a mitad de respuesta (EXP-010).
                 if intento == self.reintentos:
                     raise ErrorLLM(f"no se pudo contactar al proveedor: {e}") from e
             time.sleep(2**intento)

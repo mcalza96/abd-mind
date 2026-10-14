@@ -35,5 +35,9 @@ Si F1 y F2 se cumplen y F4 no fracasa, el motor aporta saber cuándo no sabe. Si
 
 **Configuración fijada:** la de `config/abd-mind.example.yaml` al momento de correr. Línea base: Muse 1.3 (con Muse 1.2 de respaldo) y DeepSeek.
 
+## Nota agregada antes de correr (después de EXP-010)
+
+EXP-010 mostró que la etiqueta del tipo de causa es ambigua: el motor puede elegir el mecanismo correcto con otra etiqueta. Para las series V y P se guardan y se revisan los mecanismos elegidos, y los errores se clasifican en "de etiqueta" o "de razonamiento". F1 y F2, que miden la abstención en U, no dependen de la etiqueta. Las expectativas no cambian.
+
 ## Resultado
 *(pendiente)*

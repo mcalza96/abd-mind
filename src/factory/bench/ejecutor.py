@@ -14,6 +14,7 @@ como puntaje (datasets/abd-bench/README.md).
 """
 
 import functools
+import threading
 import time
 from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor
@@ -132,8 +133,14 @@ class EjecutorBench:
     ) -> list[ResultadoCaso]:
         self.directorio.mkdir(parents=True, exist_ok=True)
 
+        parcial = self.directorio / "resultados.parcial.jsonl"
+        candado = threading.Lock()
+
         def uno(caso: Caso) -> ResultadoCaso:
             resultado = self.ejecutar_caso(caso)
+            # Se guarda cada caso al terminar: una falla tardía no pierde la corrida.
+            with candado, parcial.open("a", encoding="utf-8") as f:
+                f.write(resultado.model_dump_json() + "\n")
             if progreso is not None:
                 progreso(resultado)
             return resultado
@@ -218,6 +225,8 @@ class EjecutorBench:
             resultado.llamadas = servicio.estado_caso(caso_id).llamadas
         except (ErrorCaso, ErrorLLM) as e:
             resultado.error = str(e)
+        except Exception as e:  # un caso que falla no debe tumbar la corrida (EXP-010)
+            resultado.error = f"{type(e).__name__}: {e}"
         finally:
             store.cerrar()
         resultado.segundos = round(time.monotonic() - inicio, 1)
@@ -257,6 +266,8 @@ class EjecutorBench:
             )
         except ErrorLLM as e:
             return ResultadoBase(modelo=rol.modelo, error=str(e))
+        except Exception as e:  # idem: se registra y la corrida sigue
+            return ResultadoBase(modelo=rol.modelo, error=f"{type(e).__name__}: {e}")
 
 
 # --- informe -------------------------------------------------------------------------------
