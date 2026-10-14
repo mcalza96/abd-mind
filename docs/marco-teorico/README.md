@@ -20,6 +20,7 @@ Este directorio es la referencia conceptual del proyecto. Todo módulo de códig
 | 10 | [Validación: caída de una acción](10-validacion-caida-accion.md) | Ejercicio mental con una pregunta financiera real y brechas encontradas |
 | 11 | [Explicación en dominios abiertos](11-explicacion-en-dominios-abiertos.md) | Veredicto de tres valores, explananda, pregunta del caso, margen, predicciones; protocolo contra el sobreajuste |
 | 12 | [Verdad y entrenamiento](12-verdad-y-entrenamiento.md) | Datos sintéticos válidos e inválidos, verdad de cierre falible, cuestionar lo establecido con contabilidad, circularidad |
+| 13 | [Verificación comparativa](13-verificacion-comparativa.md) | Calificar cada hecho contra todas las rivales; parsimonia juzgada por un tercero |
 | — | [Glosario](glosario.md) | Términos y notación |
 
 ## Lectura rápida
