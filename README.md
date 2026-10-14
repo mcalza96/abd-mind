@@ -5,3 +5,4 @@ Motor de razonamiento abductivo: un pipeline que separa percepción (LLM), gener
 ## Documentación
 
 - [Marco teórico](docs/marco-teorico/README.md): problema, postulados, formalización, función objetivo IBE, experimentos canónicos, arquitectura, estado del arte y decisiones de diseño.
+- [Arquitectura](docs/arquitectura/README.md): acoplamiento a Hermes Agent vía MCP, contrato de herramientas, interacción por Telegram, despliegue en el PC, ADRs y hoja de ruta.
