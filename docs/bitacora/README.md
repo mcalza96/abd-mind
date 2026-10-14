@@ -41,7 +41,8 @@ Incluye qué resultado contaría como fracaso.
 | [EXP-007](EXP-007-bench-linea-base.md) | abd-bench: línea base sobre 50 casos | 36–39 de 49; las variantes no les resultan más difíciles |
 | [EXP-008](EXP-008-bench-motor-v01-v02.md) | abd-bench: motor sobre V01/V02 | El motor no decide: el verificador acepta casi todo |
 | [EXP-009](EXP-009-verificacion-comparativa.md) | Verificación comparativa y parsimonia juzgada | Abortado: el juez sobrecuenta (8,3 postulados por hipótesis) y se trunca |
-| [EXP-010](EXP-010-juez-comparativo.md) | Juez de parsimonia comparativo | Registrado antes de correr |
+| [EXP-010](EXP-010-juez-comparativo.md) | Juez de parsimonia comparativo | En curso |
+| [EXP-012](EXP-012-bench-v2-perturbaciones-y-sin-respuesta.md) | abd-bench v2: perturbaciones y casos sin respuesta | Registrado antes de construir los casos |
 
 ## Lecciones transversales
 
