@@ -36,6 +36,7 @@ from factory.engine.modelos import (
     InfoCaso,
     ObservacionAuditada,
     ObservacionRegistrada,
+    PrediccionVigilada,
     RegistroCaso,
     ResultadoEvaluacionCaso,
     ResultadoEvidencia,
@@ -45,6 +46,7 @@ from factory.engine.modelos import (
     ResultadoRetractacion,
     ResultadoSugerencias,
     ResumenHipotesis,
+    Verdad,
 )
 from factory.engine.store import CacheSQLite, Store, ahora
 from factory.organ.projections import VerificadorProyeccion
@@ -192,11 +194,22 @@ class ServicioCasos:
     def estado_caso(self, caso_id: str) -> InfoCaso:
         return self._info(self._registro(caso_id))
 
-    def cerrar_caso(self, caso_id: str) -> InfoCaso:
+    def cerrar_caso(self, caso_id: str, verdad: Verdad | None = None) -> InfoCaso:
+        """Cierra el caso; `verdad` registra lo que realmente ocurrió, si se sabe (ADR-0013)."""
         registro = self._registro(caso_id)
+        if verdad is not None and verdad.valor is not None:
+            pregunta = registro.pregunta
+            if pregunta is None or clase_de({pregunta.variable: verdad.valor}, pregunta) is None:
+                raise ErrorCaso(
+                    CodigoError.VALOR_INVALIDO,
+                    f"'{verdad.valor}' no es un valor de la pregunta del caso",
+                )
         registro.estado = "cerrado"
+        registro.verdad = verdad
         registro.actualizado = ahora()
-        self.store.agregar_evento(caso_id, "caso_cerrado", {})
+        self.store.agregar_evento(
+            caso_id, "caso_cerrado", {"verdad": verdad.model_dump(mode="json") if verdad else None}
+        )
         self.store.guardar_caso(registro)
         return self._info(registro)
 
@@ -368,6 +381,7 @@ class ServicioCasos:
                     afirmaciones=afirmaciones,
                     predicados_de_consistencia=entrada.predicados,
                     observaciones_explicadas=entrada.observaciones_explicadas,
+                    predicciones=entrada.predicciones,
                     origen=origen,
                 )
                 self._registrar_hipotesis(ctx, h)
@@ -467,10 +481,17 @@ class ServicioCasos:
                     f"; resultado frágil: {respuesta.margen_veredictos} veredicto(s) del "
                     "verificador lo invertirían"
                 )
+            vigiladas = respuesta.candidatas if respuesta is not None else []
+            que_vigilar = [
+                PrediccionVigilada(**p.model_dump(), id_hipotesis=i, clase=ctx.arbol.clase(i))
+                for i in vigiladas
+                for p in ctx.arbol.hipotesis(i).predicciones
+            ]
             return ResultadoMejorExplicacion(
                 caso_id=caso_id,
                 h_estrella=h,
                 respuesta=respuesta,
+                que_vigilar=que_vigilar,
                 empatadas=empatadas,
                 atribuidas_a_error=residuo,
                 motivo=motivo,
@@ -531,6 +552,7 @@ class ServicioCasos:
                     origen=h.origen,
                     entidades_latentes=h.entidades_latentes,
                     afirmaciones=h.afirmaciones,
+                    predicciones=h.predicciones,
                     estado=arbol.estado(h.id_hipotesis),
                     derrotada_por=arbol.derrotada_por(h.id_hipotesis),
                 )
@@ -579,6 +601,7 @@ class ServicioCasos:
             dominio=registro.dominio,
             version_reglas=reglas.version,
             pregunta=registro.pregunta,
+            verdad=registro.verdad,
             pesos=registro.pesos,
             estado=registro.estado,
             llamadas=registro.llamadas,
@@ -975,6 +998,7 @@ def _hipotesis_registrada(h: HipotesisCandidata) -> HipotesisRegistrada:
         mecanismo=h.mecanismo_latente,
         entidades_latentes=h.entidades_latentes,
         afirmaciones=h.afirmaciones,
+        predicciones=h.predicciones,
         origen=h.origen,
     )
 

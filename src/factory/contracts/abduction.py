@@ -9,6 +9,17 @@ from pydantic import BaseModel, Field
 Valor = str | int | float | bool
 
 
+class Prediccion(BaseModel):
+    """Consecuencia futura observable que la hipótesis espera (11 §11.5, ADR-0013).
+
+    No entra en el score: todavía no es una observación.
+    """
+
+    que: str = Field(description="Qué se observaría")
+    horizonte: str = Field(description="En qué plazo (texto libre hasta implementar fechas)")
+    esperado: str = Field(description="Qué resultado espera la hipótesis")
+
+
 class HipotesisCandidata(BaseModel):
     id_hipotesis: str
     mecanismo_latente: str = Field(
@@ -34,6 +45,9 @@ class HipotesisCandidata(BaseModel):
         description=(
             "Afirmaciones estructuradas variable → valor que evalúa el motor de reglas (D3)"
         ),
+    )
+    predicciones: list[Prediccion] = Field(
+        default_factory=list, description="Consecuencias futuras que espera (no puntúan)"
     )
     origen: str = Field(
         default="desconocido",

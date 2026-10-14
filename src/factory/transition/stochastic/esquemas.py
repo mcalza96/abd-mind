@@ -2,7 +2,7 @@
 
 from typing import Literal
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from factory.contracts.abduction import Valor
 
@@ -34,12 +34,19 @@ class ExtraccionLLM(BaseModel):
     dudas: list[str]
 
 
+class PrediccionFuturaLLM(BaseModel):
+    que: str
+    horizonte: str
+    esperado: str
+
+
 class HipotesisLLM(BaseModel):
     mecanismo_latente: str
     entidades_latentes: list[str]
     afirmaciones: list[ParVariable]
     predicados_de_consistencia: list[str]
     observaciones_explicadas: list[str]
+    predicciones: list[PrediccionFuturaLLM] = Field(default_factory=list)
 
 
 class GeneracionLLM(BaseModel):

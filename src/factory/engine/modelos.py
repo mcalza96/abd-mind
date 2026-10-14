@@ -9,7 +9,7 @@ from typing import Literal
 from pydantic import BaseModel, Field
 
 from factory.config import ConfigPesos
-from factory.contracts.abduction import Valor
+from factory.contracts.abduction import Prediccion, Valor
 from factory.contracts.case import EstadoHipotesis, Pregunta, Respuesta, Veredicto
 from factory.contracts.observation import EstadoObservacion, Observador, RolObservacion
 
@@ -25,6 +25,7 @@ class CodigoError(StrEnum):
     LIMITE_HIPOTESIS = "limite_hipotesis"
     PROVEEDOR_LLM_NO_DISPONIBLE = "proveedor_llm_no_disponible"
     RESPUESTA_LLM_INVALIDA = "respuesta_llm_invalida"
+    VALOR_INVALIDO = "valor_invalido"
 
 
 class ErrorCaso(Exception):
@@ -60,6 +61,13 @@ class ResumenCaso(BaseModel):
     )
 
 
+class Verdad(BaseModel):
+    """Lo que realmente ocurrió, al cerrar el caso (ADR-0013). Insumo de calibración."""
+
+    descripcion: str
+    valor: str | None = Field(default=None, description="Valor verdadero de la pregunta")
+
+
 class RegistroCaso(BaseModel):
     id: str
     descripcion: str
@@ -69,6 +77,7 @@ class RegistroCaso(BaseModel):
     pesos: ConfigPesos
     sesion: str = Field(description="x-opencode-session estable del caso")
     pregunta: Pregunta | None = None
+    verdad: Verdad | None = None
     estado: Literal["abierto", "cerrado"] = "abierto"
     llamadas: int = 0
     resumen: ResumenCaso = Field(default_factory=ResumenCaso)
@@ -98,6 +107,9 @@ class EntradaHipotesis(BaseModel):
     afirmaciones: dict[str, Valor] = Field(default_factory=dict)
     predicados: list[str] = Field(default_factory=list)
     observaciones_explicadas: list[str] = Field(default_factory=list)
+    predicciones: list[Prediccion] = Field(
+        default_factory=list, description="Consecuencias futuras que espera; no puntúan"
+    )
 
 
 # --- salidas ------------------------------------------------------------------------------
@@ -109,6 +121,7 @@ class InfoCaso(BaseModel):
     dominio: str
     version_reglas: int
     pregunta: Pregunta | None = None
+    verdad: Verdad | None = None
     pesos: ConfigPesos
     estado: str
     llamadas: int
@@ -147,6 +160,7 @@ class HipotesisRegistrada(BaseModel):
     mecanismo: str
     entidades_latentes: list[str]
     afirmaciones: dict[str, Valor]
+    predicciones: list[Prediccion] = Field(default_factory=list)
     origen: str
 
 
@@ -196,10 +210,19 @@ class ResultadoEvaluacionCaso(BaseModel):
     avisos: list[str] = Field(default_factory=list)
 
 
+class PrediccionVigilada(Prediccion):
+    id_hipotesis: str
+    clase: str | None = Field(description="Lo que la hipótesis responde a la pregunta, o su id")
+
+
 class ResultadoMejorExplicacion(BaseModel):
     caso_id: str
     h_estrella: ResumenHipotesis | None
     respuesta: Respuesta | None = None
+    que_vigilar: list[PrediccionVigilada] = Field(
+        default_factory=list,
+        description="Predicciones de las candidatas en disputa: lo que cambiaría la respuesta",
+    )
     empatadas: list[ResumenHipotesis] = Field(default_factory=list)
     atribuidas_a_error: dict[str, float] = Field(default_factory=dict)
     motivo: str
@@ -242,6 +265,7 @@ class HipotesisAuditada(BaseModel):
     origen: str
     entidades_latentes: list[str]
     afirmaciones: dict[str, Valor]
+    predicciones: list[Prediccion] = Field(default_factory=list)
     estado: EstadoHipotesis
     derrotada_por: list[str]
 

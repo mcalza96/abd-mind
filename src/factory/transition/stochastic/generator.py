@@ -5,7 +5,7 @@ from enum import StrEnum
 from pydantic import BaseModel, Field
 
 from factory.config import ConfigRol
-from factory.contracts.abduction import HipotesisCandidata
+from factory.contracts.abduction import HipotesisCandidata, Prediccion
 from factory.contracts.case import Pregunta
 from factory.contracts.observation import Observacion, Observador
 from factory.contracts.rules import ConjuntoReglas
@@ -36,7 +36,10 @@ guiones bajos).
 - En 'entidades_latentes' declara toda entidad o mecanismo que postulas y que NO está en el \
 vocabulario conocido. Cada entidad nueva tiene un costo: postúlala solo si hace falta.
 - En 'observaciones_explicadas' lista los ids de las observaciones que la hipótesis explica.
-- En 'predicados_de_consistencia' enuncia las condiciones que la hipótesis asume."""
+- En 'predicados_de_consistencia' enuncia las condiciones que la hipótesis asume.
+- En 'predicciones' da de 1 a 3 consecuencias futuras observables que la hipótesis espera, \
+con su horizonte: qué se observaría, en qué plazo y con qué resultado. Prefiere las que la \
+distinguen de las hipótesis rivales."""
 
 INSTRUCCION_MODO = {
     "contrastivo": (
@@ -180,6 +183,7 @@ class Generador:
                 observaciones_explicadas=propuesta.observaciones_explicadas,
                 predicados_de_consistencia=propuesta.predicados_de_consistencia,
                 afirmaciones=afirmaciones,
+                predicciones=[Prediccion(**p.model_dump()) for p in propuesta.predicciones],
                 origen=f"motor:{modelo}",
             ),
             avisos,

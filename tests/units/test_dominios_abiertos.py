@@ -254,3 +254,50 @@ def test_servicio_con_pregunta() -> None:
     assert mejor.motivo.startswith("respuesta: redonda")
     # La respuesta está determinada por proyección: no hay nada que discriminar.
     assert servicio.sugerir_observacion(caso).consultas == []
+
+
+# --- predicciones y cierre (11 §11.5, ADR-0013) --------------------------------------------
+
+
+def test_predicciones_que_vigilar_y_verdad() -> None:
+    import pytest
+
+    from factory.contracts.abduction import Prediccion
+    from factory.engine.auditoria import auditoria_markdown
+    from factory.engine.case_service import ServicioCasos
+    from factory.engine.modelos import EntradaHipotesis, EntradaObservador, ErrorCaso, Verdad
+    from factory.engine.store import Store
+    from factory.experiments.robustez import _config_sin_llm
+
+    servicio = ServicioCasos(Store(":memory:"), _config_sin_llm())
+    pregunta = Pregunta(variable="forma", valores=["redonda", "angulosa"])
+    caso = servicio.crear_caso("¿forma?", "sintetico", pregunta=pregunta).caso_id
+    servicio.agregar_observacion(
+        caso,
+        EntradaObservador(nombre="Cenital", parametros={"vista": "cenital"}),
+        "círculo",
+        valor="circulo",
+    )
+    lateral = Prediccion(que="vista lateral", horizonte="próxima inspección", esperado="")
+    servicio.proponer_hipotesis(
+        caso,
+        [
+            EntradaHipotesis(
+                mecanismo=f"Es un {s}",
+                afirmaciones={"solido": s, "dimension": 3, "forma": "redonda"},
+                predicciones=[lateral.model_copy(update={"esperado": vista})],
+            )
+            for s, vista in [("esfera", "circulo"), ("cilindro", "rectangulo")]
+        ],
+    )
+    mejor = servicio.mejor_explicacion(caso)
+    # Esfera y cilindro responden lo mismo: no hay rival de otra clase, se vigila la líder.
+    assert mejor.respuesta is not None and mejor.respuesta.valor == "redonda"
+    assert {p.esperado for p in mejor.que_vigilar} == {"circulo"}  # solo la líder
+
+    with pytest.raises(ErrorCaso):
+        servicio.cerrar_caso(caso, Verdad(descripcion="x", valor="triangular"))
+    info = servicio.cerrar_caso(caso, Verdad(descripcion="Era un cilindro", valor="redonda"))
+    assert info.verdad is not None and info.verdad.valor == "redonda"
+    texto = auditoria_markdown(servicio.auditoria(caso))
+    assert "Lo que ocurrió" in texto and "Predice: vista lateral" in texto

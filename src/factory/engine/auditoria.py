@@ -22,7 +22,26 @@ def auditoria_markdown(a: Auditoria) -> str:
         f"**Pesos:** α={caso.pesos.alpha}, β={caso.pesos.beta}, γ={caso.pesos.gamma},"
         f" τ={caso.pesos.tau}",
     ]
+    if caso.pregunta is not None:
+        lineas.append(
+            f"**Pregunta:** {caso.pregunta.descripcion or caso.pregunta.variable} "
+            f"({caso.pregunta.variable} ∈ {', '.join(caso.pregunta.valores)})"
+        )
+    if caso.verdad is not None:
+        valor = f" (valor: {caso.verdad.valor})" if caso.verdad.valor else ""
+        lineas.append(f"**Lo que ocurrió:** {caso.verdad.descripcion}{valor}")
     lineas += [f"> Aviso: {aviso}" for aviso in caso.avisos]
+
+    r = caso.resumen.respuesta
+    if caso.pregunta is not None and r is not None:
+        lineas += ["", "## Respuesta", ""]
+        if r.determinada:
+            margen = "∞" if r.margen_veredictos is None else str(r.margen_veredictos)
+            fragil = " — **frágil**" if r.fragil else ""
+            lineas.append(f"**{r.valor}** (margen: {margen} veredictos{fragil})")
+        else:
+            lineas.append("No determinada por la evidencia.")
+        lineas += [f"- {k}: {_score(v)}" for k, v in r.scores_por_valor.items()]
 
     h = caso.resumen.h_estrella
     lineas += ["", "## Mejor explicación", ""]
@@ -76,6 +95,7 @@ def auditoria_markdown(a: Auditoria) -> str:
             f"- Origen: {hip.origen}",
             f"- Entidades latentes: {', '.join(hip.entidades_latentes) or '—'}",
             f"- Afirmaciones: `{json.dumps(hip.afirmaciones, ensure_ascii=False)}`",
+            *[f"- Predice: {p.que} → {p.esperado} ({p.horizonte})" for p in hip.predicciones],
             f"- Explica: {', '.join(explica) or '—'}",
             f"- Contradice: {', '.join(contradice) or '—'}",
             "",
