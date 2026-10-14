@@ -2,6 +2,8 @@
 
 Este documento somete el marco a una pregunta real y frecuente: *"La acción de la Empresa Z cayó 35 % en tres meses. ¿Es una caída estructural o viene un rebote?"*. Se simula, paso a paso, lo que haría Hermes con el contrato MCP actual ([contrato-mcp](../arquitectura/contrato-mcp.md)) y el motor de la fase 4b. Después se listan las brechas que aparecen.
 
+> **Estado:** B1–B4 y B10 se abordaron en [11](11-explicacion-en-dominios-abiertos.md) (fase 4c). La conclusión sobre B2 se corrigió en 11 §11.0.
+
 La empresa y los datos son ficticios. Los scores se calcularon con la función de [09 §9.1.4](09-robustez-epistemica.md#914-función-objetivo-extendida) y los pesos por defecto (α = 1.5, β = 10, γ = 1, λ = 1, ω_d = 0.95).
 
 ## 10.1 La simulación

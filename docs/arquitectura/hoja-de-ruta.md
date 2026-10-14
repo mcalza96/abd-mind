@@ -12,7 +12,7 @@ Cada fase termina con algo que funciona y se puede probar. Ninguna fase depende 
 | 3 — Roles LLM del motor | ✅ |
 | 4 — Motor de casos y persistencia | ✅ |
 | 4b — Robustez epistémica | ✅ |
-| 4c — Explicación en dominios abiertos | En curso |
+| 4c — Explicación en dominios abiertos | ✅ |
 | 5 — Servidor MCP | Pendiente |
 | 6 — Integración con Hermes | Pendiente |
 | 7 — Benchmarks y calibración | Pendiente |
@@ -109,6 +109,14 @@ Origen: el ejercicio mental de [10](../marco-teorico/10-validacion-caida-accion.
 - se cumplen las propiedades de invarianza;
 - el caso reservado (11 §11.6) cumple sus cinco propiedades sin modificarlo;
 - `finanzas-llm` corre en vivo con el verificador de tres valores.
+
+**Resultado:** criterio cumplido.
+- Los cinco experimentos anteriores dan salida idéntica, carácter por carácter.
+- El caso reservado (`experimento reservado`) cumple sus cinco propiedades sin modificarlo.
+- El margen voraz coincide con fuerza bruta en 25 casos aleatorios.
+- `finanzas-llm` en vivo: 42 llamadas, ~5 min. El verificador real distingue lo neutral de lo contradicho, y el comunicado sigue derrotando a la hipótesis de precios porque la contradice.
+
+Efecto visible: las hipótesis de un solo hecho (demanda, costos) ya no pagan residuo por los hechos que no tratan. En la evaluación inicial, la diferencia con la ganadora baja de 6.3 a 1.8 puntos (c(0.9) = 2.3 por cada hecho no tratado).
 
 ## Fase 5 — Servidor MCP
 

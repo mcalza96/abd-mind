@@ -181,6 +181,12 @@ def finanzas_llm(
             f"nueva mejor explicación: {h.id_hipotesis} — {h.mecanismo} "
             f"({h.consiliencia_c}/{final.m})"
         )
+        if final.respuesta is not None:
+            margen = final.respuesta.margen_veredictos
+            resultado.notas.append(
+                f"margen: {'∞' if margen is None else margen} veredictos"
+                + (" (frágil)" if final.respuesta.fragil else "")
+            )
     elif final.subdeterminada:
         resultado.notas.append(
             f"subdeterminación: empatan {', '.join(final.empatadas)}; se piden observaciones"

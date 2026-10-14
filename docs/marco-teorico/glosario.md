@@ -59,7 +59,7 @@
 
 **Quimera estadística.** Respuesta que promedia proyecciones incompatibles y no corresponde a ningún estado posible del mundo (p. ej., "óvalo" para un cilindro).
 
-**Residuo.** Observaciones que una hipótesis no explica y que, por lo tanto, atribuye a error de sus observadores; cuesta $-\ln(1-\omega)$ cada una.
+**Residuo.** Observaciones que una hipótesis contradice y que, por lo tanto, atribuye a error de sus observadores; cuesta $-\ln(1-\omega)$ cada una. Lo neutral no entra en el residuo (11 §11.1).
 
 **Subdeterminación.** Situación en que varias hipótesis incompatibles explican la evidencia igual de bien; el sistema no elige entre ellas.
 
@@ -68,3 +68,13 @@
 **Tronco determinista.** Código sin IA que calcula el score, aplica umbral y desempate, y selecciona $H^*$.
 
 **Verificador.** Proceso independiente del generador que decide $\pi_i(H) \approx y_i$ cuando $\pi_i$ no es computable.
+
+**Evidencia (rol).** Observación que sirve para elegir entre explicaciones y no exige ser explicada (11 §11.2).
+
+**Explanandum.** Lo que el caso quiere entender. Una hipótesis neutral ante un explanandum lo deja sin explicar (11 §11.2).
+
+**Margen en veredictos ($k$).** Cuántos veredictos de LLM habría que cambiar para invertir la respuesta. Frágil si $k \le k_f$ (11 §11.4).
+
+**Pregunta del caso.** Variable contrastiva cuyos valores son las respuestas posibles; la respuesta se decide entre clases de hipótesis, no entre mecanismos (11 §11.3).
+
+**Veredicto de tres valores.** `explica`, `neutral` o `contradice`; solo lo contradicho cuesta o derrota (11 §11.1).
