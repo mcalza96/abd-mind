@@ -36,7 +36,24 @@ Resumen del caso sin recalcular nada: observadores, observaciones activas, hipó
 
 ### `cerrar_caso`
 
-Marca el caso como cerrado (sigue consultable; no admite más cambios). Entrada opcional `verdad: {descripcion, valor?}`: lo que realmente ocurrió, con el valor verdadero de la pregunta si lo hay. Los casos cerrados con verdad son el insumo para calibrar ω, δ y k_f ([ADR-0013](adr/0013-predicciones.md)).
+Marca el caso como cerrado (sigue consultable; no admite más cambios). Entrada opcional `verdad`, igual que en `registrar_verdad`.
+
+### `registrar_verdad`
+
+Agrega lo que una fuente reporta que realmente ocurrió. Funciona también con el caso cerrado. La verdad es una observación, no un dato incuestionable ([ADR-0014](adr/0014-verdad-como-observacion.md)).
+
+| Entrada | Tipo | Notas |
+|---|---|---|
+| `caso_id` | str | |
+| `verdad` | {descripcion, valor?, fuente, marco?, confiabilidad?} | `valor`: uno de la pregunta. `fuente` debe ser independiente de los observadores del caso. Sin `confiabilidad`, la del dominio |
+
+**Salida:** el caso, con `verdades` (historial; nada se sobrescribe) y `estado_verdad`:
+- `sin_verdad`;
+- `tentativa`: ninguna fuente alcanza $\omega_d$;
+- `establecida`: las fuentes que alcanzan $\omega_d$ coinciden;
+- `disputada`: las fuentes que alcanzan $\omega_d$ discrepan.
+
+Solo los casos `establecida` sirven para calibrar.
 
 ## Observaciones
 

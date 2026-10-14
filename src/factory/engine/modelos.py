@@ -61,11 +61,39 @@ class ResumenCaso(BaseModel):
     )
 
 
-class Verdad(BaseModel):
-    """Lo que realmente ocurrió, al cerrar el caso (ADR-0013). Insumo de calibración."""
+class EntradaVerdad(BaseModel):
+    """Lo que alguien reporta que realmente ocurrió (ADR-0014). Es una observación, no la verdad."""
 
     descripcion: str
-    valor: str | None = Field(default=None, description="Valor verdadero de la pregunta")
+    valor: str | None = Field(default=None, description="Valor de la pregunta que reporta")
+    fuente: str = Field(description="Quién lo establece: debe ser independiente del caso")
+    marco: str | None = None
+    confiabilidad: float | None = Field(
+        default=None, gt=0.0, le=1.0, description="ω de la fuente; si no, la del dominio"
+    )
+
+
+class Verdad(EntradaVerdad):
+    confiabilidad: float = Field(gt=0.0, le=1.0)
+    momento: str
+
+
+class EstadoVerdad(StrEnum):
+    SIN_VERDAD = "sin_verdad"
+    TENTATIVA = "tentativa"  # ningún registro alcanza ω_d
+    ESTABLECIDA = "establecida"  # los registros con ω ≥ ω_d coinciden: sirve para calibrar
+    DISPUTADA = "disputada"  # registros con ω ≥ ω_d discrepan
+
+
+def estado_verdad(verdades: list[Verdad], omega_derrota: float) -> EstadoVerdad:
+    """Estado del historial de verdades (12 §12.1)."""
+    if not verdades:
+        return EstadoVerdad.SIN_VERDAD
+    firmes = [v for v in verdades if v.confiabilidad >= omega_derrota]
+    if not firmes:
+        return EstadoVerdad.TENTATIVA
+    valores = {v.valor for v in firmes}
+    return EstadoVerdad.ESTABLECIDA if len(valores) == 1 else EstadoVerdad.DISPUTADA
 
 
 class RegistroCaso(BaseModel):
@@ -77,7 +105,9 @@ class RegistroCaso(BaseModel):
     pesos: ConfigPesos
     sesion: str = Field(description="x-opencode-session estable del caso")
     pregunta: Pregunta | None = None
-    verdad: Verdad | None = None
+    verdades: list[Verdad] = Field(
+        default_factory=list, description="Historial de lo que se reportó que ocurrió"
+    )
     estado: Literal["abierto", "cerrado"] = "abierto"
     llamadas: int = 0
     resumen: ResumenCaso = Field(default_factory=ResumenCaso)
@@ -121,7 +151,8 @@ class InfoCaso(BaseModel):
     dominio: str
     version_reglas: int
     pregunta: Pregunta | None = None
-    verdad: Verdad | None = None
+    verdades: list[Verdad] = Field(default_factory=list)
+    estado_verdad: EstadoVerdad = EstadoVerdad.SIN_VERDAD
     pesos: ConfigPesos
     estado: str
     llamadas: int

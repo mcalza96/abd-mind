@@ -27,9 +27,14 @@ def auditoria_markdown(a: Auditoria) -> str:
             f"**Pregunta:** {caso.pregunta.descripcion or caso.pregunta.variable} "
             f"({caso.pregunta.variable} ∈ {', '.join(caso.pregunta.valores)})"
         )
-    if caso.verdad is not None:
-        valor = f" (valor: {caso.verdad.valor})" if caso.verdad.valor else ""
-        lineas.append(f"**Lo que ocurrió:** {caso.verdad.descripcion}{valor}")
+    if caso.verdades:
+        lineas.append(f"**Lo que ocurrió** (estado: {caso.estado_verdad.value}):")
+        for verdad in caso.verdades:
+            valor = f" (valor: {verdad.valor})" if verdad.valor else ""
+            lineas.append(
+                f"- {verdad.momento} · {verdad.fuente}, ω={verdad.confiabilidad:g}: "
+                f"{verdad.descripcion}{valor}"
+            )
     lineas += [f"> Aviso: {aviso}" for aviso in caso.avisos]
 
     r = caso.resumen.respuesta

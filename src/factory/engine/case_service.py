@@ -30,6 +30,7 @@ from factory.engine.modelos import (
     EntradaHipotesis,
     EntradaObservador,
     EntradaRanking,
+    EntradaVerdad,
     ErrorCaso,
     HipotesisAuditada,
     HipotesisRegistrada,
@@ -47,6 +48,7 @@ from factory.engine.modelos import (
     ResultadoSugerencias,
     ResumenHipotesis,
     Verdad,
+    estado_verdad,
 )
 from factory.engine.store import CacheSQLite, Store, ahora
 from factory.organ.projections import VerificadorProyeccion
@@ -188,28 +190,54 @@ class ServicioCasos:
         )
         return self._info(registro)
 
+    def registrar_verdad(self, caso_id: str, verdad: EntradaVerdad) -> InfoCaso:
+        """Agrega lo que una fuente reporta que ocurrió, aunque el caso esté cerrado.
+
+        Nada se sobrescribe: una verdad corregida después convive con la anterior y el caso
+        queda `disputado` si ambas son firmes y discrepan (12 §12.1).
+        """
+        registro = self._registro(caso_id)
+        self._agregar_verdad(registro, verdad)
+        registro.actualizado = ahora()
+        self.store.guardar_caso(registro)
+        return self._info(registro)
+
+    def _agregar_verdad(self, registro: RegistroCaso, entrada: EntradaVerdad) -> None:
+        pregunta = registro.pregunta
+        if entrada.valor is not None and (
+            pregunta is None or clase_de({pregunta.variable: entrada.valor}, pregunta) is None
+        ):
+            raise ErrorCaso(
+                CodigoError.VALOR_INVALIDO,
+                f"'{entrada.valor}' no es un valor de la pregunta del caso",
+            )
+        reglas = ConjuntoReglas.model_validate_json(registro.reglas_json)
+        verdad = Verdad(
+            **entrada.model_dump(exclude={"confiabilidad"}),
+            confiabilidad=entrada.confiabilidad or reglas.confiabilidad_por_defecto,
+            momento=ahora(),
+        )
+        if pregunta is not None and verdad.valor is not None:
+            verdad.valor = clase_de({pregunta.variable: verdad.valor}, pregunta)
+        registro.verdades.append(verdad)
+        self.store.agregar_evento(
+            registro.id, "verdad_registrada", {"verdad": verdad.model_dump(mode="json")}
+        )
+
     def listar_casos(self, estado: str | None = None, limite: int = 50) -> list[InfoCaso]:
         return [self._info(r) for r in self.store.listar_casos(estado, limite)]
 
     def estado_caso(self, caso_id: str) -> InfoCaso:
         return self._info(self._registro(caso_id))
 
-    def cerrar_caso(self, caso_id: str, verdad: Verdad | None = None) -> InfoCaso:
-        """Cierra el caso; `verdad` registra lo que realmente ocurrió, si se sabe (ADR-0013)."""
+    def cerrar_caso(self, caso_id: str, verdad: EntradaVerdad | None = None) -> InfoCaso:
+        """Cierra el caso; `verdad`, si se da, se agrega al historial (ADR-0014)."""
         registro = self._registro(caso_id)
-        if verdad is not None and verdad.valor is not None:
-            pregunta = registro.pregunta
-            if pregunta is None or clase_de({pregunta.variable: verdad.valor}, pregunta) is None:
-                raise ErrorCaso(
-                    CodigoError.VALOR_INVALIDO,
-                    f"'{verdad.valor}' no es un valor de la pregunta del caso",
-                )
+        if verdad is not None:
+            self._agregar_verdad(registro, verdad)
         registro.estado = "cerrado"
-        registro.verdad = verdad
         registro.actualizado = ahora()
-        self.store.agregar_evento(
-            caso_id, "caso_cerrado", {"verdad": verdad.model_dump(mode="json") if verdad else None}
-        )
+        self.store.agregar_evento(caso_id, "caso_cerrado", {})
         self.store.guardar_caso(registro)
         return self._info(registro)
 
@@ -601,7 +629,8 @@ class ServicioCasos:
             dominio=registro.dominio,
             version_reglas=reglas.version,
             pregunta=registro.pregunta,
-            verdad=registro.verdad,
+            verdades=registro.verdades,
+            estado_verdad=estado_verdad(registro.verdades, registro.pesos.omega_derrota),
             pesos=registro.pesos,
             estado=registro.estado,
             llamadas=registro.llamadas,

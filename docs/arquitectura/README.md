@@ -30,6 +30,7 @@ Este directorio define **cómo** se construye el sistema descrito en el [marco t
 | [0011](adr/0011-veredicto-ternario-y-explananda.md) | Veredicto de tres valores y explananda |
 | [0012](adr/0012-pregunta-y-margen.md) | Pregunta del caso y margen de victoria |
 | [0013](adr/0013-predicciones.md) | Predicciones y cierre del ciclo |
+| [0014](adr/0014-verdad-como-observacion.md) | La verdad de cierre es una observación |
 
 ## Visión general
 

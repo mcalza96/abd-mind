@@ -26,7 +26,7 @@ Tienes acceso a las herramientas MCP del servidor `abd-mind`. El motor decide qu
 7. `evaluar`. Si `expansion_sugerida` es `true`, ejecuta `generar_hipotesis` con `modo: "expansion"` y vuelve a evaluar.
 8. `mejor_explicacion`. Si la respuesta no está determinada o es `fragil`, ejecuta `sugerir_observacion` y busca esas observaciones antes de concluir, o preséntalas al usuario.
 9. Si hay `que_vigilar` con horizonte, ofrece programar una revisión (cron) para esa fecha. Al vencer, registra lo ocurrido con `nueva_evidencia`.
-10. Ante evidencia nueva: `nueva_evidencia`. Si el usuario dice que algo era falso: `retractar_evidencia`. Cuando se sepa qué pasó realmente, `cerrar_caso` con `verdad`.
+10. Ante evidencia nueva: `nueva_evidencia`. Si el usuario dice que algo era falso: `retractar_evidencia`. Cuando se sepa qué pasó realmente, `cerrar_caso` con `verdad`, indicando la `fuente`. Debe ser una fuente independiente de los observadores del caso; si no lo es, avísale al usuario. Si después aparece una versión distinta, `registrar_verdad`: no se borra la anterior.
 
 ## Reglas estrictas
 

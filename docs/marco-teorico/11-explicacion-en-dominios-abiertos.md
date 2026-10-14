@@ -106,7 +106,7 @@ IBE elige la mejor explicación de lo ocurrido. Si la pregunta del usuario es so
 
 1. **Qué vigilar:** las predicciones en que el líder y el rival difieren son las señales que cambiarían la respuesta.
 2. **Cierre del ciclo:** al vencer el horizonte, Hermes registra lo ocurrido con `nueva_evidencia`. Las predicciones cumplidas o fallidas se vuelven observaciones como cualquier otra.
-3. **Calibración:** `cerrar_caso` puede registrar la respuesta verdadera cuando se conoce. Los casos cerrados con verdad son el insumo para calibrar ω, δ y k_f (L7). La calibración misma queda para después.
+3. **Calibración:** `cerrar_caso` puede registrar la respuesta verdadera cuando se conoce, como observación falible con historial ([12 §12.1](12-verdad-y-entrenamiento.md#121-la-verdad-de-cierre-es-una-observación)). Los casos cerrados con verdad son el insumo para calibrar ω, δ y k_f (L7). La calibración misma queda para después.
 
 ## 11.6 Caso reservado
 

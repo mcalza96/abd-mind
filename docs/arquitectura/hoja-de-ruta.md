@@ -118,6 +118,10 @@ Origen: el ejercicio mental de [10](../marco-teorico/10-validacion-caida-accion.
 
 Efecto visible: las hipótesis de un solo hecho (demanda, costos) ya no pagan residuo por los hechos que no tratan. En la evaluación inicial, la diferencia con la ganadora baja de 6.3 a 1.8 puntos (c(0.9) = 2.3 por cada hecho no tratado).
 
+### Complemento: verdad de cierre falible
+
+[12](../marco-teorico/12-verdad-y-entrenamiento.md) y ADR-0014: la verdad de cierre tiene fuente, ω e historial, y su estado puede ser `sin_verdad`, `tentativa`, `establecida` o `disputada`. Pendientes para después de la fase 5: mundos sintéticos con observadores sesgados, registro de anomalías de reglas y vocabulario retractable.
+
 ## Fase 5 — Servidor MCP
 
 - `interfaces/mcp_server.py` con FastMCP, herramientas del [contrato](contrato-mcp.md), stdio y HTTP ([ADR-0005](adr/0005-transporte-stdio-y-http.md)).

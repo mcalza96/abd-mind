@@ -10,7 +10,7 @@ IBE explica el pasado, pero preguntas como "¿vendrá un rebote?" son sobre el f
 
 1. `HipotesisCandidata.predicciones: [{que, horizonte, esperado}]`. Los generadores las piden y `proponer_hipotesis` las acepta. **No entran en el score.**
 2. `mejor_explicacion` devuelve `que_vigilar`: predicciones del líder y del principal rival, de modo que Hermes vea en qué difieren.
-3. `cerrar_caso` acepta `verdad` (texto y, si hay pregunta, el valor verdadero) y la guarda como evento.
+3. *(Reemplazado por [ADR-0014](0014-verdad-como-observacion.md).)* `cerrar_caso` acepta `verdad` (texto y, si hay pregunta, el valor verdadero) y la guarda como evento.
 4. Hermes programa una revisión al vencer el horizonte (cron) y registra el resultado con `nueva_evidencia`.
 
 ## Consecuencias

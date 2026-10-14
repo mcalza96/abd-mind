@@ -265,7 +265,13 @@ def test_predicciones_que_vigilar_y_verdad() -> None:
     from factory.contracts.abduction import Prediccion
     from factory.engine.auditoria import auditoria_markdown
     from factory.engine.case_service import ServicioCasos
-    from factory.engine.modelos import EntradaHipotesis, EntradaObservador, ErrorCaso, Verdad
+    from factory.engine.modelos import (
+        EntradaHipotesis,
+        EntradaObservador,
+        EntradaVerdad,
+        ErrorCaso,
+        EstadoVerdad,
+    )
     from factory.engine.store import Store
     from factory.experiments.robustez import _config_sin_llm
 
@@ -296,8 +302,36 @@ def test_predicciones_que_vigilar_y_verdad() -> None:
     assert {p.esperado for p in mejor.que_vigilar} == {"circulo"}  # solo la líder
 
     with pytest.raises(ErrorCaso):
-        servicio.cerrar_caso(caso, Verdad(descripcion="x", valor="triangular"))
-    info = servicio.cerrar_caso(caso, Verdad(descripcion="Era un cilindro", valor="redonda"))
-    assert info.verdad is not None and info.verdad.valor == "redonda"
+        servicio.cerrar_caso(caso, EntradaVerdad(descripcion="x", valor="triangular", fuente="f"))
+
+    # La verdad de cierre es una observación con historial (ADR-0014).
+    info = servicio.cerrar_caso(
+        caso, EntradaVerdad(descripcion="Parece redondo", valor="Redonda", fuente="foto")
+    )
+    assert info.verdades[0].confiabilidad == 1.0  # la del dominio sintético
+    assert info.verdades[0].valor == "redonda"  # grafía de la pregunta
+    assert info.estado_verdad is EstadoVerdad.ESTABLECIDA
+    info = servicio.registrar_verdad(
+        caso,
+        EntradaVerdad(
+            descripcion="Medición posterior: tenía aristas",
+            valor="angulosa",
+            fuente="metrología",
+            confiabilidad=0.99,
+        ),
+    )
+    assert len(info.verdades) == 2 and info.estado_verdad is EstadoVerdad.DISPUTADA
     texto = auditoria_markdown(servicio.auditoria(caso))
-    assert "Lo que ocurrió" in texto and "Predice: vista lateral" in texto
+    assert "estado: disputada" in texto and "Predice: vista lateral" in texto
+
+
+def test_estado_verdad() -> None:
+    from factory.engine.modelos import EstadoVerdad, Verdad, estado_verdad
+
+    def v(valor: str, omega: float) -> Verdad:
+        return Verdad(descripcion="", valor=valor, fuente="f", confiabilidad=omega, momento="t")
+
+    assert estado_verdad([], 0.95) is EstadoVerdad.SIN_VERDAD
+    assert estado_verdad([v("a", 0.9)], 0.95) is EstadoVerdad.TENTATIVA
+    assert estado_verdad([v("a", 0.98), v("b", 0.6)], 0.95) is EstadoVerdad.ESTABLECIDA
+    assert estado_verdad([v("a", 0.98), v("b", 0.97)], 0.95) is EstadoVerdad.DISPUTADA

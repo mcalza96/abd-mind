@@ -138,8 +138,19 @@ El resultado lleva su margen en veredictos de LLM y se marca como frágil si un 
 
 Sirven para vigilar y para cerrar el ciclo de calibración. ([ADR-0013](../arquitectura/adr/0013-predicciones.md))
 
-### Pendientes (encontrados en 10)
+### D20 — La verdad de cierre es una observación
 
+Tiene observador, confiabilidad e historial; solo la `establecida` calibra. ([ADR-0014](../arquitectura/adr/0014-verdad-como-observacion.md), [12](12-verdad-y-entrenamiento.md))
+
+### D21 — Datos sintéticos solo con verdad por construcción
+
+Se generan el estado y los observadores, nunca las respuestas con un LLM. Ningún resultado interno cuenta como validación externa (12 §12.5).
+
+### Pendientes (encontrados en 10 y 12)
+
+- Mundos sintéticos con observadores sesgados y correlacionados (12 §12.2).
+- Registro de anomalías de reglas empíricas (12 §12.4).
+- Vocabulario verificado con su evidencia, retractable (12 §12.4).
 - Magnitudes y observadores derivados deterministas (B5); prueba contrafactual contra hipótesis vagas (B6); atomización (B7); hechos sobre creencias (B8); tasas base (B9); dominio `mercado` (B11); selección de evidencia en la skill de Hermes (B12).
 
 ### L7 — La confiabilidad por defecto es una suposición
