@@ -114,6 +114,13 @@ Se evaluó usarla solo como desempate. Se rechaza: favorecería sistemáticament
 - Observaciones con fecha y cambio de régimen como hipótesis candidata (§9.4).
 - Naturaleza de las reglas (axiomática o empírica) y alerta de revisión (§9.5).
 
+### Pendientes (encontrados en 10)
+
+- Veredicto de tres valores (explica / neutral / contradice) y explananda distintos de la evidencia (B1, B2).
+- Pregunta del caso y margen de victoria (B3, B10).
+- Predicciones con horizonte y revisión programada (B4).
+- Magnitudes, vaguedad, atomización, hechos sobre creencias, tasas base, dominio `mercado` (B5–B12).
+
 ### L7 — La confiabilidad por defecto es una suposición
 
 Mientras no haya historial de casos cerrados con verdad establecida, $\omega$ es una suposición del dominio, y los resultados dependen de ella. Un error sistemático de un observador no es error aleatorio: debe modelarse como parte de su marco, no de su confiabilidad.
