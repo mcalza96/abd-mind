@@ -1,0 +1,8 @@
+# Reglas invariantes del entorno sintético de sólidos (experimentos 5.1–5.3).
+dominio: sintetico
+version: 1
+reglas:
+  - id: objeto_tridimensional
+    tipo: dura
+    descripcion: El objeto observado es un sólido tridimensional
+    condicion: { variable: dimension, op: "==", valor: 3 }

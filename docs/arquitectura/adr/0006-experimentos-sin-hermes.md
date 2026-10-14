@@ -8,7 +8,7 @@ La tesis se valida comparando el pipeline contra una línea base (D10 del marco 
 
 ## Decisión
 
-- Los experimentos (`experiments/`) usan el **motor directamente**, vía `engine/case_service.py` o la CLI (`abd-mind experimento <nombre>`), nunca vía Hermes.
+- Los experimentos (`src/factory/experiments/`) usan el **motor directamente**, vía `engine/case_service.py` o la CLI (`abd-mind experimento <nombre>`), nunca vía Hermes.
 - Cada corrida guarda: configuración (modelos por rol, pesos, presupuestos), versión de reglas, semilla, todas las respuestas de LLM (caché) y métricas.
 - La línea base es un LLM en una sola llamada con las mismas observaciones; su respuesta se evalúa con el **mismo** verificador.
 - Hermes se prueba aparte, con pruebas de punta a punta que verifican la **integración** (que use bien las herramientas), no la tesis.

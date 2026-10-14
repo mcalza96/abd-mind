@@ -112,9 +112,10 @@ abd-mind/
 │   │   ├── observation.py      # Observer, Observation, Hecho, Opinion
 │   │   └── case.py             # Caso, EstadoHipotesis, Veredicto
 │   ├── organ/
+│   │   ├── texto.py            # normalización de valores categóricos
 │   │   ├── rule_engine.py      # K: reglas duras y blandas
-│   │   ├── projections.py      # π computables (entornos sintéticos)
-│   │   └── verifier.py         # π aproximada por LLM (dominios reales)
+│   │   ├── projections.py      # π computables (entornos sintéticos) y relación ≈
+│   │   └── verifier.py         # interfaz Verificador; verificador LLM en fase 3
 │   ├── transition/
 │   │   ├── deterministic/
 │   │   │   ├── ibe_evaluator.py  # Score, umbral, desempate
@@ -126,6 +127,7 @@ abd-mind/
 │   ├── engine/
 │   │   ├── case_service.py     # casos de uso del motor
 │   │   └── store.py            # SQLite
+│   ├── experiments/            # cilindro, expansión, tercer observador, finanzas
 │   └── interfaces/
 │       ├── mcp_server.py       # FastMCP
 │       └── cli.py              # experimentos, inspección de casos
@@ -135,11 +137,12 @@ abd-mind/
 ├── hermes/
 │   ├── skills/razonamiento-abductivo/SKILL.md
 │   └── config.example.yaml
-├── experiments/                # cilindro, expansión, derrotabilidad, finanzas
 └── tests/
     ├── units/
     └── integration/
 ```
+
+El paquete Python se llama `factory` (diseño `src/`), así que se importa como `from factory.contracts.abduction import ...`. Las instrucciones originales usaban `from src.factory...`; se evita porque convertir `src` en paquete es un antipatrón de empaquetado. Los nombres de módulo y clase son los de la especificación.
 
 ### Flujo de un caso
 
@@ -170,4 +173,4 @@ El detalle de cada herramienta está en el [contrato MCP](contrato-mcp.md); la e
 | Umbral y desempate (D7) | `ibe_evaluator.py` |
 | Hechos ≠ opiniones (D8) | `cortex.py` → `Hecho` / `Opinion` |
 | Modelos como configuración (D9) | `config/abd-mind.yaml`, `llm_client.py` |
-| Línea base (D10) | `experiments/` + `cli.py` ([ADR-0006](adr/0006-experimentos-sin-hermes.md)) |
+| Línea base (D10) | `src/factory/experiments/` + `cli.py` ([ADR-0006](adr/0006-experimentos-sin-hermes.md)) |

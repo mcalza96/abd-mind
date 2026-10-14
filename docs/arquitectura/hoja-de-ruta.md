@@ -2,11 +2,24 @@
 
 Cada fase termina con algo que funciona y se puede probar. Ninguna fase depende de Hermes hasta la 5.
 
+## Estado
+
+| Fase | Estado |
+|---|---|
+| 0 — Base del proyecto | ✅ |
+| 1 — Núcleo determinista | ✅ |
+| 2 — Observadores, proyecciones y experimentos sintéticos | ✅ |
+| 3 — Roles LLM del motor | Pendiente |
+| 4 — Motor de casos y persistencia | Pendiente |
+| 5 — Servidor MCP | Pendiente |
+| 6 — Integración con Hermes | Pendiente |
+| 7 — Benchmarks y calibración | Pendiente |
+
 ## Fase 0 — Base del proyecto
 
 - `pyproject.toml` (Python 3.12, `uv`), pydantic, pytest, ruff, mypy.
 - Estructura de carpetas según [README](README.md#estructura-del-repositorio).
-- Comando `abd-mind` con subcomandos vacíos.
+- Comando `abd-mind` con `experimento`; los demás subcomandos avisan en qué fase llegan.
 
 **Término:** `uv run pytest`, `ruff` y `mypy` pasan en CI.
 
@@ -19,6 +32,8 @@ Cada fase termina con algo que funciona y se puede probar. Ninguna fase depende 
 
 **Término:** tests de la especificación pasan sin ningún LLM.
 
+Notas de implementación: `seleccionar_mejor_explicacion` devuelve `None` si ninguna hipótesis es coherente o alcanza $\tau$ (la especificación devolvía siempre la de mayor score, aunque fuera $-\infty$). El filtro textual de la especificación (`validar_predicados`) se conserva y se combina con las reglas estructuradas.
+
 ## Fase 2 — Observadores, proyecciones y experimentos sintéticos
 
 - `contracts/observation.py`, `contracts/case.py`.
@@ -27,6 +42,7 @@ Cada fase termina con algo que funciona y se puede probar. Ninguna fase depende 
 - `transition/deterministic/state_tree.py`: derrota y reactivación (D6).
 - `rules/sintetico.yaml`; motor de reglas con predicados estructurados (D3, D4).
 - Experimentos 5.1, 5.2 (con hipótesis fijas) y 5.3 como tests.
+- `rules/finanzas.yaml` con las tres reglas de la especificación (adelantado desde la fase 4 para probar el motor de reglas).
 
 **Término:** `abd-mind experimento cilindro|expansion|tercer-observador` reproduce las tablas de [05](../marco-teorico/05-experimentos-canonicos.md).
 
@@ -42,7 +58,7 @@ Cada fase termina con algo que funciona y se puede probar. Ninguna fase depende 
 
 - `engine/store.py` (SQLite, [ADR-0007](adr/0007-persistencia-sqlite.md)), `engine/case_service.py`.
 - Presupuestos ([ADR-0008](adr/0008-presupuestos-y-trabajos-largos.md)).
-- `rules/finanzas.yaml`; experimento 5.4.
+- Experimento 5.4.
 
 **Término:** un caso se crea, sobrevive a un reinicio, recibe evidencia nueva, derrota y reactiva hipótesis, y produce auditoría.
 

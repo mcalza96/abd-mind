@@ -90,10 +90,11 @@ Contratos mínimos de la especificación (Python 3.12, Pydantic):
 ```python
 class HipotesisCandidata(BaseModel):
     id_hipotesis: str
-    mecanismo_latente: str            # descripción causal invariante
-    entidades_latentes: list[str]     # declaradas por el generador (referencia para P)
+    mecanismo_latente: str  # descripción causal invariante
+    entidades_latentes: list[str]  # declaradas por el generador (referencia para P)
     observaciones_explicadas: list[str]  # declaradas por el generador (predicción auditable para C)
     predicados_de_consistencia: list[str]  # insumo para K
+
 
 class EvaluacionAbductiva(BaseModel):
     id_hipotesis: str

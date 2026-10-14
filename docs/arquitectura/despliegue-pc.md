@@ -64,7 +64,7 @@ Comprobar:
 ```bash
 uv run abd-mind modelos      # lista modelos disponibles en OpenCode Go
 uv run abd-mind doctor       # valida config, clave, reglas y base de datos
-uv run abd-mind experimento cilindro   # no usa LLM: debe elegir "cilindro"
+uv run abd-mind experimento todos      # no usa LLM: cilindro, expansion, tercer-observador
 ```
 
 ## 4. Configurar Hermes
