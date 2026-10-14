@@ -42,7 +42,7 @@ Incluye qué resultado contaría como fracaso.
 | [EXP-008](EXP-008-bench-motor-v01-v02.md) | abd-bench: motor sobre V01/V02 | El motor no decide: el verificador acepta casi todo |
 | [EXP-009](EXP-009-verificacion-comparativa.md) | Verificación comparativa y parsimonia juzgada | Abortado: el juez sobrecuenta (8,3 postulados por hipótesis) y se trunca |
 | [EXP-010](EXP-010-juez-comparativo.md) | Juez de parsimonia comparativo | El motor decide (18 de 20), pero acierta 10 de 20 frente a 18 de 19 de Muse; al menos 2 errores son de etiqueta |
-| [EXP-012](EXP-012-bench-v2-perturbaciones-y-sin-respuesta.md) | abd-bench v2: perturbaciones y casos sin respuesta | Registrado antes de construir los casos |
+| [EXP-012](EXP-012-bench-v2-perturbaciones-y-sin-respuesta.md) | abd-bench v2: perturbaciones y casos sin respuesta | Fracasa: el motor no se abstiene más que la línea base y acierta menos |
 
 ## Lecciones transversales
 
@@ -57,5 +57,6 @@ Patrones de error que ya ocurrieron. Antes de diseñar un experimento, revisar e
 7. **Conclusiones propias apresuradas** (EXP-004 §B2). Una brecha que parece defecto puede ser una respuesta legítima. Antes de corregir la función objetivo, preguntar si lo "malo" podría ser verdad.
 8. **Encargos a agentes externos sin verificar la salida** (EXP-006). Comprobar formato y tema antes de usar el resultado.
 9. **Corridas grandes sin prueba de humo** (EXP-009). Todo rol o prompt nuevo se prueba en uno o dos casos reales antes de lanzar muchos en paralelo.
+12. **Descomponer en juicios independientes** (EXP-012). Sumar juicios por observación pierde las relaciones entre hechos; cuando la abducción depende de un patrón, la descomposición tiene un costo.
 11. **Taxonomías ambiguas como verdad** (EXP-010). Si la respuesta correcta depende de cómo se etiqueta un mecanismo, el benchmark mide convención de etiquetado.
 10. **Juicios de LLM sin punto de comparación** (EXP-008, EXP-009). Un LLM sin rivales a la vista no tiene escala estable: puede ser indulgente (verificador) o exhaustivo (juez).
