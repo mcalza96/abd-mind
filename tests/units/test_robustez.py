@@ -1,6 +1,7 @@
 import json
 import math
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -41,7 +42,7 @@ def test_score_extendido_se_reduce_al_original() -> None:
         IBEEvaluator(lambda_residuo=-1)
 
 
-def _arbol(omega_y3: float, **kwargs: float) -> ArbolHipotesis:
+def _arbol(omega_y3: float, **kwargs: Any) -> ArbolHipotesis:
     evaluador = IBEEvaluator(rule_engine=RuleEngine(cargar_reglas("sintetico")), lambda_residuo=1.0)
     arbol = ArbolHipotesis(evaluador, VerificadorProyeccion(), SOLIDOS_CONOCIDOS, **kwargs)
     for i, vista in [("O1", "frontal"), ("O2", "cenital"), ("O3", "lateral")]:

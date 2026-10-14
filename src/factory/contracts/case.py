@@ -70,3 +70,39 @@ class ResultadoEvaluacion(BaseModel):
             "(indicador de racionalización)"
         ),
     )
+
+
+class Pregunta(BaseModel):
+    """Pregunta contrastiva del caso (11 §11.3, ADR-0012): una variable y sus valores."""
+
+    variable: str
+    valores: list[str] = Field(min_length=2)
+    descripcion: str = ""
+
+
+class Respuesta(BaseModel):
+    """Qué responde la evidencia y con qué margen (11 §11.3–11.4).
+
+    Con pregunta, las clases son sus valores; sin pregunta, cada hipótesis es su propia clase y
+    `valor` es el id de H*.
+    """
+
+    valor: str | None = Field(description="Valor que responde la pregunta, o None")
+    determinada: bool
+    scores_por_valor: dict[str, float] = Field(
+        default_factory=dict, description="Mejor score de cada clase"
+    )
+    candidatas: list[str] = Field(
+        default_factory=list,
+        description="Mejor hipótesis de cada clase en disputa (empatadas, o líder y rival)",
+    )
+    lider: str | None = None
+    rival: str | None = None
+    margen_veredictos: int | None = Field(
+        default=None,
+        description="Veredictos de LLM que habría que cambiar para invertirla (None: ∞)",
+    )
+    fragil: bool = False
+    sin_responder: list[str] = Field(
+        default_factory=list, description="Hipótesis vivas que no fijan la variable de la pregunta"
+    )

@@ -80,6 +80,11 @@ class ConfigPesos(_Estricto):
     delta_empate: float = Field(
         default=1e-6, ge=0.0, description="δ: diferencia de score que cuenta como empate"
     )
+    veredictos_fragil: int = Field(
+        default=1,
+        ge=0,
+        description="k_f: la respuesta es frágil si cambiar k_f veredictos de LLM la invierte",
+    )
 
 
 class ConfigPresupuestos(_Estricto):

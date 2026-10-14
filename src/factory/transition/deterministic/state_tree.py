@@ -24,7 +24,14 @@ from dataclasses import dataclass, field
 from pydantic import BaseModel, Field
 
 from factory.contracts.abduction import HipotesisCandidata
-from factory.contracts.case import EstadoHipotesis, Relacion, ResultadoEvaluacion, Veredicto
+from factory.contracts.case import (
+    EstadoHipotesis,
+    Pregunta,
+    Relacion,
+    Respuesta,
+    ResultadoEvaluacion,
+    Veredicto,
+)
 from factory.contracts.observation import (
     EstadoObservacion,
     Observacion,
@@ -38,6 +45,7 @@ from factory.transition.deterministic.ibe_evaluator import (
     clave_ranking,
     costo_error,
 )
+from factory.transition.deterministic.respuesta import CalculoRespuesta, clase_de
 
 
 class ResultadoArbol(BaseModel):
@@ -51,6 +59,9 @@ class ResultadoArbol(BaseModel):
         default=False, description="Varias hipótesis empatan: no se elige ninguna (ADR-0010)"
     )
     empatadas: list[str] = Field(default_factory=list)
+    respuesta: Respuesta | None = Field(
+        default=None, description="Respuesta contrastiva y su margen (ADR-0012)"
+    )
 
 
 @dataclass
@@ -73,6 +84,8 @@ class ArbolHipotesis:
         *,
         omega_derrota: float = 0.95,
         delta_empate: float = 1e-6,
+        pregunta: Pregunta | None = None,
+        veredictos_fragil: int = 1,
     ) -> None:
         self.evaluador = evaluador
         self.verificador = verificador
@@ -81,6 +94,8 @@ class ArbolHipotesis:
         self.vocabulario = {normalizar(v) for v in vocabulario}
         self.omega_derrota = omega_derrota
         self.delta_empate = delta_empate
+        self.pregunta = pregunta
+        self.veredictos_fragil = veredictos_fragil
         self.observadores: dict[str, Observador] = {}
         self.observaciones: dict[str, Observacion] = {}
         self._hipotesis: dict[str, _Registro] = {}
@@ -279,9 +294,29 @@ class ArbolHipotesis:
             expansion_sugerida=m > 0 and perdida_minima > self.evaluador.gamma,
             subdeterminada=bool(empatadas),
             empatadas=empatadas,
+            respuesta=self._respuesta(coherentes),
         )
 
+    def clase(self, id_hipotesis: str) -> str | None:
+        """Clase de la hipótesis para la respuesta: su valor de la pregunta, o su id."""
+        if self.pregunta is None:
+            return id_hipotesis
+        return clase_de(dict(self.hipotesis(id_hipotesis).afirmaciones), self.pregunta)
+
     # --- interno --------------------------------------------------------------------------
+
+    def _respuesta(self, coherentes: list[ResultadoEvaluacion]) -> Respuesta | None:
+        calculo = CalculoRespuesta(
+            self.evaluador,
+            self.observaciones.__getitem__,
+            self.confiabilidad,
+            delta=self.delta_empate,
+            veredictos_fragil=self.veredictos_fragil,
+        )
+        clases = {
+            r.evaluacion.id_hipotesis: self.clase(r.evaluacion.id_hipotesis) for r in coherentes
+        }
+        return calculo.responder(coherentes, clases)
 
     def _perdida_residuo(self, r: ResultadoEvaluacion) -> float:
         """Lo que se ganaría explicando lo pendiente (11 §11.2).

@@ -10,7 +10,7 @@ from pydantic import BaseModel, Field
 
 from factory.config import ConfigPesos
 from factory.contracts.abduction import Valor
-from factory.contracts.case import EstadoHipotesis, Veredicto
+from factory.contracts.case import EstadoHipotesis, Pregunta, Respuesta, Veredicto
 from factory.contracts.observation import EstadoObservacion, Observador, RolObservacion
 
 
@@ -54,6 +54,7 @@ class ResumenCaso(BaseModel):
     expansion_sugerida: bool = False
     subdeterminada: bool = False
     empatadas: list[str] = Field(default_factory=list)
+    respuesta: Respuesta | None = None
     evaluado_en_evento: int | None = Field(
         default=None, description="Cantidad de eventos cuando se evaluó por última vez"
     )
@@ -67,6 +68,7 @@ class RegistroCaso(BaseModel):
     hash_reglas: str
     pesos: ConfigPesos
     sesion: str = Field(description="x-opencode-session estable del caso")
+    pregunta: Pregunta | None = None
     estado: Literal["abierto", "cerrado"] = "abierto"
     llamadas: int = 0
     resumen: ResumenCaso = Field(default_factory=ResumenCaso)
@@ -106,6 +108,7 @@ class InfoCaso(BaseModel):
     descripcion: str
     dominio: str
     version_reglas: int
+    pregunta: Pregunta | None = None
     pesos: ConfigPesos
     estado: str
     llamadas: int
@@ -189,12 +192,14 @@ class ResultadoEvaluacionCaso(BaseModel):
     expansion_sugerida: bool
     subdeterminada: bool = False
     empatadas: list[str] = Field(default_factory=list)
+    respuesta: Respuesta | None = None
     avisos: list[str] = Field(default_factory=list)
 
 
 class ResultadoMejorExplicacion(BaseModel):
     caso_id: str
     h_estrella: ResumenHipotesis | None
+    respuesta: Respuesta | None = None
     empatadas: list[ResumenHipotesis] = Field(default_factory=list)
     atribuidas_a_error: dict[str, float] = Field(default_factory=dict)
     motivo: str

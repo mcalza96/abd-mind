@@ -3,6 +3,7 @@
 import json
 
 from factory.contracts.abduction import HipotesisCandidata
+from factory.contracts.case import Pregunta
 from factory.contracts.observation import Observacion, Observador
 from factory.contracts.rules import ConjuntoReglas
 
@@ -20,6 +21,15 @@ def describir_dominio(dominio: ConjuntoReglas) -> str:
         lineas.append("\nLeyes invariantes del dominio (una hipótesis que las viola se descarta):")
         lineas += [f"- {r.descripcion}" for r in dominio.reglas]
     return "\n".join(lineas)
+
+
+def describir_pregunta(pregunta: Pregunta) -> str:
+    texto = f"Pregunta del caso: {pregunta.descripcion}\n" if pregunta.descripcion else ""
+    return (
+        f"{texto}Cada hipótesis DEBE fijar en 'afirmaciones' la variable '{pregunta.variable}' "
+        f"con exactamente uno de estos valores: {', '.join(pregunta.valores)}. Es lo que la "
+        "hipótesis responde a la pregunta."
+    )
 
 
 def describir_observador(o: Observador) -> str:

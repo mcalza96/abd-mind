@@ -6,6 +6,7 @@ from pydantic import BaseModel, Field
 
 from factory.config import ConfigRol
 from factory.contracts.abduction import HipotesisCandidata
+from factory.contracts.case import Pregunta
 from factory.contracts.observation import Observacion, Observador
 from factory.contracts.rules import ConjuntoReglas
 from factory.organ.texto import normalizar
@@ -13,6 +14,7 @@ from factory.transition.stochastic.contexto import (
     describir_dominio,
     describir_hipotesis,
     describir_observaciones,
+    describir_pregunta,
 )
 from factory.transition.stochastic.esquemas import GeneracionLLM, HipotesisLLM, a_diccionario
 from factory.transition.stochastic.llm_client import ClienteLLM, ErrorLLM
@@ -61,6 +63,7 @@ class ContextoGeneracion(BaseModel):
     observaciones: list[Observacion]
     existentes: list[HipotesisCandidata] = Field(default_factory=list)
     vocabulario: set[str] = Field(default_factory=set)
+    pregunta: Pregunta | None = None
 
 
 class ResultadoGeneracion(BaseModel):
@@ -114,7 +117,7 @@ class Generador:
                 resultado.avisos.append(f"{rol.modelo}: {e}")
                 continue
             for propuesta in bruto.hipotesis:
-                h, avisos = self._convertir(propuesta, modelo, contexto.dominio, ids)
+                h, avisos = self._convertir(propuesta, modelo, contexto, ids)
                 resultado.avisos += avisos
                 firma = _firma(h, contexto.dominio)
                 if firma is not None and firma in firmas:
@@ -147,17 +150,23 @@ class Generador:
                 "Hipótesis ya existentes (no las repitas):\n"
                 + "\n".join(describir_hipotesis(h) for h in vistas)
             )
+        if contexto.pregunta is not None:
+            partes.append(describir_pregunta(contexto.pregunta))
         partes.append(INSTRUCCION_MODO[modo].format(n=n))
         return "\n\n".join(partes)
 
     @staticmethod
     def _convertir(
-        propuesta: HipotesisLLM, modelo: str, dominio: ConjuntoReglas, ids: set[str]
+        propuesta: HipotesisLLM, modelo: str, contexto: ContextoGeneracion, ids: set[str]
     ) -> tuple[HipotesisCandidata, list[str]]:
         avisos = []
         afirmaciones = a_diccionario(propuesta.afirmaciones)
+        dominio = contexto.dominio
         if dominio.variables:
-            for nombre in sorted(set(afirmaciones) - set(dominio.variables)):
+            permitidas = set(dominio.variables)
+            if contexto.pregunta is not None:
+                permitidas.add(contexto.pregunta.variable)
+            for nombre in sorted(set(afirmaciones) - permitidas):
                 del afirmaciones[nombre]
                 avisos.append(f"{modelo}: se ignoró la variable desconocida '{nombre}'")
         n = len(ids) + 1

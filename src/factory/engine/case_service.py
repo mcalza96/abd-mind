@@ -14,7 +14,7 @@ from pathlib import Path
 
 from factory.config import Config, ConfigPesos
 from factory.contracts.abduction import HipotesisCandidata, Valor
-from factory.contracts.case import EstadoHipotesis, ResultadoEvaluacion, Veredicto
+from factory.contracts.case import EstadoHipotesis, Pregunta, ResultadoEvaluacion, Veredicto
 from factory.contracts.observation import (
     EstadoObservacion,
     Observacion,
@@ -52,6 +52,7 @@ from factory.organ.rule_engine import RuleEngine, cargar_reglas, directorio_regl
 from factory.organ.texto import normalizar
 from factory.organ.verifier import Verificador, VerificadorLLM
 from factory.transition.deterministic.ibe_evaluator import IBEEvaluator
+from factory.transition.deterministic.respuesta import clase_de
 from factory.transition.deterministic.state_tree import ArbolHipotesis
 from factory.transition.stochastic.contexto import (
     describir_dominio,
@@ -150,8 +151,13 @@ class ServicioCasos:
         return self._reglas_de_archivo(dominio)
 
     def crear_caso(
-        self, descripcion: str, dominio: str, pesos: ConfigPesos | None = None
+        self,
+        descripcion: str,
+        dominio: str,
+        pesos: ConfigPesos | None = None,
+        pregunta: Pregunta | None = None,
     ) -> InfoCaso:
+        """`pregunta`: variable contrastiva que cada hipótesis debe fijar (ADR-0012)."""
         reglas = self._reglas_de_archivo(dominio)
         numero = self.store.nuevo_numero()
         momento = ahora()
@@ -163,6 +169,7 @@ class ServicioCasos:
             hash_reglas=_hash_reglas(reglas),
             pesos=pesos or self.config.pesos,
             sesion=f"abd-mind-{uuid.uuid4()}",
+            pregunta=pregunta,
             creado=momento,
             actualizado=momento,
         )
@@ -170,7 +177,12 @@ class ServicioCasos:
         self.store.agregar_evento(
             registro.id,
             "caso_creado",
-            {"descripcion": descripcion, "dominio": dominio, "version_reglas": reglas.version},
+            {
+                "descripcion": descripcion,
+                "dominio": dominio,
+                "version_reglas": reglas.version,
+                "pregunta": pregunta.model_dump(mode="json") if pregunta else None,
+            },
         )
         return self._info(registro)
 
@@ -334,12 +346,21 @@ class ServicioCasos:
             self._exigir_cupo(ctx, len(hipotesis))
             avisos: list[str] = []
             nuevas = []
+            pregunta = ctx.registro.pregunta
             for entrada in hipotesis:
                 afirmaciones = dict(entrada.afirmaciones)
                 if ctx.reglas.variables:
-                    for nombre in sorted(set(afirmaciones) - set(ctx.reglas.variables)):
+                    permitidas = set(ctx.reglas.variables)
+                    if pregunta is not None:
+                        permitidas.add(pregunta.variable)
+                    for nombre in sorted(set(afirmaciones) - permitidas):
                         del afirmaciones[nombre]
                         avisos.append(f"se ignoró la variable desconocida '{nombre}'")
+                if pregunta is not None and clase_de(afirmaciones, pregunta) is None:
+                    avisos.append(
+                        f"'{entrada.mecanismo}' no fija '{pregunta.variable}' con un valor de "
+                        f"{pregunta.valores}: no cuenta para la respuesta"
+                    )
                 h = HipotesisCandidata(
                     id_hipotesis=self._siguiente_id_hipotesis(ctx),
                     mecanismo_latente=entrada.mecanismo,
@@ -378,6 +399,7 @@ class ServicioCasos:
                     observaciones=ctx.arbol.observaciones_activas(),
                     existentes=ctx.arbol.todas_las_hipotesis(),
                     vocabulario=ctx.arbol.vocabulario,
+                    pregunta=ctx.registro.pregunta,
                 ),
                 n,
                 modo_real,
@@ -430,26 +452,52 @@ class ServicioCasos:
                 motivo += f"; supone que {', '.join(sorted(residuo))} son errores de observación"
             if evaluacion.expansion_sugerida:
                 motivo += "; conviene generar hipótesis en modo expansión"
+            respuesta = evaluacion.respuesta
+            if ctx.registro.pregunta is not None and respuesta is not None:
+                if respuesta.determinada:
+                    motivo = f"respuesta: {respuesta.valor}. " + motivo
+                else:
+                    disputa = (
+                        ", ".join(str(ctx.arbol.clase(i)) for i in respuesta.candidatas)
+                        or "ninguna clase alcanza el umbral"
+                    )
+                    motivo = f"respuesta no determinada ({disputa}). " + motivo
+            if respuesta is not None and respuesta.determinada and respuesta.fragil:
+                motivo += (
+                    f"; resultado frágil: {respuesta.margen_veredictos} veredicto(s) del "
+                    "verificador lo invertirían"
+                )
             return ResultadoMejorExplicacion(
                 caso_id=caso_id,
                 h_estrella=h,
+                respuesta=respuesta,
                 empatadas=empatadas,
                 atribuidas_a_error=residuo,
                 motivo=motivo,
             )
 
     def sugerir_observacion(self, caso_id: str) -> ResultadoSugerencias:
-        """Abducción activa (ADR-0010): qué observar para separar hipótesis empatadas."""
+        """Abducción activa (ADR-0010, ADR-0012): qué observar para separar a las candidatas.
+
+        Actúa si hay empate de mecanismos, si la respuesta no está determinada o si es frágil.
+        Con pregunta, las candidatas son la mejor hipótesis de cada clase en disputa.
+        """
         with self._operacion(caso_id) as ctx:
             evaluacion = self._evaluar(ctx)
-            if not evaluacion.subdeterminada:
+            respuesta = evaluacion.respuesta
+            ids: list[str] = []
+            if respuesta is not None and (not respuesta.determinada or respuesta.fragil):
+                ids = respuesta.candidatas
+            if len(ids) < 2 and ctx.registro.pregunta is None and evaluacion.subdeterminada:
+                ids = evaluacion.empatadas
+            if len(ids) < 2:
                 return ResultadoSugerencias(
                     caso_id=caso_id,
                     empatadas=[],
                     consultas=[],
-                    avisos=["no hay hipótesis empatadas: no hace falta discriminar"],
+                    avisos=["el resultado no está en disputa: no hace falta discriminar"],
                 )
-            empatadas = [ctx.arbol.hipotesis(i) for i in evaluacion.empatadas]
+            empatadas = [ctx.arbol.hipotesis(i) for i in ids]
             if ctx.reglas.verificador == "proyeccion":
                 consultas = self._consultas_por_proyeccion(ctx, empatadas)
             else:
@@ -457,7 +505,7 @@ class ServicioCasos:
             avisos = [] if consultas else ["no se encontró una observación que las separe"]
             return ResultadoSugerencias(
                 caso_id=caso_id,
-                empatadas=evaluacion.empatadas,
+                empatadas=ids,
                 consultas=sorted(consultas, key=lambda c: -c.clases),
                 avisos=avisos,
             )
@@ -530,6 +578,7 @@ class ServicioCasos:
             descripcion=registro.descripcion,
             dominio=registro.dominio,
             version_reglas=reglas.version,
+            pregunta=registro.pregunta,
             pesos=registro.pesos,
             estado=registro.estado,
             llamadas=registro.llamadas,
@@ -580,6 +629,8 @@ class ServicioCasos:
             set(reglas.vocabulario),
             omega_derrota=pesos.omega_derrota,
             delta_empate=pesos.delta_empate,
+            pregunta=registro.pregunta,
+            veredictos_fragil=pesos.veredictos_fragil,
         )
         ctx = _Contexto(registro=registro, reglas=reglas, arbol=arbol, cliente=cliente)
 
@@ -840,12 +891,35 @@ class ServicioCasos:
         resumen.expansion_sugerida = resultado.expansion_sugerida
         resumen.subdeterminada = resultado.subdeterminada
         resumen.empatadas = resultado.empatadas
+        resumen.respuesta = resultado.respuesta
         resumen.evaluado_en_evento = self.store.contar_eventos(ctx.registro.id)
         avisos = list(ctx.cliente.avisos) if ctx.cliente else []
         if resultado.expansion_sugerida:
             avisos.append(
                 "lo que la mejor hipótesis deja sin explicar cuesta más que postular una entidad "
                 "nueva: conviene generar hipótesis en modo expansión"
+            )
+        respuesta = resultado.respuesta
+        if ctx.registro.pregunta is not None and respuesta is not None:
+            if respuesta.determinada:
+                if respuesta.fragil:
+                    avisos.append(
+                        f"la respuesta '{respuesta.valor}' es frágil: cambiar "
+                        f"{respuesta.margen_veredictos} veredicto(s) del verificador la invertiría"
+                    )
+            else:
+                avisos.append(
+                    "la evidencia no determina la respuesta a la pregunta; sugerir_observacion "
+                    "propone qué observar"
+                )
+            if respuesta.sin_responder:
+                avisos.append(
+                    f"hipótesis que no responden la pregunta: {', '.join(respuesta.sin_responder)}"
+                )
+        elif respuesta is not None and respuesta.fragil and respuesta.determinada:
+            avisos.append(
+                f"H* es frágil: cambiar {respuesta.margen_veredictos} veredicto(s) del verificador "
+                "la invertiría"
             )
         if resultado.subdeterminada:
             avisos.append(
@@ -861,6 +935,7 @@ class ServicioCasos:
             expansion_sugerida=resultado.expansion_sugerida,
             subdeterminada=resultado.subdeterminada,
             empatadas=resultado.empatadas,
+            respuesta=resultado.respuesta,
             avisos=avisos,
         )
 
