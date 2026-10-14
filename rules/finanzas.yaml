@@ -1,0 +1,21 @@
+# Reglas invariantes del dominio financiero (experimento 5.4).
+# Solo lectura para el agente: se editan aquí y se revisan como cualquier cambio de código (ADR-0004).
+dominio: finanzas
+version: 1
+reglas:
+  - id: tasa_descuento_no_negativa
+    tipo: dura
+    descripcion: La tasa de descuento no puede ser negativa
+    condicion: { variable: tasa_descuento, op: ">=", valor: 0 }
+
+  - id: dividendos_bajo_caja
+    tipo: dura
+    descripcion: Los dividendos pagados no pueden exceder la caja disponible
+    condicion: { variable: dividendos_pagados, op: "<=", variable_ref: caja_disponible }
+
+  - id: reduccion_precio_comprime_margen
+    tipo: dura
+    descripcion: Una reducción de precios sostenida comprime el margen bruto
+    condicion:
+      si: { variable: tendencia_precio, op: "==", valor: baja_sostenida }
+      entonces: { variable: tendencia_margen_bruto, op: "in", valor: [baja, estable_con_compensacion] }

@@ -1,0 +1,22 @@
+# Fragmento ORIENTATIVO de ~/.hermes/config.yaml para usar abd-mind.
+# Verificar contra la versión instalada de Hermes con `hermes doctor`.
+# Detalle: docs/arquitectura/despliegue-pc.md
+
+model:
+  provider: custom
+  base_url: https://opencode.ai/zen/go/v1
+  default: "<modelo-agente>"        # bueno siguiendo herramientas; distinto del verificador de abd-mind
+  # La clave va en ~/.hermes/.env. Según la versión, puede requerirse
+  # referenciar aquí la variable de entorno explícitamente.
+
+mcp_servers:
+  abd-mind:
+    # Modo stdio (recomendado: Hermes y abd-mind en el mismo PC)
+    command: uv
+    args: ["--directory", "/ruta/a/abd-mind", "run", "abd-mind", "serve", "--transport", "stdio"]
+
+  # Modo HTTP (abd-mind en otra máquina o proceso aparte). Usar uno u otro.
+  # abd-mind:
+  #   url: http://127.0.0.1:8765/mcp
+  #   headers:
+  #     Authorization: "Bearer ${ABD_MIND_TOKEN}"
