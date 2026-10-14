@@ -30,41 +30,28 @@ OPENCODE_API_KEY=...
 
 ### Configuración
 
-Copiar `config/abd-mind.example.yaml` a `~/.abd-mind/config.yaml`:
+Copiar `config/abd-mind.example.yaml` a `~/.abd-mind/config.yaml` (o apuntar `ABD_MIND_CONFIG` a otro archivo) y ajustar. Si no existe ninguno, se usa el ejemplo del repositorio. Lo que define:
 
-```yaml
-proveedor:
-  base_url: https://opencode.ai/zen/go/v1   # verificar con GET /v1/models
-  api_key_env: OPENCODE_API_KEY
+- `proveedor`: `base_url` (`https://opencode.ai/inference/go/v1`) y la variable de entorno de la clave.
+- `modelos`: por cada modelo, endpoint (`chat` o `responses`), modo de salida JSON (`json_schema` o `json_object`) y `streaming`. La tabla de endpoints está en la documentación de OpenCode Go.
+- `roles`: córtex, generadores, verificador (distinto de los generadores, ADR-0002) y modelos de línea base.
+- `pesos`, `presupuestos` y `cache_dir` (caché de respuestas para reproducir experimentos).
 
-roles:                       # nombres reales: consultar `abd-mind modelos`
-  cortex:       { modelo: "<modelo-barato>",  temperatura: 0.0 }
-  generadores:
-    - { modelo: "<modelo-A>", temperatura: 1.0 }
-    - { modelo: "<modelo-B>", temperatura: 1.0 }
-  verificador:  { modelo: "<modelo-C>",       temperatura: 0.0 }   # distinto de generadores (ADR-0002)
+Particularidades de OpenCode Go que el cliente ya maneja:
 
-pesos: { alpha: 1.5, beta: 10.0, gamma: 1.0, tau: 11.0 }   # tau provisional: se calibra en la fase 7
-
-presupuestos:
-  hipotesis_por_ronda: 5
-  hipotesis_vivas_max: 20
-  profundidad_expansion: 2
-  llamadas_por_operacion: 60
-  llamadas_por_caso: 500
-
-almacenamiento:
-  sqlite: ~/.abd-mind/abd-mind.db
-
-reglas_dir: ./rules
-```
+- Exige un encabezado `x-opencode-session` estable por conversación y un user agent propio.
+- La pasarela corta a los ~30 s las respuestas **sin streaming**: los modelos que razonan largo necesitan `streaming: true`.
+- DeepSeek V4.1 Flash no acepta `json_schema`; usar `json_object`.
+- Los modelos *Contributor* (p. ej. Muse Spark) **usan los datos para entrenamiento** y no tienen retención cero, según la tabla de privacidad de OpenCode Go. No enviarles información confidencial; para documentos sensibles, asignar esos roles a modelos sin entrenamiento.
+- OpenCode Go está pensado para agentes de programación y monitorea el tráfico; el volumen del motor (muchas verificaciones cortas) puede requerir otro proveedor para benchmarks grandes.
 
 Comprobar:
 
 ```bash
 uv run abd-mind modelos      # lista modelos disponibles en OpenCode Go
-uv run abd-mind doctor       # valida config, clave, reglas y base de datos
+uv run abd-mind doctor       # valida config, reglas y acceso a cada modelo configurado
 uv run abd-mind experimento todos      # no usa LLM: cilindro, expansion, tercer-observador
+uv run abd-mind experimento cilindro-llm   # hipótesis generadas por LLM + línea base
 ```
 
 ## 4. Configurar Hermes

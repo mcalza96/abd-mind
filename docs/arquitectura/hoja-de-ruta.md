@@ -9,8 +9,8 @@ Cada fase termina con algo que funciona y se puede probar. Ninguna fase depende 
 | 0 — Base del proyecto | ✅ |
 | 1 — Núcleo determinista | ✅ |
 | 2 — Observadores, proyecciones y experimentos sintéticos | ✅ |
-| 3 — Roles LLM del motor | Pendiente |
-| 4 — Motor de casos y persistencia | Pendiente |
+| 3 — Roles LLM del motor | ✅ |
+| 4 — Motor de casos y persistencia | ✅ |
 | 5 — Servidor MCP | Pendiente |
 | 6 — Integración con Hermes | Pendiente |
 | 7 — Benchmarks y calibración | Pendiente |
@@ -54,6 +54,14 @@ Notas de implementación: `seleccionar_mejor_explicacion` devuelve `None` si nin
 
 **Término:** el experimento del cilindro corre con hipótesis **generadas** por LLM y sigue eligiendo "cilindro"; la línea base (una llamada) se mide con el mismo verificador.
 
+Notas de implementación:
+- Roles por defecto (`config/abd-mind.example.yaml`): generador Muse Spark 1.3 Contributor con Muse Spark 1.2 Contributor como `fallback` si falla (endpoint `/responses`, salida `json_schema`); córtex y verificador DeepSeek V4.1 Flash (`/chat/completions`, salida `json_object`: no acepta `json_schema`). El verificador es de otra familia que los generadores (ADR-0002).
+- OpenCode Go exige `x-opencode-session` y un user agent propio; la pasarela corta a los ~30 s las respuestas sin streaming, por eso los modelos se configuran con `streaming: true` (SSE).
+- P cuenta también las entidades afirmadas en variables de tipo `entidad` del dominio (`rules/*.yaml` declara ahora sus variables), aunque el generador no las declare latentes (D2).
+- Experimentos `cilindro-llm` y `expansion-llm`: la consiliencia se sigue calculando por proyección exacta, el LLM solo propone. `VerificadorLLM` queda listo para el dominio financiero (fase 4).
+
+**Hallazgo.** En la primera corrida, los tres modelos de la línea base respondieron "cilindro" en una sola llamada (C = 2/2): el caso canónico es demasiado fácil para mostrar la falla inductiva con modelos actuales. La comparación con la línea base necesita casos más difíciles (fase 7).
+
 ## Fase 4 — Motor de casos y persistencia
 
 - `engine/store.py` (SQLite, [ADR-0007](adr/0007-persistencia-sqlite.md)), `engine/case_service.py`.
@@ -61,6 +69,13 @@ Notas de implementación: `seleccionar_mejor_explicacion` devuelve `None` si nin
 - Experimento 5.4.
 
 **Término:** un caso se crea, sobrevive a un reinicio, recibe evidencia nueva, derrota y reactiva hipótesis, y produce auditoría.
+
+Notas de implementación:
+- El estado de un caso es un registro de eventos append-only; el árbol se reconstruye reproduciéndolo. Los veredictos se guardan aparte, así que reconstruir o reevaluar no vuelve a llamar al verificador. Cada caso guarda una copia de sus reglas: cambiar el YAML no altera casos existentes (solo genera un aviso).
+- Cada dominio declara su verificador (`proyeccion` o `llm`). La detección de hipótesis duplicadas considera el mecanismo en dominios con verificador LLM.
+- `corregir_observacion` retracta el hecho y registra la versión corregida sin usarla como prueba.
+
+**Resultado de `finanzas-llm`** (21 llamadas): el córtex separó hechos de opiniones; ganó la estrategia de reducción de precios (C=3/3); la regla de dividendos descartó su hipótesis; la postura intermedia obtuvo C=0; el comunicado derrotó a la ganadora. Después, la expansión produjo **cuatro hipótesis empatadas** (C=4/4, P=1, score 15.0) y H* se eligió por el id: un caso real de subdeterminación que el sistema todavía no reconoce (ver la fase 5 bis).
 
 ## Fase 5 — Servidor MCP
 
@@ -79,6 +94,7 @@ Notas de implementación: `seleccionar_mejor_explicacion` devuelve `None` si nin
 
 ## Fase 7 — Benchmarks y calibración
 
+- Casos más difíciles que el cilindro, porque la línea base ya resuelve el caso canónico: dataset de casos frontera documentados (encargo de investigación en [docs/investigacion](../investigacion/prompt-deep-research-casos-frontera.md)), con controles negativos y variantes ofuscadas contra la memorización.
 - Las cuatro pruebas del Plan Maestro ([05 §5.5](../marco-teorico/05-experimentos-canonicos.md#55-pruebas-que-derivan-de-estos-experimentos)) contra línea base.
 - Sensibilidad a $\alpha$, $\gamma$, $\tau$.
 - Métrica de racionalización (declarado vs. verificado) por modelo.

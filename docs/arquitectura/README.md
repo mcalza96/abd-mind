@@ -107,6 +107,7 @@ abd-mind/
 │   ├── marco-teorico/
 │   └── arquitectura/
 ├── src/factory/
+│   ├── config.py               # proveedor, modelos, roles, pesos, presupuestos
 │   ├── contracts/
 │   │   ├── abduction.py        # HipotesisCandidata, EvaluacionAbductiva
 │   │   ├── observation.py      # Observer, Observation, Hecho, Opinion
@@ -115,13 +116,15 @@ abd-mind/
 │   │   ├── texto.py            # normalización de valores categóricos
 │   │   ├── rule_engine.py      # K: reglas duras y blandas
 │   │   ├── projections.py      # π computables (entornos sintéticos) y relación ≈
-│   │   └── verifier.py         # interfaz Verificador; verificador LLM en fase 3
+│   │   └── verifier.py         # interfaz Verificador y VerificadorLLM
 │   ├── transition/
 │   │   ├── deterministic/
 │   │   │   ├── ibe_evaluator.py  # Score, umbral, desempate
 │   │   │   └── state_tree.py     # derrotabilidad
 │   │   └── stochastic/
-│   │       ├── llm_client.py     # cliente OpenAI-compatible, roles por config
+│   │       ├── llm_client.py     # cliente OpenAI-compatible: chat/responses, SSE, caché
+│   │       ├── esquemas.py       # salidas JSON que se piden a los modelos
+│   │       ├── contexto.py       # descripción del dominio y del caso para los prompts
 │   │       ├── cortex.py         # extracción hechos/opiniones
 │   │       └── generator.py      # contrastivo, expansión
 │   ├── engine/

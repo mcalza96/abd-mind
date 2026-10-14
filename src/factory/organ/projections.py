@@ -67,16 +67,22 @@ class VerificadorProyeccion:
         self,
         proyeccion: Proyeccion = proyectar_solido,
         relacion: RelacionConsistencia | None = None,
+        variable_observada: str | None = "silueta",
     ) -> None:
         self.proyeccion = proyeccion
         self.relacion = relacion or RelacionConsistencia()
+        # Variable del hecho que se compara cuando la observación no trae `valor`
+        # (p. ej. la que extrae el córtex de un texto libre).
+        self.variable_observada = variable_observada
 
     def verificar(
         self, hipotesis: HipotesisCandidata, observacion: Observacion, observador: Observador
     ) -> Veredicto:
-        observado: Valor = (
-            observacion.valor if observacion.valor is not None else observacion.contenido
-        )
+        observado: Valor = observacion.contenido
+        if observacion.valor is not None:
+            observado = observacion.valor
+        elif self.variable_observada and self.variable_observada in observacion.variables:
+            observado = observacion.variables[self.variable_observada]
         predicho = self.proyeccion(hipotesis, observador)
         if predicho is None:
             explica = False

@@ -23,6 +23,7 @@ class ResultadoExperimento(BaseModel):
     descripcion: str
     tablas: list[Tabla] = Field(default_factory=list)
     comprobaciones: list[Comprobacion] = Field(default_factory=list)
+    notas: list[str] = Field(default_factory=list)
 
     @property
     def exito(self) -> bool:
@@ -68,6 +69,8 @@ def renderizar(resultado: ResultadoExperimento) -> str:
         for fila in [tabla.columnas, *tabla.filas]:
             lineas.append("  " + "  ".join(c.ljust(a) for c, a in zip(fila, anchos, strict=True)))
         lineas.append("")
+    if resultado.notas:
+        lineas += ["Notas:", *(f"  - {n}" for n in resultado.notas), ""]
     for c in resultado.comprobaciones:
         lineas.append(f"  [{'OK' if c.ok else 'FALLA'}] {c.descripcion}")
     lineas.append(f"Resultado: {'ÉXITO' if resultado.exito else 'FALLA'}")

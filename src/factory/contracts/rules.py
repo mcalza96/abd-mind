@@ -2,7 +2,7 @@
 
 from typing import Literal, Self
 
-from pydantic import BaseModel, ConfigDict, model_validator
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from factory.contracts.abduction import Valor
 
@@ -51,17 +51,50 @@ class Regla(BaseModel):
     condicion: Condicion
 
 
+class VariableDominio(BaseModel):
+    """Variable del vocabulario del dominio que pueden usar observaciones e hipótesis."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    descripcion: str
+    tipo: Literal["entidad", "categoria", "numero", "booleano"] = "categoria"
+    valores: list[Valor] | None = Field(
+        default=None, description="Valores admitidos, si el conjunto es cerrado"
+    )
+
+
 class ConjuntoReglas(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     dominio: str
     version: int
+    descripcion: str = ""
+    verificador: Literal["llm", "proyeccion"] = Field(
+        default="llm",
+        description="Cómo se decide π_i(H) ≈ y_i: proyección computable o verificador LLM",
+    )
+    variables: dict[str, VariableDominio] = Field(default_factory=dict)
     reglas: list[Regla]
 
+    def variables_entidad(self) -> set[str]:
+        """Variables cuyo valor nombra una entidad: cuentan en P si no están en V (D2)."""
+        return {n for n, v in self.variables.items() if v.tipo == "entidad"}
+
     @model_validator(mode="after")
-    def _ids_unicos(self) -> Self:
+    def _validar(self) -> Self:
         ids = [r.id for r in self.reglas]
         repetidos = sorted({i for i in ids if ids.count(i) > 1})
         if repetidos:
             raise ValueError(f"ids de regla repetidos: {repetidos}")
+        if self.variables:
+            usadas = {v for r in self.reglas for v in _variables(r.condicion)}
+            no_declaradas = sorted(usadas - set(self.variables))
+            if no_declaradas:
+                raise ValueError(f"las reglas usan variables no declaradas: {no_declaradas}")
         return self
+
+
+def _variables(condicion: Condicion) -> set[str]:
+    if isinstance(condicion, Implicacion):
+        return _variables(condicion.si) | _variables(condicion.entonces)
+    return {condicion.variable} | ({condicion.variable_ref} if condicion.variable_ref else set())

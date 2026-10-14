@@ -2,7 +2,8 @@
 
 Implementa docs/marco-teorico/03 §3.5–3.6 y las decisiones D1, D2 y D6:
 - C se cuenta con veredictos de un verificador, no con lo que declara la hipótesis.
-- P cuenta las entidades latentes que no están en el vocabulario verificado V.
+- P cuenta las entidades (declaradas o afirmadas en variables de tipo entidad) que no están en
+  el vocabulario verificado V.
 - Una observación que llega cuando ya hay hipótesis es una prueba: toda hipótesis que no la
   explica queda derrotada. Retractar esa observación reactiva a las que derrotó solo ella.
 """
@@ -65,17 +66,18 @@ class ArbolHipotesis:
             raise ValueError(f"la hipótesis '{hipotesis.id_hipotesis}' ya existe")
         self._hipotesis[hipotesis.id_hipotesis] = _Registro(hipotesis)
 
-    def agregar_observacion(self, observacion: Observacion) -> list[str]:
+    def agregar_observacion(self, observacion: Observacion, como_prueba: bool = True) -> list[str]:
         """Registra y_k y la usa como prueba de las hipótesis existentes.
 
-        Devuelve los ids de las hipótesis vivas que quedaron derrotadas.
+        Devuelve los ids de las hipótesis vivas que quedaron derrotadas. Con
+        `como_prueba=False` (p. ej. al corregir un hecho mal transcrito) solo se registra.
         """
         if observacion.id in self.observaciones:
             raise ValueError(f"la observación '{observacion.id}' ya existe")
         if observacion.observador_id not in self.observadores:
             raise ValueError(f"el observador '{observacion.observador_id}' no está registrado")
         self.observaciones[observacion.id] = observacion
-        if observacion.estado is not EstadoObservacion.ACTIVA:
+        if observacion.estado is not EstadoObservacion.ACTIVA or not como_prueba:
             return []
 
         derrotadas = []
@@ -111,15 +113,38 @@ class ArbolHipotesis:
 
     # --- consulta -------------------------------------------------------------------------
 
+    def hipotesis(self, id_hipotesis: str) -> HipotesisCandidata:
+        return self._hipotesis[id_hipotesis].hipotesis
+
+    def todas_las_hipotesis(self) -> list[HipotesisCandidata]:
+        return [r.hipotesis for r in self._hipotesis.values()]
+
     def estado(self, id_hipotesis: str) -> EstadoHipotesis:
         return self._hipotesis[id_hipotesis].estado
+
+    def derrotada_por(self, id_hipotesis: str) -> list[str]:
+        return sorted(self._hipotesis[id_hipotesis].derrotada_por)
 
     def observaciones_activas(self) -> list[Observacion]:
         return [o for o in self.observaciones.values() if o.estado is EstadoObservacion.ACTIVA]
 
+    def entidades(self, hipotesis: HipotesisCandidata) -> set[str]:
+        """Entidades que usa H: las declaradas y los valores de variables de tipo entidad."""
+        variables_entidad = self.evaluador.rule_engine.reglas.variables_entidad()
+        afirmadas = {
+            v
+            for k, v in hipotesis.afirmaciones.items()
+            if k in variables_entidad and isinstance(v, str)
+        }
+        return {normalizar(e) for e in [*hipotesis.entidades_latentes, *afirmadas]}
+
     def parsimonia(self, hipotesis: HipotesisCandidata) -> int:
-        no_verificadas = {normalizar(e) for e in hipotesis.entidades_latentes} - self.vocabulario
-        return len(no_verificadas)
+        """P: entidades de H que no están en el vocabulario verificado (D2).
+
+        Las entidades afirmadas en variables de tipo entidad cuentan aunque el generador no las
+        declare como latentes.
+        """
+        return len(self.entidades(hipotesis) - self.vocabulario)
 
     def evaluar_registro(self, id_hipotesis: str) -> ResultadoEvaluacion:
         registro = self._hipotesis[id_hipotesis]

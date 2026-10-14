@@ -6,13 +6,14 @@ from factory.experiments.solidos import arbol_cilindro, hipotesis_solido
 from factory.transition.deterministic.state_tree import ArbolHipotesis
 
 VOCABULARIO = {"esfera", "cubo", "cono"}
-LATENTE = "solido_de_revolucion_perfil_rectangular"
+# El generador nombra el sólido nuevo; al afirmarlo en 'solido' cuenta en P aunque no se declare.
+LATENTE = "cilindro"
 
 NOMBRES = {
     "h_esfera": "Esfera",
     "h_cubo": "Cubo",
     "h_cono": "Cono",
-    "h_latente": "Latente: sólido de revolución de perfil rectangular",
+    "h_latente": "Latente: sólido de revolución de perfil rectangular (cilindro)",
 }
 
 
