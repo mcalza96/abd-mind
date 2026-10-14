@@ -199,7 +199,10 @@ class ArbolHipotesis:
             for k, v in hipotesis.afirmaciones.items()
             if k in variables_entidad and isinstance(v, str)
         }
-        return {normalizar(e) for e in [*hipotesis.entidades_latentes, *afirmadas]}
+        return {
+            normalizar(e)
+            for e in [*hipotesis.entidades_latentes, *hipotesis.entidades_juzgadas, *afirmadas]
+        }
 
     def parsimonia(self, hipotesis: HipotesisCandidata) -> int:
         """P: entidades de H que no están en el vocabulario verificado (D2).
@@ -215,6 +218,7 @@ class ArbolHipotesis:
         activas = self.observaciones_activas()
         veredictos = [self._veredicto(h, o) for o in activas]
         relacion = {v.id_observacion: v.relacion for v in veredictos}
+        pesos = {v.id_observacion: v.peso for v in veredictos}
         explicadas = {i for i, r in relacion.items() if r is Relacion.EXPLICA}
         residuo = {
             o.id: costo_error(self.confiabilidad(o))
@@ -231,7 +235,7 @@ class ArbolHipotesis:
             consiliencia=len(explicadas),
             parsimonia=self.parsimonia(h),
             consiliencia_ponderada=sum(
-                self.confiabilidad(o) for o in activas if o.id in explicadas
+                self.confiabilidad(o) * pesos[o.id] for o in activas if o.id in explicadas
             ),
             residuo=sum(residuo.values()),
         )

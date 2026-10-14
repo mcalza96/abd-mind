@@ -125,15 +125,16 @@ class CalculoRespuesta:
                 continue
             omega = self.confiabilidad(self.observacion(v.id_observacion))
             explicar, contradecir = alpha * omega, lam * costo_error(omega)
+            # Un veredicto que explica con peso g aporta α·ω·g (ADR-0015).
             if subir:
                 cambio = {
                     Relacion.CONTRADICE: explicar + contradecir,
                     Relacion.NEUTRAL: explicar,
-                    Relacion.EXPLICA: 0.0,
+                    Relacion.EXPLICA: explicar * (1 - v.peso),
                 }[v.relacion]
             else:
                 cambio = {
-                    Relacion.EXPLICA: explicar + contradecir,
+                    Relacion.EXPLICA: explicar * v.peso + contradecir,
                     Relacion.NEUTRAL: contradecir,
                     Relacion.CONTRADICE: 0.0,
                 }[v.relacion]

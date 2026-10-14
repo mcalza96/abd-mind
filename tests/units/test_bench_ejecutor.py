@@ -1,6 +1,7 @@
 """Ejecutor de abd-bench con modelos simulados."""
 
 import json
+import re
 from pathlib import Path
 
 from factory.bench.casos import TipoCausa, cargar_todos
@@ -37,8 +38,19 @@ def _responder(ruta: str, cuerpo: JSON) -> str:
             }
         )
     if "verificador independiente" in sistema:
-        relacion = "explica" if "Error del instrumento" in usuario else "neutral"
-        return json.dumps({"justificacion": "prueba", "relacion": relacion})
+        calificaciones = [
+            {
+                "id_hipotesis": m.group(1),
+                "justificacion": "prueba",
+                "nivel": "muy_esperable"
+                if "Error del instrumento" in m.group(2)
+                else "indiferente",
+            }
+            for m in re.finditer(r"^- (\w+): (.*?) \| afirmaciones", usuario, re.MULTILINE)
+        ]
+        return json.dumps({"calificaciones": calificaciones})
+    if "juez de parsimonia" in sistema:
+        return json.dumps({"postulados": []})
     raise AssertionError(f"petición inesperada: {sistema[:60]}")
 
 

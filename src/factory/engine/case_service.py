@@ -54,7 +54,7 @@ from factory.engine.store import CacheSQLite, Store, ahora
 from factory.organ.projections import VerificadorProyeccion
 from factory.organ.rule_engine import RuleEngine, cargar_reglas, directorio_reglas
 from factory.organ.texto import normalizar
-from factory.organ.verifier import Verificador, VerificadorLLM
+from factory.organ.verifier import Verificador, VerificadorComparativo
 from factory.transition.deterministic.ibe_evaluator import IBEEvaluator
 from factory.transition.deterministic.respuesta import clase_de
 from factory.transition.deterministic.state_tree import ArbolHipotesis
@@ -70,6 +70,7 @@ from factory.transition.stochastic.generator import (
     Generador,
     ModoGeneracion,
 )
+from factory.transition.stochastic.juez import juzgar_postulados
 from factory.transition.stochastic.llm_client import (
     Cache,
     ClienteLLM,
@@ -416,8 +417,7 @@ class ServicioCasos:
                     predicciones=entrada.predicciones,
                     origen=origen,
                 )
-                self._registrar_hipotesis(ctx, h)
-                nuevas.append(h)
+                nuevas.append(self._registrar_hipotesis(ctx, h))
             return ResultadoHipotesis(
                 caso_id=caso_id, hipotesis=[_hipotesis_registrada(h) for h in nuevas], avisos=avisos
             )
@@ -450,14 +450,13 @@ class ServicioCasos:
                 n,
                 modo_real,
             )
-            for h in generacion.hipotesis[:cupo]:
-                self._registrar_hipotesis(ctx, h)
+            registradas = [self._registrar_hipotesis(ctx, h) for h in generacion.hipotesis[:cupo]]
             avisos = [f"modo: {modo_real.value}", *generacion.avisos, *ctx.cliente.avisos]
             if len(generacion.hipotesis) > cupo:
                 avisos.append(f"se descartaron {len(generacion.hipotesis) - cupo} por el límite")
             return ResultadoHipotesis(
                 caso_id=caso_id,
-                hipotesis=[_hipotesis_registrada(h) for h in generacion.hipotesis[:cupo]],
+                hipotesis=[_hipotesis_registrada(h) for h in registradas],
                 avisos=avisos,
             )
 
@@ -583,6 +582,7 @@ class ServicioCasos:
                     mecanismo=h.mecanismo_latente,
                     origen=h.origen,
                     entidades_latentes=h.entidades_latentes,
+                    entidades_juzgadas=h.entidades_juzgadas,
                     afirmaciones=h.afirmaciones,
                     predicciones=h.predicciones,
                     estado=arbol.estado(h.id_hipotesis),
@@ -673,10 +673,23 @@ class ServicioCasos:
             lambda_residuo=pesos.lambda_residuo,
         )
         base: Verificador
+        # El verificador comparativo necesita el conjunto vivo; el árbol se crea después.
+        arboles: list[ArbolHipotesis] = []
+
+        def vivas() -> list[HipotesisCandidata]:
+            arbol = arboles[0]
+            return [
+                h
+                for h in arbol.todas_las_hipotesis()
+                if arbol.estado(h.id_hipotesis) is EstadoHipotesis.VIVA
+            ]
+
         if reglas.verificador == "proyeccion":
             base = VerificadorProyeccion()
         elif cliente is not None:
-            base = VerificadorLLM(cliente, self.config.roles.verificador)
+            base = VerificadorComparativo(
+                cliente, self.config.roles.verificador, vivas, pesos.peso_esperable
+            )
         else:
             base = _SinVerificador()
         arbol = ArbolHipotesis(
@@ -688,6 +701,7 @@ class ServicioCasos:
             pregunta=registro.pregunta,
             veredictos_fragil=pesos.veredictos_fragil,
         )
+        arboles.append(arbol)
         ctx = _Contexto(registro=registro, reglas=reglas, arbol=arbol, cliente=cliente)
 
         for evento in self.store.eventos(registro.id):
@@ -897,11 +911,25 @@ class ServicioCasos:
             n += 1
         return f"h{n}"
 
-    def _registrar_hipotesis(self, ctx: _Contexto, h: HipotesisCandidata) -> None:
+    def _registrar_hipotesis(self, ctx: _Contexto, h: HipotesisCandidata) -> HipotesisCandidata:
+        if ctx.reglas.verificador == "llm" and ctx.cliente is not None:
+            # Parsimonia juzgada (ADR-0015): P no depende solo de lo que la hipótesis declara.
+            h = h.model_copy(
+                update={
+                    "entidades_juzgadas": juzgar_postulados(
+                        ctx.cliente,
+                        self.config.roles.verificador,
+                        h,
+                        ctx.arbol.observadores,
+                        ctx.arbol.observaciones_activas(),
+                    )
+                }
+            )
         ctx.arbol.agregar_hipotesis(h)
         self.store.agregar_evento(
             ctx.registro.id, "hipotesis_registrada", {"hipotesis": h.model_dump(mode="json")}
         )
+        return h
 
     def _exigir_cupo(self, ctx: _Contexto, pedidas: int) -> int:
         maximo = self.config.presupuestos.hipotesis_vivas_max
@@ -1031,6 +1059,7 @@ def _hipotesis_registrada(h: HipotesisCandidata) -> HipotesisRegistrada:
         id_hipotesis=h.id_hipotesis,
         mecanismo=h.mecanismo_latente,
         entidades_latentes=h.entidades_latentes,
+        entidades_juzgadas=h.entidades_juzgadas,
         afirmaciones=h.afirmaciones,
         predicciones=h.predicciones,
         origen=h.origen,

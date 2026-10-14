@@ -35,11 +35,7 @@ def _cortex(usuario: str) -> str:
     )
 
 
-def _verificador(usuario: str) -> str:
-    hipotesis = re.search(r"Hipótesis: (.*)", usuario)
-    observacion = re.search(r"Observación: (.*)", usuario)
-    assert hipotesis and observacion
-    h, o = hipotesis.group(1).lower(), observacion.group(1).lower()
+def _explica(h: str, o: str) -> bool:
     if "precios" in h:
         explica = "precios de lista" not in o
     elif "demanda" in h:
@@ -50,8 +46,23 @@ def _verificador(usuario: str) -> str:
         explica = True
     else:
         explica = False
-    relacion = "explica" if explica else "contradice"
-    return json.dumps({"justificacion": "regla de prueba", "relacion": relacion})
+    return explica
+
+
+def _verificador(usuario: str) -> str:
+    """Verificador comparativo simulado: muy_esperable o inesperado según reglas fijas."""
+    observacion = re.search(r"Observación: (.*)", usuario)
+    assert observacion
+    o = observacion.group(1).lower()
+    calificaciones = [
+        {
+            "id_hipotesis": m.group(1),
+            "justificacion": "regla de prueba",
+            "nivel": "muy_esperable" if _explica(m.group(2).lower(), o) else "inesperado",
+        }
+        for m in re.finditer(r"^- (\w+): (.*?) \| afirmaciones", usuario, re.MULTILINE)
+    ]
+    return json.dumps({"calificaciones": calificaciones})
 
 
 def _generador() -> str:
@@ -76,6 +87,8 @@ def responder(ruta: str, cuerpo: JSON) -> str:
         return _cortex(usuario)
     if "verificador independiente" in sistema:
         return _verificador(usuario)
+    if "juez de parsimonia" in sistema:
+        return json.dumps({"postulados": []})
     if "generador de hipótesis" in sistema:
         return _generador()
     raise AssertionError(f"petición inesperada: {sistema[:60]}")

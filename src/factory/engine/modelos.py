@@ -190,6 +190,9 @@ class HipotesisRegistrada(BaseModel):
     id_hipotesis: str
     mecanismo: str
     entidades_latentes: list[str]
+    entidades_juzgadas: list[str] = Field(
+        default_factory=list, description="Postulados no observados según el juez (ADR-0015)"
+    )
     afirmaciones: dict[str, Valor]
     predicciones: list[Prediccion] = Field(default_factory=list)
     origen: str
@@ -295,6 +298,7 @@ class HipotesisAuditada(BaseModel):
     mecanismo: str
     origen: str
     entidades_latentes: list[str]
+    entidades_juzgadas: list[str] = Field(default_factory=list)
     afirmaciones: dict[str, Valor]
     predicciones: list[Prediccion] = Field(default_factory=list)
     estado: EstadoHipotesis

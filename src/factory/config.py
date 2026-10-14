@@ -80,6 +80,12 @@ class ConfigPesos(_Estricto):
     delta_empate: float = Field(
         default=1e-6, ge=0.0, description="δ: diferencia de score que cuenta como empate"
     )
+    peso_esperable: float = Field(
+        default=0.5,
+        ge=0.0,
+        le=1.0,
+        description="g: peso en C de un hecho 'esperable' pero no predicho (ADR-0015, a priori)",
+    )
     veredictos_fragil: int = Field(
         default=1,
         ge=0,

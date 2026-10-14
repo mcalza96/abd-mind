@@ -99,6 +99,7 @@ def auditoria_markdown(a: Auditoria) -> str:
             "",
             f"- Origen: {hip.origen}",
             f"- Entidades latentes: {', '.join(hip.entidades_latentes) or '—'}",
+            f"- Postulados según el juez: {', '.join(hip.entidades_juzgadas) or '—'}",
             f"- Afirmaciones: `{json.dumps(hip.afirmaciones, ensure_ascii=False)}`",
             *[f"- Predice: {p.que} → {p.esperado} ({p.horizonte})" for p in hip.predicciones],
             f"- Explica: {', '.join(explica) or '—'}",

@@ -28,6 +28,12 @@ class Veredicto(BaseModel):
     id_observacion: str
     relacion: Relacion
     explica: bool = Field(default=False, description="Derivado: relacion == explica")
+    nivel: str | None = Field(
+        default=None, description="Nivel de la escala comparativa (ADR-0015), si lo hubo"
+    )
+    peso: float = Field(
+        default=1.0, ge=0.0, le=1.0, description="Peso en la consiliencia cuando explica"
+    )
     fuente: str = Field(description="proyeccion o verificador:<modelo>")
     justificacion: str = ""
 

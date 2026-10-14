@@ -77,3 +77,22 @@ class ConsultaLLM(BaseModel):
 
 class ConsultasLLM(BaseModel):
     consultas: list[ConsultaLLM]
+
+
+class CalificacionLLM(BaseModel):
+    id_hipotesis: str
+    justificacion: str
+    nivel: Literal["muy_esperable", "esperable", "indiferente", "inesperado"]
+
+
+class ComparacionLLM(BaseModel):
+    calificaciones: list[CalificacionLLM]
+
+
+class PostuladoLLM(BaseModel):
+    nombre: str
+    descripcion: str
+
+
+class JuicioParsimoniaLLM(BaseModel):
+    postulados: list[PostuladoLLM]

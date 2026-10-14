@@ -29,6 +29,10 @@ class HipotesisCandidata(BaseModel):
         default_factory=list,
         description="Nuevas entidades asumidas para calcular Parsimonia P",
     )
+    entidades_juzgadas: list[str] = Field(
+        default_factory=list,
+        description="Postulados no observados según un juez independiente (ADR-0015); cuentan en P",
+    )
     observaciones_explicadas: list[str] = Field(
         default_factory=list,
         description=(

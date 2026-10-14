@@ -37,6 +37,7 @@ pesos:
   lambda_residuo: 1.0   # costo de atribuir un hecho a error del observador (ADR-0009)
   omega_derrota: 0.95   # confiabilidad mínima para que un hecho derrote por sí solo
   delta_empate: 1.0e-6  # diferencia de score que cuenta como empate (ADR-0010)
+  peso_esperable: 0.5   # peso en C de un hecho "esperable" no predicho (ADR-0015; a priori)
   veredictos_fragil: 1  # respuesta frágil si cambiar este número de veredictos LLM la invierte (ADR-0012)
 
 presupuestos:
