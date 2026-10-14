@@ -65,6 +65,19 @@ def _verificador(usuario: str) -> str:
     return json.dumps({"calificaciones": calificaciones})
 
 
+def _juicio(usuario: str) -> str:
+    """Juez holístico simulado: ordena por cuántas observaciones explica según `_explica`."""
+    observaciones = re.findall(r"^- \S+ \(observador [^)]*\): (.*)$", usuario, re.MULTILINE)
+    hipotesis = re.findall(r"^- (h\d+): (.*?) \| afirmaciones", usuario, re.MULTILINE)
+    puntos = {i: sum(_explica(m.lower(), o.lower()) for o in observaciones) for i, m in hipotesis}
+    orden = sorted(puntos, key=lambda i: (-puntos[i], i))
+    # Si las dos primeras explican lo mismo, el juez no decide (empate honesto).
+    decide = len(orden) < 2 or puntos[orden[0]] > puntos[orden[1]]
+    return json.dumps(
+        {"justificacion": "regla de prueba", "orden": orden, "decide": decide, "confianza": "media"}
+    )
+
+
 def _generador() -> str:
     return json.dumps(
         {
@@ -87,6 +100,8 @@ def responder(ruta: str, cuerpo: JSON) -> str:
         return _cortex(usuario)
     if "verificador independiente" in sistema:
         return _verificador(usuario)
+    if "juez de un sistema" in sistema:
+        return _juicio(usuario)
     if "juez de parsimonia" in sistema:
         return json.dumps({"juicios": []})
     if "generador de hipótesis" in sistema:

@@ -15,7 +15,13 @@ from pathlib import Path
 
 from factory.config import Config, ConfigPesos
 from factory.contracts.abduction import HipotesisCandidata, Valor
-from factory.contracts.case import EstadoHipotesis, Pregunta, ResultadoEvaluacion, Veredicto
+from factory.contracts.case import (
+    EstadoHipotesis,
+    Pregunta,
+    Respuesta,
+    ResultadoEvaluacion,
+    Veredicto,
+)
 from factory.contracts.observation import (
     EstadoObservacion,
     Observacion,
@@ -36,6 +42,7 @@ from factory.engine.modelos import (
     HipotesisAuditada,
     HipotesisRegistrada,
     InfoCaso,
+    JuicioRegistrado,
     ObservacionAuditada,
     ObservacionRegistrada,
     PrediccionVigilada,
@@ -58,7 +65,7 @@ from factory.organ.texto import normalizar
 from factory.organ.verifier import Verificador, VerificadorComparativo
 from factory.transition.deterministic.ibe_evaluator import IBEEvaluator
 from factory.transition.deterministic.respuesta import clase_de
-from factory.transition.deterministic.state_tree import ArbolHipotesis
+from factory.transition.deterministic.state_tree import ArbolHipotesis, ResultadoArbol
 from factory.transition.stochastic.contexto import (
     describir_dominio,
     describir_hipotesis,
@@ -72,6 +79,7 @@ from factory.transition.stochastic.generator import (
     ModoGeneracion,
 )
 from factory.transition.stochastic.juez import juzgar_postulados
+from factory.transition.stochastic.juicio import juzgar_explicaciones
 from factory.transition.stochastic.llm_client import (
     Cache,
     ClienteLLM,
@@ -526,10 +534,17 @@ class ServicioCasos:
                 for i in vigiladas
                 for p in ctx.arbol.hipotesis(i).predicciones
             ]
+            if evaluacion.juicio is not None:
+                motivo = (
+                    f"juicio holístico de {evaluacion.juicio.modelo} (confianza "
+                    f"{evaluacion.juicio.confianza}): {evaluacion.juicio.justificacion}. " + motivo
+                )
             return ResultadoMejorExplicacion(
                 caso_id=caso_id,
                 h_estrella=h,
                 respuesta=respuesta,
+                metodo=evaluacion.metodo,
+                juicio=evaluacion.juicio,
                 que_vigilar=que_vigilar,
                 empatadas=empatadas,
                 atribuidas_a_error=residuo,
@@ -962,6 +977,59 @@ class ServicioCasos:
             )
         return cupo
 
+    def _aplicar_juicio(
+        self, ctx: _Contexto, resultado: ResultadoArbol
+    ) -> tuple[ResultadoArbol, JuicioRegistrado]:
+        """Selección holística (ADR-0016) sobre las hipótesis vivas que respetan las reglas."""
+        assert ctx.cliente is not None
+        arbol = ctx.arbol
+        coherentes = [r for r in resultado.ranking if not r.violaciones]
+        if not coherentes:
+            vacio = JuicioRegistrado(
+                modelo="—",
+                orden=[],
+                decide=False,
+                confianza="baja",
+                justificacion="ninguna hipótesis viva respeta las reglas del dominio",
+            )
+            return resultado, vacio
+        rol = self.config.roles.juez or self.config.roles.verificador
+        bruto = juzgar_explicaciones(
+            ctx.cliente,
+            rol,
+            [arbol.hipotesis(r.evaluacion.id_hipotesis) for r in coherentes],
+            arbol.observadores,
+            arbol.observaciones_activas(),
+            ctx.registro.pregunta,
+        )
+        juicio = JuicioRegistrado(**bruto.model_dump())
+        self.store.agregar_evento(ctx.registro.id, "juicio_holistico", juicio.model_dump())
+        por_id = {r.evaluacion.id_hipotesis: r for r in coherentes}
+        lider = juicio.orden[0]
+        clase_lider = arbol.clase(lider)
+        rival = next((i for i in juicio.orden[1:] if arbol.clase(i) != clase_lider), None)
+        decide = juicio.decide and clase_lider is not None
+        respuesta = Respuesta(
+            valor=clase_lider if decide else None,
+            determinada=decide,
+            candidatas=[lider] + ([rival] if rival else []),
+            lider=lider if decide else None,
+            rival=rival,
+            fragil=decide and juicio.confianza == "baja",
+            sin_responder=resultado.respuesta.sin_responder if resultado.respuesta else [],
+        )
+        actualizado = resultado.model_copy(
+            update={
+                "ranking": [por_id[i] for i in juicio.orden]
+                + [r for r in resultado.ranking if r.violaciones],
+                "h_estrella": por_id[lider] if decide else None,
+                "subdeterminada": not decide,
+                "empatadas": [] if decide else respuesta.candidatas,
+                "respuesta": respuesta,
+            }
+        )
+        return actualizado, juicio
+
     def _precalificar(self, ctx: _Contexto) -> None:
         """Califica en paralelo las observaciones que tienen hipótesis vivas sin veredicto.
 
@@ -1005,6 +1073,9 @@ class ServicioCasos:
                 raise ErrorCaso(CodigoError.SIN_HIPOTESIS, "el caso no tiene hipótesis vivas")
 
         resultado = arbol.evaluar()
+        juicio: JuicioRegistrado | None = None
+        if ctx.reglas.modo_seleccion() == "holistica" and ctx.cliente is not None:
+            resultado, juicio = self._aplicar_juicio(ctx, resultado)
         ranking = [self._entrada_ranking(ctx, r) for r in resultado.ranking if not r.violaciones]
         descartadas = [
             Descartada(
@@ -1032,9 +1103,14 @@ class ServicioCasos:
                 "nueva: conviene generar hipótesis en modo expansión"
             )
         respuesta = resultado.respuesta
+        if juicio is not None:
+            avisos.append(
+                f"la mejor explicación la elige un juicio holístico de {juicio.modelo} "
+                f"(confianza {juicio.confianza}), no un cálculo (ADR-0016)"
+            )
         if ctx.registro.pregunta is not None and respuesta is not None:
             if respuesta.determinada:
-                if respuesta.fragil:
+                if respuesta.fragil and juicio is None:
                     avisos.append(
                         f"la respuesta '{respuesta.valor}' es frágil: cambiar "
                         f"{respuesta.margen_veredictos} veredicto(s) del verificador la invertiría"
@@ -1068,6 +1144,8 @@ class ServicioCasos:
             subdeterminada=resultado.subdeterminada,
             empatadas=resultado.empatadas,
             respuesta=resultado.respuesta,
+            metodo="holistica" if juicio is not None else "score",
+            juicio=juicio,
             avisos=avisos,
         )
 

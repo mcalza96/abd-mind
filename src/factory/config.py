@@ -67,6 +67,9 @@ class ConfigRoles(_Estricto):
     cortex: ConfigRol
     generadores: list[ConfigRol] = Field(min_length=1)
     verificador: ConfigRol
+    juez: ConfigRol | None = Field(
+        default=None, description="Juicio holístico (ADR-0016); por defecto, el del verificador"
+    )
     linea_base: list[ConfigRol] = Field(default_factory=list)
 
 

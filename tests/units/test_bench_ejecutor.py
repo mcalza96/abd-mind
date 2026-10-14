@@ -49,6 +49,12 @@ def _responder(ruta: str, cuerpo: JSON) -> str:
             for m in re.finditer(r"^- (\w+): (.*?) \| afirmaciones", usuario, re.MULTILINE)
         ]
         return json.dumps({"calificaciones": calificaciones})
+    if "juez de un sistema" in sistema:
+        ids = re.findall(r"^- (h\d+): (.*?) \| afirmaciones", usuario, re.MULTILINE)
+        orden = sorted((i for i, _ in ids), key=lambda i: "Error" not in dict(ids)[i])
+        return json.dumps(
+            {"justificacion": "prueba", "orden": orden, "decide": True, "confianza": "alta"}
+        )
     if "juez de parsimonia" in sistema:
         return json.dumps({"juicios": []})
     raise AssertionError(f"petición inesperada: {sistema[:60]}")

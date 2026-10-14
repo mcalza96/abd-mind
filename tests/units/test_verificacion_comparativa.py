@@ -152,6 +152,11 @@ def test_precalificacion_en_paralelo_una_llamada_por_observacion() -> None:
         prompt = ultimo_prompt(cuerpo)
         if "juez de parsimonia" in json.dumps(cuerpo, ensure_ascii=False):
             return json.dumps({"juicios": []})
+        if "juez de un sistema" in json.dumps(cuerpo, ensure_ascii=False):
+            ids = re.findall(r"- (h\d+): ", prompt)
+            return json.dumps(
+                {"justificacion": "", "orden": ids, "decide": False, "confianza": "baja"}
+            )
         ids = re.findall(r"- (h\d+): ", prompt)
         return json.dumps(
             {
@@ -173,5 +178,6 @@ def test_precalificacion_en_paralelo_una_llamada_por_observacion() -> None:
     )
     antes = len(transporte.llamadas)
     evaluacion = servicio.evaluar(caso)
-    assert len(transporte.llamadas) - antes == 5  # una calificación por observación
-    assert evaluacion.subdeterminada  # las tres empatan: todo "esperable"
+    # Una calificación por observación, más el juicio holístico (ADR-0016).
+    assert len(transporte.llamadas) - antes == 6
+    assert evaluacion.metodo == "holistica" and evaluacion.subdeterminada  # el juez no decide

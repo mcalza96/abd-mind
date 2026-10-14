@@ -89,6 +89,13 @@ class ComparacionLLM(BaseModel):
     calificaciones: list[CalificacionLLM]
 
 
+class JuicioHolisticoLLM(BaseModel):
+    justificacion: str
+    orden: list[str]
+    decide: bool
+    confianza: Literal["alta", "media", "baja"]
+
+
 class JuicioHipotesisLLM(BaseModel):
     id_hipotesis: str
     postulados: list[str]

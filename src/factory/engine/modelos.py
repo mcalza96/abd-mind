@@ -231,6 +231,16 @@ class Descartada(BaseModel):
     reglas: list[str]
 
 
+class JuicioRegistrado(BaseModel):
+    """Juicio holístico usado para elegir (ADR-0016). Es un juicio, no un cálculo."""
+
+    modelo: str
+    orden: list[str]
+    decide: bool
+    confianza: str
+    justificacion: str
+
+
 class ResultadoEvaluacionCaso(BaseModel):
     caso_id: str
     m: int
@@ -241,6 +251,8 @@ class ResultadoEvaluacionCaso(BaseModel):
     subdeterminada: bool = False
     empatadas: list[str] = Field(default_factory=list)
     respuesta: Respuesta | None = None
+    metodo: Literal["score", "holistica"] = "score"
+    juicio: JuicioRegistrado | None = None
     avisos: list[str] = Field(default_factory=list)
 
 
@@ -253,6 +265,8 @@ class ResultadoMejorExplicacion(BaseModel):
     caso_id: str
     h_estrella: ResumenHipotesis | None
     respuesta: Respuesta | None = None
+    metodo: Literal["score", "holistica"] = "score"
+    juicio: JuicioRegistrado | None = None
     que_vigilar: list[PrediccionVigilada] = Field(
         default_factory=list,
         description="Predicciones de las candidatas en disputa: lo que cambiaría la respuesta",

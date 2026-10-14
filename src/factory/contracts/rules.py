@@ -91,6 +91,18 @@ class ConjuntoReglas(BaseModel):
         default=1.0, gt=0.0, le=1.0, description="ω de un observador sin calibración propia"
     )
     marcos_posibles: list[MarcoPosible] = Field(default_factory=list)
+    seleccion: Literal["score", "holistica"] | None = Field(
+        default=None,
+        description=(
+            "Cómo se elige H* (ADR-0016). None: 'score' con proyección, 'holistica' con LLM"
+        ),
+    )
+
+    def modo_seleccion(self) -> str:
+        if self.seleccion is not None:
+            return self.seleccion
+        return "holistica" if self.verificador == "llm" else "score"
+
     reglas: list[Regla]
 
     def variables_entidad(self) -> set[str]:
