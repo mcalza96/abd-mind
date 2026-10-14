@@ -13,6 +13,8 @@ Los tres postulados son los axiomas del sistema. No se demuestran: se asumen y s
 
 **Matiz.** Dentro de un mismo marco puede existir ruido de medición ordinario. La forma completa es $y_i = \pi_{O_i}(S) + \eta_i$, donde $\eta_i$ es ruido *intra-marco*. El postulado afirma que la discrepancia *entre* observadores se explica principalmente por la diferencia entre $\pi_{O_i}$ y $\pi_{O_j}$, no por $\eta$.
 
+**Corolario: el observador es falible (Duhem-Quine).** Además del ruido pequeño, un observador puede cometer errores groseros: $y_i = \pi_{O_i}(S) \oplus \eta_i$, con confiabilidad $\omega_i = \Pr(\eta_i = \varnothing)$. Una observación que contradice una hipótesis no la refuta por sí sola: refuta la conjunción de la hipótesis con "el observador reportó bien", y el sistema debe poder elegir cuál abandonar. La confiabilidad nunca se infiere del acuerdo con los demás observadores, porque eso reintroduciría el consenso. Desarrollo completo en [09 §9.1](09-robustez-epistemica.md#91-observadores-falibles-duhem-quine).
+
 ## Postulado 2 — Invariante Causal
 
 > El proceso generativo que rige el fenómeno opera bajo leyes y restricciones estructurales **invariantes** respecto al marco de referencia del observador.

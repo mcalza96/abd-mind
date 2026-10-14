@@ -91,6 +91,14 @@ Por eso el marco exige:
 
 La lista autodeclarada por el generador sigue siendo útil como **predicción** que se puede auditar: si el generador dice explicar $y_3$ y el verificador dice que no, eso es una señal de racionalización.
 
-## 4.7 Lo que la función no captura
+## 4.7 Extensión: observadores falibles y empates
+
+La función de esta sección supone observadores infalibles. La versión general pondera cada observación por la confiabilidad de su observador y cobra el residuo que una hipótesis deja sin explicar:
+
+$$\text{Score}(H) = \alpha \sum_{i \in E(H)} \omega_i + \beta K(H) - \gamma P(H) - \lambda \sum_{j \in R(H)} -\ln(1 - \omega_j)$$
+
+Con $\lambda = 0$ y $\omega_i = 1$ se recupera exactamente la función de §4.3. Además, cuando varias hipótesis empatan dentro de una tolerancia $\delta$, no hay $H^*$: el caso está subdeterminado y el sistema pide la observación que las separa. Derivaciones y criterios en [09](09-robustez-epistemica.md).
+
+## 4.8 Lo que la función no captura
 
 Literatura de IBE computacional (ver [07](07-estado-del-arte.md)) identifica otras virtudes: profundidad de prueba, deriva conceptual, *hedging* (cobertura lingüística excesiva), circularidad. No se incluyen en la versión inicial para mantener la función mínima y auditable; quedan como extensiones candidatas, cada una con su término y peso propio.

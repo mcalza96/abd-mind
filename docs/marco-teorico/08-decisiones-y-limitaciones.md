@@ -87,3 +87,33 @@ $\alpha$, $\beta$, $\gamma$, $\tau$ no se derivan de la teoría. Se calibran con
 ### L6 — Explosión del espacio de hipótesis
 
 La expansión ontológica sin límite hace crecer el espacio de búsqueda rápidamente (C-ABL lo demuestra para el caso cerrado). Se fijan presupuestos de profundidad, de número de hipótesis por ronda y de llamadas al LLM.
+
+## Decisiones de robustez epistémica
+
+Desarrolladas en [09 — Robustez epistémica](09-robustez-epistemica.md).
+
+### D11 — El observador es falible, y su confiabilidad no sale del consenso
+
+Cada observación pesa según la confiabilidad $\omega_i$ de su observador, y dejarla sin explicar cuesta $-\ln(1-\omega_i)$. $\omega_i$ viene de calibración independiente, historial en casos cerrados o el valor por defecto del dominio; nunca del acuerdo con los otros observadores del caso. ([ADR-0009](../arquitectura/adr/0009-observadores-falibles.md))
+
+### D12 — La derrota es graduada
+
+Solo una observación con $\omega \ge \omega_d$ derrota por sí sola a una hipótesis; las demás la dejan en tensión. La expansión ontológica se dispara cuando el residuo de la mejor hipótesis cuesta más que una entidad nueva. Con $\omega = 1$ ambas reglas coinciden con D6 y con [03 §3.5](03-formalizacion.md#35-ampliación-ontológica).
+
+### D13 — Un empate no se resuelve por el identificador
+
+Si varias hipótesis vivas y coherentes quedan a menos de $\delta$ del mejor score, no hay $H^*$. El sistema informa el empate y propone observaciones que separen a las candidatas (abducción activa). D7 sigue valiendo para ordenar, no para elegir. ([ADR-0010](../arquitectura/adr/0010-subdeterminacion.md))
+
+### D14 — La parsimonia se mantiene lineal
+
+Se evaluó usarla solo como desempate. Se rechaza: favorecería sistemáticamente a las hipótesis *ad hoc* que postulan una entidad por anomalía. Ver [09 §9.6](09-robustez-epistemica.md#96-parsimonia-y-realidad-compleja-no-se-cambia).
+
+### Pendientes (propuestos en 09)
+
+- Observadores correlacionados: peso por grupo de fuentes compartidas (§9.3).
+- Observaciones con fecha y cambio de régimen como hipótesis candidata (§9.4).
+- Naturaleza de las reglas (axiomática o empírica) y alerta de revisión (§9.5).
+
+### L7 — La confiabilidad por defecto es una suposición
+
+Mientras no haya historial de casos cerrados con verdad establecida, $\omega$ es una suposición del dominio, y los resultados dependen de ella. Un error sistemático de un observador no es error aleatorio: debe modelarse como parte de su marco, no de su confiabilidad.

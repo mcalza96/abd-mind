@@ -16,6 +16,7 @@ Este directorio es la referencia conceptual del proyecto. Todo módulo de códig
 | 06 | [Arquitectura](06-arquitectura.md) | Pipeline, frontera estocástico/determinista, contratos de datos |
 | 07 | [Estado del arte](07-estado-del-arte.md) | Cuatro pilares de la literatura y el vacío que ocupa el proyecto |
 | 08 | [Decisiones y limitaciones](08-decisiones-y-limitaciones.md) | Correcciones a la especificación original y límites asumidos |
+| 09 | [Robustez epistémica](09-robustez-epistemica.md) | Observadores falibles (Duhem-Quine), subdeterminación, correlación, tiempo, reglas falibles |
 | — | [Glosario](glosario.md) | Términos y notación |
 
 ## Lectura rápida

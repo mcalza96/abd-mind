@@ -17,6 +17,11 @@
 | $\approx$, $d_i$, $\varepsilon_i$ | Relación de consistencia, discrepancia y tolerancia del observador $i$ | [03 §3.3](03-formalizacion.md#33-relación-de-consistencia) |
 | $P$, $C$, $K$ | Parsimonia, consiliencia, coherencia | [04 §4.2](04-funcion-objetivo-ibe.md#42-las-tres-virtudes) |
 | $\alpha$, $\beta$, $\gamma$ | Pesos de $C$, $K$, $P$ | [04 §4.3](04-funcion-objetivo-ibe.md#43-el-score-abductivo) |
+| $\omega_i$ | Confiabilidad del observador $i$: probabilidad de que su reporte no sea un error grosero | [09 §9.1.2](09-robustez-epistemica.md#912-observación-con-canal-de-error) |
+| $E(H)$, $R(H)$ | Observaciones que $H$ explica; su residuo (las que atribuye a error) | [09 §9.1.4](09-robustez-epistemica.md#914-función-objetivo-extendida) |
+| $\lambda$ | Peso del costo del residuo | [09 §9.1.4](09-robustez-epistemica.md#914-función-objetivo-extendida) |
+| $\omega_d$ | Umbral de confiabilidad para que una observación derrote por sí sola | [09 §9.1.8](09-robustez-epistemica.md#918-derrota-graduada) |
+| $\delta$, $T$ | Tolerancia de empate; conjunto de hipótesis empatadas | [09 §9.2.2](09-robustez-epistemica.md#922-definiciones) |
 | $\tau$ | Umbral de aceptación | [04 §4.3](04-funcion-objetivo-ibe.md#43-el-score-abductivo) |
 | $H^*$ | Hipótesis ganadora actual | [04 §4.3](04-funcion-objetivo-ibe.md#43-el-score-abductivo) |
 
@@ -32,7 +37,11 @@
 
 **Córtex perceptivo.** Módulo LLM que convierte observaciones en lenguaje natural en hechos y predicados estructurados.
 
-**Derrotabilidad.** Propiedad de una conclusión de poder ser retirada ante evidencia nueva sin reentrenar. El razonamiento es *no monótono*.
+**Abducción activa.** Pedir la observación que separa hipótesis empatadas, en lugar de elegir una al azar.
+
+**Confiabilidad ($\omega$).** Probabilidad de que un observador reporte su proyección sin error grosero. Nunca se infiere del acuerdo con otros observadores del caso.
+
+**Derrotabilidad.** Propiedad de una conclusión de poder ser retirada ante evidencia nueva sin reentrenar. El razonamiento es *no monótono*. Con observadores falibles es graduada: solo un observador muy confiable derrota por sí solo; los demás dejan la hipótesis *en tensión*.
 
 **Entidad latente.** Entidad, variable o mecanismo que una hipótesis postula y que no ha sido observada ni verificada.
 
@@ -49,6 +58,10 @@
 **Parsimonia ($P$).** Número de entidades latentes no verificadas que postula una hipótesis. Menor es mejor.
 
 **Quimera estadística.** Respuesta que promedia proyecciones incompatibles y no corresponde a ningún estado posible del mundo (p. ej., "óvalo" para un cilindro).
+
+**Residuo.** Observaciones que una hipótesis no explica y que, por lo tanto, atribuye a error de sus observadores; cuesta $-\ln(1-\omega)$ cada una.
+
+**Subdeterminación.** Situación en que varias hipótesis incompatibles explican la evidencia igual de bien; el sistema no elige entre ellas.
 
 **Racionalización.** Producción de justificaciones lógicamente válidas para conclusiones incorrectas. Se mide como discrepancia entre lo que el generador declara explicar y lo que el verificador confirma.
 

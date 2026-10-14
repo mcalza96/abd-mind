@@ -84,6 +84,8 @@ y genera nuevas hipótesis que la usan.
 
 **Promoción.** Una entidad latente postulada deja de contar en $P$ cuando es **verificada** de forma independiente (por evidencia nueva o una fuente externa) y pasa a $\mathcal{V}$. Hasta entonces, es una deuda ontológica de la hipótesis.
 
+> Con observadores falibles, el disparo de la expansión compara el costo del residuo de la mejor hipótesis con el de una entidad nueva: ver [09 §9.1.7](09-robustez-epistemica.md#917-disparo-de-la-expansión-ontológica).
+
 ## 3.6 Derrotabilidad (no monotonía)
 
 Sea $H^*$ la hipótesis ganadora actual y llega una observación nueva $y_k$ del observador $O_k$:
@@ -100,6 +102,8 @@ Tres precisiones respecto a los documentos fuente:
 Si tras la reevaluación no queda ninguna hipótesis viva que supere el umbral de aceptación, se vuelve a §3.4 (generar) y, si es necesario, a §3.5 (ampliar).
 
 Nada de esto requiere reentrenar pesos: el estado del razonamiento vive en el árbol de hipótesis, no en el modelo.
+
+> Con observadores falibles, solo una observación de confiabilidad $\omega_k \ge \omega_d$ derrota por sí sola; las demás dejan a la hipótesis *en tensión* ([09 §9.1.8](09-robustez-epistemica.md#918-derrota-graduada)). Si varias hipótesis quedan empatadas, no se elige ninguna ([09 §9.2](09-robustez-epistemica.md#92-subdeterminación-y-abducción-activa)).
 
 ## 3.7 Ciclo completo
 

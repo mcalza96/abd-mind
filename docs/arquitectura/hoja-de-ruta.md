@@ -11,6 +11,7 @@ Cada fase termina con algo que funciona y se puede probar. Ninguna fase depende 
 | 2 — Observadores, proyecciones y experimentos sintéticos | ✅ |
 | 3 — Roles LLM del motor | ✅ |
 | 4 — Motor de casos y persistencia | ✅ |
+| 4b — Robustez epistémica | Pendiente |
 | 5 — Servidor MCP | Pendiente |
 | 6 — Integración con Hermes | Pendiente |
 | 7 — Benchmarks y calibración | Pendiente |
@@ -75,7 +76,19 @@ Notas de implementación:
 - Cada dominio declara su verificador (`proyeccion` o `llm`). La detección de hipótesis duplicadas considera el mecanismo en dominios con verificador LLM.
 - `corregir_observacion` retracta el hecho y registra la versión corregida sin usarla como prueba.
 
-**Resultado de `finanzas-llm`** (21 llamadas): el córtex separó hechos de opiniones; ganó la estrategia de reducción de precios (C=3/3); la regla de dividendos descartó su hipótesis; la postura intermedia obtuvo C=0; el comunicado derrotó a la ganadora. Después, la expansión produjo **cuatro hipótesis empatadas** (C=4/4, P=1, score 15.0) y H* se eligió por el id: un caso real de subdeterminación que el sistema todavía no reconoce (ver la fase 5 bis).
+**Resultado de `finanzas-llm`** (21 llamadas): el córtex separó hechos de opiniones; ganó la estrategia de reducción de precios (C=3/3); la regla de dividendos descartó su hipótesis; la postura intermedia obtuvo C=0; el comunicado derrotó a la ganadora. Después, la expansión produjo **cuatro hipótesis empatadas** (C=4/4, P=1, score 15.0) y H* se eligió por el id: un caso real de subdeterminación que el sistema todavía no reconoce (ver la fase 4b).
+
+## Fase 4b — Robustez epistémica
+
+Implementa [09 §9.1–9.2](../marco-teorico/09-robustez-epistemica.md), antes del servidor MCP porque cambia el contrato.
+
+- Observadores falibles ([ADR-0009](adr/0009-observadores-falibles.md)): confiabilidad por observador y por dominio, score con consiliencia ponderada y residuo, derrota graduada, nuevo disparo de expansión, `atribuidas_a_error` en la evaluación.
+- Subdeterminación ([ADR-0010](adr/0010-subdeterminacion.md)): detección de empates, sin $H^*$ cuando los hay, operación `sugerir_observacion`.
+- Experimentos: errata de un observador poco confiable (no debe derrotar ni disparar expansión) y empate sintético (el sistema debe pedir la vista que separa).
+
+**Término:** los experimentos sintéticos anteriores no cambian; los nuevos pasan; `finanzas-llm` informa el empate en lugar de elegir por id.
+
+Después (propuestos en 09 §9.3–9.5): observadores correlacionados, observaciones con fecha y alerta de revisión de reglas.
 
 ## Fase 5 — Servidor MCP
 

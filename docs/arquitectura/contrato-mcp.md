@@ -46,7 +46,7 @@ Registra una observación de un observador. Pasa por el **córtex perceptivo**, 
 | Entrada | Tipo | Notas |
 |---|---|---|
 | `caso_id` | str | |
-| `observador` | {nombre, marco?} | Si no existe en el caso, se crea. `marco`: perspectiva, metodología, instrumento |
+| `observador` | {nombre, marco?, confiabilidad?} | Si no existe en el caso, se crea. `marco`: perspectiva, metodología, instrumento. `confiabilidad` ω ∈ (0, 1]: solo si hay calibración independiente; si no, se usa la del dominio ([ADR-0009](adr/0009-observadores-falibles.md)) |
 | `contenido` | str | Texto crudo (fragmento de informe, mensaje, medición) |
 | `fuente` | str? | Referencia al documento o mensaje de origen |
 
@@ -136,11 +136,22 @@ Verifica todas las hipótesis vivas contra todas las observaciones activas (reut
 }
 ```
 
-`expansion_sugerida` es `true` cuando ninguna hipótesis coherente alcanza $C = m$ (condición de [03 §3.5](../marco-teorico/03-formalizacion.md#35-ampliación-ontológica)).
+`expansion_sugerida` es `true` cuando el residuo de la mejor hipótesis coherente cuesta más que una entidad nueva ([09 §9.1.7](../marco-teorico/09-robustez-epistemica.md#917-disparo-de-la-expansión-ontológica)); con observadores infalibles equivale a que ninguna alcance $C = m$.
+
+Campos adicionales ([ADR-0009](adr/0009-observadores-falibles.md), [ADR-0010](adr/0010-subdeterminacion.md)):
+
+- en cada entrada del ranking, `atribuidas_a_error`: observaciones que la hipótesis no explica y por lo tanto supone erróneas, con su costo;
+- `subdeterminada` y `empatadas`: si varias hipótesis empatan, no hay `h_estrella` y se listan las candidatas.
 
 ### `mejor_explicacion`
 
 Devuelve $H^*$ si existe una hipótesis con score $\ge \tau$; si no, `{"h_estrella": null, "motivo": "..."}`. "No hay explicación suficiente" es una respuesta válida, no un error.
+
+### `sugerir_observacion`
+
+Abducción activa ([ADR-0010](adr/0010-subdeterminacion.md)). Con hipótesis empatadas, propone observaciones que las separarían.
+
+**Salida:** lista de `{observador_sugerido, marco, que_observar, predicciones: {id_hipotesis: prediccion}, clases}` ordenada por poder discriminante. Vacía si no hay empate.
 
 ## Evidencia y derrotabilidad
 
@@ -148,7 +159,7 @@ Devuelve $H^*$ si existe una hipótesis con score $\ge \tau$; si no, `{"h_estrel
 
 Igual que `agregar_observacion`, y además reevalúa **todas** las hipótesis vivas contra los hechos nuevos (D6).
 
-**Salida adicional:** `derrotadas: [{id_hipotesis, derrotada_por}]`, `h_estrella_anterior`, `h_estrella_nueva`.
+**Salida adicional:** `derrotadas: [{id_hipotesis, derrotada_por}]`, `en_tension` (hipótesis que no explican el hecho nuevo pero no quedan derrotadas porque el observador no alcanza $\omega_d$), `h_estrella_anterior`, `h_estrella_nueva`.
 
 ### `retractar_evidencia`
 
