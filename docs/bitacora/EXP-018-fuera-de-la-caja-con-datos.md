@@ -103,3 +103,11 @@ Con 9 casos no obvios, solo una diferencia grande cuenta.
 ## Resultado
 
 *(pendiente)*
+
+## Nota 2026-10-15: dos condiciones en vez de tres (antes de correr)
+
+A pedido del usuario, que tiene dos agentes Hermes, se corren solo **S0** (sin skill ni MCP) y **S2** (skill y MCP). S1 queda para después.
+
+- **Regla de decisión:** S2 acierta 3 o más casos no obvios más que S0, sin más de 1 caso de control rebuscado adicional → nuestro paquete (skill y MCP juntos) forma el hábito. Si la diferencia es de 2 o menos, no hay efecto detectable.
+- **Lo que se pierde:** si S2 gana, no se sabe si es por la skill o por el MCP. Eso lo respondería S1.
+- **El usuario envía las preguntas** sin ver la clave, para no insinuar la respuesta.
