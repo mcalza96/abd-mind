@@ -23,6 +23,7 @@ Este directorio es la referencia conceptual del proyecto. Todo módulo de códig
 | 13 | [Verificación comparativa](13-verificacion-comparativa.md) | Calificar cada hecho contra todas las rivales; parsimonia juzgada por un tercero |
 | 14 | [Rumbo: estado y proyección](14-rumbo-estado-y-proyeccion.md) | Qué hace el motor tras EXP-010 y EXP-012: juicio holístico en dominios abiertos, verificación exacta donde hay estructura |
 | 15 | [Forma y material](15-forma-y-material.md) | Revisión de la base: un motor hecho de juicios de LLM aporta forma, no contenido; el aporte posible es el compromiso previo con el mundo |
+| 16 | [Fundamentos desde las historias](16-fundamentos-desde-las-historias.md) | **Propuesta de nueva base:** seis principios (mediación, ley, riesgo, subdeterminación, pregunta, contacto) derivados de los [experimentos mentales](../experimentos-mentales/README.md) |
 | — | [Glosario](glosario.md) | Términos y notación |
 
 ## Lectura rápida
