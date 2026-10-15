@@ -36,7 +36,7 @@ Una sala cerrada con un objeto sólido. Hay ventanas en el techo, al frente y al
 | 3 | [Los cien jueces](03-los-cien-jueces.md) | El acuerdo entre jueces de igual formación no es evidencia; explicar todo no significa que no haya rivales | escrita |
 | 4 | [El sobre cerrado](04-el-sobre-cerrado.md) | El compromiso previo no hace acertar en un caso: produce el registro para saber en quién confiar | escrita |
 | 5 | [La lámpara torcida](05-la-lampara-torcida.md) | Ante una contradicción hay tres sospechosos: instrumento, ley y objeto; las hipótesis auxiliares tienen que pagar | escrita |
-| 6 | La acción que cae | ¿Dónde está la tercera ventana en un mercado? | pendiente |
+| 6 | [La acción que cae](06-la-accion-que-cae.md) | Fuera de la sala casi no hay leyes ni ventanas independientes; lo que sobrevive es disciplina, no ventaja | escrita |
 | 7 | El objeto que cambia según quién mira | Una hipótesis infalsable tiene consiliencia máxima: ¿qué la descarta? | pendiente (propuesta en la lectura ciega) |
 | 8 | El hueco interior | Una pregunta que ninguna ventana resuelve: el motor debe decirlo, no sugerir qué mirar | pendiente (propuesta en la lectura ciega) |
 

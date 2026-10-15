@@ -18,6 +18,13 @@ Cada axioma cita la historia que lo exige. Son **candidatos**: siguen en pie mie
 | A14 | **El error sistemático no se ve repitiendo: se ve calibrando.** La confiabilidad sale de la calibración y del historial, no del prestigio | [5](05-la-lampara-torcida.md) |
 | A15 | **Se puede observar al observador.** La observación que decide a veces apunta al instrumento | [5](05-la-lampara-torcida.md) |
 | A16 | **Las hipótesis auxiliares pagan según lo frecuentes que son.** Si absorber una contradicción con una entidad ad hoc cuesta menos que la contradicción, todo conflicto se lava | [5](05-la-lampara-torcida.md) |
+| A17 | **La causa y el desenlace son preguntas distintas;** una pregunta que las mezcla se separa antes de razonar | [6](06-la-accion-que-cae.md) |
+| A18 | **Se predicen las sombras del mecanismo, no solo el desenlace** | [6](06-la-accion-que-cae.md) |
+| A19 | **Un observador que lee a otros observadores es un eco, no una ventana** | [6](06-la-accion-que-cae.md) |
+| A20 | **Un dominio sin leyes no produce contradicciones:** antes de prometer algo, se mide cuánta ley tiene | [6](06-la-accion-que-cae.md) |
+| A21 | **Donde el objeto es el veredicto de otros jueces con información y dinero (un mercado), solo aporta contenido lo que no está en ese veredicto;** sin eso, el valor es disciplina | [6](06-la-accion-que-cae.md) |
+| A22 | **Las causas pueden sumarse.** Cuando no son excluyentes, la compuesta siempre explica todo; compararlas exige estimar cuánto aporta cada una, no solo si está | [6](06-la-accion-que-cae.md) |
+| A23 | **Antes de esperar, buscar la ventana transversal:** el mismo observador visto en otros objetos (amplía A15) | [6](06-la-accion-que-cae.md) |
 | A9 | **El compromiso previo no hace acertar en un caso;** produce el registro para saber en quién confiar cuando falta la ventana. **No decidir no exime de apostar:** se declaran probabilidades antes de mirar, aunque no se decida | [4](04-el-sobre-cerrado.md) |
 | A10 | **El registro sirve solo si es completo, graduado, independiente y extenso,** y se compara contra la tasa base, no contra el azar | [4](04-el-sobre-cerrado.md) |
 
@@ -43,3 +50,6 @@ Cada axioma cita la historia que lo exige. Son **candidatos**: siguen en pie mie
 | Penaliza contradecir a un observador (residuo c(ω)) | Diagnóstico por conflicto mínimo; costo de las hipótesis auxiliares según su frecuencia (A12, A16) |
 | — | Observaciones de calibración, error sistemático, sugerir calibrar (A14, A15) |
 | — | No sumar repeticiones de una medida no disputada (A13) |
+| — | Separar causa y desenlace; estimar lo que el precio ya descuenta (A17, A21) |
+| — | Hipótesis que se suman, con aporte estimado (A22) |
+| — | Sugerir observaciones transversales que estén disponibles hoy, no solo esperar (A23) |
