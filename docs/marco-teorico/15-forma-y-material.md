@@ -108,3 +108,40 @@ Un agente con herramientas busca y después racionaliza: acomoda la hipótesis a
 - **Se abandona como promesa:** que el motor razone mejor que el modelo en dominios abiertos, o que una fórmula sobre juicios de un LLM decida mejor que el LLM.
 - **Se suspende:** la elección del modelo juez y la optimización de la selección. Era optimizar la pieza equivocada.
 - **Pendiente:** evaluación externa de este documento por un agente sin contexto, y una investigación de literatura relacionada.
+
+## 15.10 Evaluación externa (2026-10-15)
+
+Un agente sin contexto leyó solo este documento y lo evaluó de forma adversarial. Veredicto: **correcto en parte**. Se registra lo que aceptamos, sin reescribir las secciones anteriores (regla 3 de la bitácora).
+
+**Aceptado:**
+
+1. **Confusor de modelo en 15.1.** En EXP-010 y EXP-012 las piezas que deciden usan DeepSeek, y la línea base más fuerte es Muse 1.3. Contra el **mismo** modelo, la diferencia es menor:
+
+   | Comparación (V + P) | Aciertos |
+   |---|---|
+   | DeepSeek en una llamada | 10/18 |
+   | Motor con score (EXP-012) | 8/18 |
+   | Motor holístico (EXP-013) | 10/18 |
+
+   "Rinde por debajo de un LLM" vale sobre todo frente a un modelo más fuerte.
+2. **Falta una línea base de igual cómputo.** El motor hace muchas llamadas. Hay que compararlo con autoconsistencia o best-of-n del mismo modelo y el mismo presupuesto.
+3. **15.2 es demasiado fuerte.** La disposición puede **sacar a la superficie** contenido latente: la autoconsistencia y la descomposición mejoran el acierto en la literatura. Además, si la disposición pudo **restar** acierto (EXP-010), opera sobre el contenido. La versión defendible es más estrecha: *sin retroalimentación externa, combinar juicios del modelo no agrega conocimiento del mundo*. Hay que verificarla en la literatura.
+4. **Contradicción entre 15.2 y 15.3.** Si la pluralidad de marcos es constitutiva, modelos de familias distintas son al menos pluralidad parcial. No se puede descartar y reclamar a la vez.
+5. **Duhem-Quine está mal aplicado en 15.3.** Lo que se describe es carga teórica de la observación (Hanson, Kuhn) o un único punto de falla, no subdeterminación.
+6. **15.4 exagera.** En Peirce, la abducción es la generación de hipótesis; un banco cerrado sí mide generación y selección. Lo que no mide es el ciclo de contrastación. Además, "excluía el aporte" explicaría un empate, no una derrota.
+7. **15.5 inmuniza la tesis.** "El fracaso es coherente con la tesis" la vuelve irrefutable. Se retira como argumento.
+8. **15.7 no es nuevo.** Ya existen pronóstico con LLMs puntuado con Brier, preregistro, diseño experimental bayesiano y agentes científicos con bitácora. El preregistro da credibilidad ante terceros, pero no mejora por sí solo el acierto de quien predice. Para eso hace falta un bucle de aprendizaje con lo resuelto, y 15.7 no lo especifica.
+9. **La anécdota reflexiva se corrige.** La honestidad de esta revisión vino de un crítico externo (el usuario), no del registro previo.
+10. **15.8 está mal especificado:**
+    - no aísla qué se manipula (la línea base también debe emitir probabilidades antes de la resolución);
+    - le falta un cálculo de potencia y un margen de equivalencia;
+    - el conjunto F tiene poca señal, eventos correlados y riesgo de fuga por búsqueda retroactiva;
+    - los mundos sintéticos propios reintroducen la circularidad.
+
+**Siguientes pasos:**
+
+1. **Análisis de errores caso a caso**, antes de seguir teorizando: en qué casos el motor falla y la llamada única acierta, y por qué (contexto perdido, verificador, agregación, etiqueta).
+2. **Ablación con el mismo modelo e igual cómputo:** llamada única, autoconsistencia y motor.
+3. **Investigación de literatura antes de construir** ([prompt](../investigacion/prompt-deep-research-3-literatura-relacionada.md)).
+4. **Separar las dos propuestas de valor.** La forma (auditoría, trazabilidad) se evalúa con usuarios; el acierto, con bancos.
+5. **Probar 15.7 primero en dominios con verificación externa rápida:** tests de software, datos retenidos o simuladores ajenos al proyecto.
