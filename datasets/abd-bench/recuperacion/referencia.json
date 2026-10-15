@@ -1,0 +1,169 @@
+{
+ "casos": [
+  {
+   "id": "R01",
+   "explicaciones": [
+    "Acumulación severa de hielo por gotas grandes superenfriadas sobre alas y cola de un avión ya sobrecargado, que elevó la velocidad de pérdida y degradó la sustentación hasta provocar pérdida de control y caída al hielo marino.",
+    "El exceso de unas 1.058 libras sobre el límite para engelamiento dejó al avión sin margen de rendimiento, de modo que con el hielo acumulado no pudo mantener altitud ni velocidad y entró en pérdida aerodinámica.",
+    "Engelamiento de la cola (tailplane stall) por hielo en el estabilizador horizontal que, al bajar flaps o cambiar de configuración, produjo un picado brusco irrecuperable a baja altura.",
+    "Formación de hielo detrás de las botas neumáticas (zona no protegida) por gotas grandes superenfriadas, generando una cresta que separó el flujo y provocó pérdida asimétrica con alabeo incontrolable.",
+    "Desaceleración no advertida durante el vuelo con piloto automático en engelamiento: el autopiloto compensó la pérdida de sustentación hasta desconectarse cerca de la pérdida, dejando al piloto una situación irrecuperable.",
+    "Centro de gravedad desplazado por mala distribución de carga y pasajeros que, sumado al sobrepeso y al hielo, redujo la autoridad del elevador y llevó a pérdida de control longitudinal.",
+    "Engelamiento de la toma de aire o del sistema de admisión del motor PT6 que causó pérdida de potencia o apagado del motor, forzando un descenso no controlado sobre el hielo.",
+    "Desorientación espacial del piloto en condiciones meteorológicas instrumentales y luz menguante, agravada por la carga de trabajo del engelamiento, que llevó a una actitud anómala y descenso hasta el impacto.",
+    "Hielo en el tubo pitot o tomas estáticas que dio indicaciones erróneas de velocidad o altitud, induciendo al piloto a maniobras que redujeron la velocidad por debajo de la de pérdida.",
+    "Presión operacional y despacho deficiente que permitieron salir sobrecargado hacia condiciones de engelamiento conocidas, sin plan de desvío, haciendo que el piloto continuara en hielo hasta perder el control."
+   ]
+  },
+  {
+   "id": "R02",
+   "explicaciones": [
+    "El tapón del contrapeso del elevador izquierdo, de una modificación a medida, se desprendió o desplazó y trabó el elevador, provocando oscilaciones de cabeceo y luego un ascenso violento incontrolable seguido de pérdida y caída.",
+    "La resina que fijaba los perdigones del contrapeso se fracturó por vibración y fatiga, liberando perdigones o el tapón que interfirieron mecánicamente con el recorrido del elevador durante la aproximación.",
+    "Pérdida de masa o desbalance del contrapeso ajustable que dejó el elevador mal balanceado y produjo flutter de la superficie de control, causando las oscilaciones y el cabeceo violento.",
+    "Interferencia del tubo de balance ajustable con la estructura del fuselaje o la cola al alcanzar ciertos ángulos de deflexión, bloqueando el elevador en posición de nariz arriba.",
+    "Atascamiento del sistema de mando del elevador (varillas, bisagras o cables) por un objeto suelto en la cola que impidió al piloto corregir el cabeceo a baja altura.",
+    "Oscilación inducida por el piloto (PIO) al intentar corregir un mando parcialmente trabado, que amplificó el cabeceo hasta un encabritamiento con pérdida a baja velocidad.",
+    "Falla o desconexión de la compensación (trim) del elevador que generó un momento de cabeceo arriba no controlable en la fase de enderezamiento del aterrizaje.",
+    "Fallo estructural del contrapeso por instalación casera inadecuada sin aprobación del fabricante, que cambió el comportamiento aerodinámico de la superficie de control en vuelo lento.",
+    "Ascenso abrupto por intento de motor y al aire (go-around) con mando trabado y plena potencia, en que el par del motor y el elevador bloqueado llevaron a una pérdida y barrena a baja altura.",
+    "Incapacitación momentánea del piloto o problema médico durante el aterrizaje que provocó entradas de mando erráticas, aunque las marcas en el tapón apuntan más a causa mecánica."
+   ]
+  },
+  {
+   "id": "R03",
+   "explicaciones": [
+    "Reacción exotérmica descontrolada (runaway térmico) en el reactor por lotes durante la caramelización de azúcares, cuyo calor y gases superaron la capacidad de enfriamiento y de alivio, rompiendo el recipiente.",
+    "Sobrepresurización del reactor por generación de gases (CO2, vapor, volátiles) en la caramelización con venteo o válvula de alivio obstruida o subdimensionada, que provocó la ruptura explosiva.",
+    "Falla del sistema de control de temperatura (sensor, lazo de control o camisa de enfriamiento) que dejó calentar la mezcla por encima del límite seguro hasta la descomposición acelerada.",
+    "Error en la carga de materias primas (exceso de catalizador como amoníaco o sulfitos, o proporciones incorrectas) que aceleró la reacción y liberó calor y gases más rápido de lo previsto.",
+    "Bloqueo del condensador o de la línea de venteo por material caramelizado o espumado, impidiendo el alivio de presión y causando la falla del recipiente.",
+    "Formación de espuma y desbordamiento que taponó los dispositivos de alivio mientras la presión interna seguía subiendo hasta la explosión.",
+    "Corrosión, fatiga o defecto del recipiente a presión que lo hizo fallar a una presión de operación que debía soportar.",
+    "Ignición de vapores o polvos combustibles liberados al ambiente por una fuga del reactor, generando una explosión secundaria en el edificio.",
+    "Procedimiento operativo inadecuado o desviación del procedimiento (calentamiento demasiado rápido, agitación detenida) que generó puntos calientes y reacción localizada descontrolada.",
+    "Deficiente análisis de riesgos del proceso que no identificó el potencial de reacción descontrolada del colorante caramelo y dejó al reactor sin salvaguardas ni dimensionamiento de alivio adecuados."
+   ]
+  },
+  {
+   "id": "R04",
+   "explicaciones": [
+    "Fuga de etileno o hidrocarburos dentro de la caja de fuego del horno de craqueo que formó una mezcla inflamable y se encendió, causando la explosión y el incendio posterior.",
+    "Ruptura de un tubo del serpentín de craqueo por sobrecalentamiento, carburización o fatiga térmica, liberando hidrocarburo al interior del horno caliente que ignició de forma explosiva.",
+    "Pérdida de llama en los quemadores con continuidad del suministro de gas combustible, que acumuló gas sin quemar en la cámara y luego se reencendió explosivamente.",
+    "Error durante una operación transitoria (arranque, decoquizado o cambio de alimentación) con secuencia de válvulas incorrecta que introdujo hidrocarburo o aire en la zona equivocada del horno.",
+    "Falla del sistema instrumentado de seguridad o del enclavamiento de quemadores que no cortó el combustible ante una condición anormal, permitiendo la acumulación de mezcla explosiva.",
+    "Purga insuficiente del horno antes del encendido de quemadores, dejando gas residual que explotó al reencender.",
+    "Falla de una brida, válvula o junta en la línea de alimentación o de salida del horno que liberó etileno a alta temperatura que autoignitó.",
+    "Desbalance de flujo entre serpentines que dejó un paso sin caudal y lo sobrecalentó hasta romper, liberando hidrocarburo en la caja de fuego.",
+    "Corrosión o erosión no detectada en tubos o colectores por inspección y mantenimiento deficientes, que terminó en ruptura bajo presión.",
+    "Falla de control de presión de tiro (ventiladores o damper) que generó presión positiva en el horno y retroceso de llama con explosión."
+   ]
+  },
+  {
+   "id": "R06",
+   "explicaciones": [
+    "La lechuga iceberg se contaminó en el campo con ooquistes de Cyclospora por agua de riego contaminada con heces humanas, y al consumirse cruda causó la ciclosporiasis.",
+    "Trabajadores agrícolas infectados con instalaciones sanitarias deficientes contaminaron la lechuga durante la cosecha o manipulación en campo en el centro de México.",
+    "Agua contaminada usada para lavar, enfriar o aplicar agroquímicos (rociado de pesticidas) depositó ooquistes de Cyclospora sobre las hojas.",
+    "Escorrentía o inundación desde zonas con aguas residuales o letrinas hacia los campos de lechuga contaminó los cultivos.",
+    "Contaminación cruzada en la planta de empaque o procesamiento por agua de lavado recirculada o superficies contaminadas que distribuyó los ooquistes en múltiples lotes.",
+    "Los ooquistes de Cyclospora resisten la cloración del lavado convencional, por lo que la lechuga contaminada llegó viable a los consumidores pese al procesamiento.",
+    "La amplia red de distribución a minoristas y cadenas de comida rápida como Taco Bell dispersó la lechuga contaminada a múltiples estados, generando un brote multiestatal.",
+    "Contaminación en un único campo o proveedor que abasteció varias líneas de producto, concentrando el brote en la lechuga de ese origen.",
+    "Uso de abono o estiércol con contenido fecal humano insuficientemente tratado en la fertilización de los campos.",
+    "Contaminación estacional asociada al verano con condiciones climáticas favorables a la esporulación de Cyclospora en el ambiente agrícola."
+   ]
+  },
+  {
+   "id": "R07",
+   "explicaciones": [
+    "La materia prima de hoja de moringa en polvo se contaminó con Salmonella Typhimurium en origen (secado al aire libre con heces de animales o aves) y, al no tener paso de letalidad, pasó viva a las cápsulas.",
+    "El polvo de moringa no recibió tratamiento validado de reducción microbiana (vapor, irradiación) antes del encapsulado, permitiendo que la Salmonella sobreviviera en el producto seco.",
+    "Contaminación en la planta de encapsulado por equipos o ambiente contaminados que afectó solo ciertos lotes, explicando el retiro limitado a dos lotes.",
+    "Un proveedor común de polvo de moringa contaminado abasteció a múltiples marcas, lo que explica brotes repetidos ligados a moringa con distintos serotipos.",
+    "Agua contaminada usada en el lavado o procesamiento de las hojas antes del secado introdujo Salmonella en el material.",
+    "La Salmonella persiste largo tiempo en alimentos de baja humedad, por lo que la contaminación inicial se mantuvo viable durante almacenamiento y distribución.",
+    "Controles de calidad y pruebas microbiológicas insuficientes del proveedor y del distribuidor no detectaron la contaminación antes de la venta.",
+    "Contaminación por roedores, aves o insectos en almacenes de materia prima en el país de origen.",
+    "Manipulación por trabajadores infectados con higiene deficiente durante cosecha, molienda o envasado.",
+    "Una cepa distinta (Typhimurium) en un nuevo lote de materia prima indica una nueva fuente de contaminación independiente del brote de febrero, no una continuación del mismo."
+   ]
+  },
+  {
+   "id": "R09",
+   "explicaciones": [
+    "Un arnés de cableado mal enrutado roza contra un componente metálico o filo de la carrocería, se desgasta el aislante y produce un cortocircuito capaz de iniciar un incendio incluso con el vehículo apagado.",
+    "Un circuito alimentado permanentemente por la batería (no protegido por fusible adecuado) puede sobrecalentarse y causar incendio con el vehículo estacionado, de ahí la orden de dejarlo afuera.",
+    "Ingreso de agua o humedad en un conector o arnés que genera corrosión y resistencia alta, con calentamiento localizado y riesgo de fuego.",
+    "Conector eléctrico mal ensamblado o con terminales flojos que provoca arco eléctrico y sobrecalentamiento.",
+    "Falla en un módulo o componente eléctrico (por ejemplo calefactor, bomba o módulo de carrocería) que permanece energizado y sobrecalienta el cableado asociado.",
+    "Defecto de fabricación de un proveedor de arneses que afecta a una gran franja de producción común a Wrangler y Gladiator en varias plataformas y mercados.",
+    "Cableado cercano al escape o a fuentes de calor del motor que se degrada térmicamente hasta perder aislamiento y causar cortocircuito.",
+    "Fusible de calibre incorrecto o ausente en un circuito, que no interrumpe la corriente ante un cortocircuito y permite que el cable se incendie.",
+    "Daño al cableado por vibración y flexión en uso todoterreno, propio de estos vehículos, que acelera el desgaste del aislante.",
+    "Falta de una solución definitiva al momento del retiro, por lo que la orden de estacionar afuera es una medida provisional ante un riesgo de incendio aún no corregido."
+   ]
+  },
+  {
+   "id": "R10",
+   "explicaciones": [
+    "Avacopan (Tavneos) causa hepatotoxicidad idiosincrásica, incluido síndrome de desaparición de conductos biliares, que en algunos pacientes progresa a insuficiencia hepática grave o mortal.",
+    "Problemas de integridad de datos en el ensayo pivotal ADVOCATE (análisis o adjudicación sesgados o no revelados) llevaron a la FDA a concluir que la eficacia nunca se demostró válidamente.",
+    "Interacción con otros fármacos hepatotóxicos usados en vasculitis ANCA (azatioprina, trimetoprim-sulfametoxazol, glucocorticoides) que sumó toxicidad hepática.",
+    "Inhibición o metabolismo por CYP3A4 que eleva las concentraciones de avacopan o de fármacos concomitantes en ciertos pacientes, aumentando el daño hepático.",
+    "El beneficio en remisión sostenida dependía de una comparación con un régimen de esteroides distinto y de criterios de valoración subjetivos, por lo que reanálisis mostraron que el efecto no era robusto.",
+    "La aprobación se basó en un único ensayo con resultado de no inferioridad en el criterio principal y beneficio solo en un criterio secundario, que al revisarse no sostuvo la eficacia.",
+    "La farmacovigilancia poscomercialización expuso a una población más amplia y frágil que la de los ensayos, revelando eventos hepáticos graves raros que no se detectaron antes.",
+    "Ocultamiento o reporte tardío de información relevante por el fabricante a la FDA que invalidó la base regulatoria de la aprobación.",
+    "Daño colestásico inmunomediado ligado a la respuesta individual del paciente (posible susceptibilidad genética) que hace impredecibles las lesiones.",
+    "La combinación de riesgo hepático grave y eficacia no demostrada invirtió el balance beneficio-riesgo, llevando a la FDA a proponer el retiro del fármaco."
+   ]
+  },
+  {
+   "id": "R12",
+   "explicaciones": [
+    "La locomotora quedó sin frenos aplicados o con el regulador parcialmente abierto mientras el operario estaba entre ambas para acoplar, y se movió sin orden por vapor residual o pendiente.",
+    "Fuga del regulador (válvula de admisión) que dejó pasar vapor a los cilindros aunque estaba cerrado, haciendo avanzar la locomotora durante el acople.",
+    "Falla de comunicación entre el maquinista y el operario de acople (señales mal entendidas en un evento concurrido) que llevó a mover la máquina con el operario entre ambas.",
+    "Freno de mano o de vacío no aplicado o liberado prematuramente en la locomotora detenida, permitiendo que rodara por la pendiente del andén.",
+    "Inversor (reversa) dejado en marcha en lugar de punto muerto, de modo que el vapor acumulado movió la máquina al abrirse el regulador o drenar.",
+    "Ausencia o incumplimiento de un procedimiento de protección (bloqueo de la locomotora antes de ingresar entre vehículos) que permitió la exposición del operario.",
+    "Distracción o presión de horarios en el evento de aniversario con más movimientos y personal voluntario menos experimentado, que redujo la verificación de seguridad.",
+    "Maquinista que operó los mandos creyendo que el acople ya estaba completo, moviendo la máquina mientras el operario aún estaba entre ellas.",
+    "Cilindros con condensado y vapor residual que al expandirse generaron movimiento inesperado al abrir las válvulas de drenaje.",
+    "Capacitación y supervisión insuficientes del voluntariado en tareas de acople de locomotoras a vapor."
+   ]
+  },
+  {
+   "id": "R13",
+   "explicaciones": [
+    "La vía de riel soldado continuo volvió a pandearse por calor el 6 de julio porque la reparación del 1 de julio no restituyó la temperatura neutra del riel ni la resistencia lateral del balasto, y el tren descarriló sobre la deformación.",
+    "El tablero del puente reconstruido en mayo dejó una transición rígida y balasto insuficiente o no consolidado, reduciendo la resistencia lateral y favoreciendo el pandeo térmico.",
+    "Al enderezar la vía se añadió o se reacomodó riel sin ajustar la tensión (destress), dejando el riel en compresión excesiva que se liberó con las altas temperaturas de julio.",
+    "Levantar la restricción de 10 mph antes de que el balasto recién colocado se consolidara permitió que el paso de trenes desestabilizara la vía y causara el descarrilamiento.",
+    "Anclaje deficiente del riel al tablero del puente (fijaciones, anclas anticorrimiento) que permitió el desplazamiento longitudinal del riel y su acumulación de esfuerzos en el puente.",
+    "Dinámica del tren (fuerzas de tracción o frenado, manejo del maquinista) sobre una vía con alineación marginal que provocó levantamiento o desplazamiento de vagones.",
+    "Inspección posterior a la reparación insuficiente que no detectó desalineación remanente o reaparición del defecto antes del 6 de julio.",
+    "Falla de un componente de vagón (rueda, eje, rodamiento) coincidente que inició el descarrilamiento en la zona del puente.",
+    "Diferencias térmicas entre la estructura del puente y la vía de aproximación que generaron esfuerzos concentrados en los extremos del puente.",
+    "El tanque DOT-111, de diseño menos resistente, se perforó en el descarrilamiento y liberó el hidróxido de sodio, agravando las consecuencias del evento."
+   ]
+  },
+  {
+   "id": "R14",
+   "explicaciones": [
+    "La fatiga de la tripulación tras un largo vuelo transatlántico degradó su desempeño y llevó a una aproximación inestable con aterrizaje duro o contacto prematuro con el terreno.",
+    "Descenso por debajo de la altitud mínima en una aproximación de no precisión en Birmingham, sin referencias visuales adecuadas, que hizo que el avión golpeara el terreno o la pista antes de tiempo, como en el UPS 1354.",
+    "Aterrizaje duro por una tasa de descenso excesiva en el enderezamiento debido a velocidad mal gestionada o configuración tardía.",
+    "Cizalladura del viento o ráfagas en la aproximación final que hicieron perder sustentación cerca del suelo y provocaron un impacto fuerte.",
+    "Salida o desviación de pista por pista mojada, hidroplaneo o frenado deficiente que hizo que el avión chocara con obstáculos o terreno al final de la pista.",
+    "Error en la configuración del sistema de gestión de vuelo o del perfil de descenso que dejó al avión más bajo de lo previsto en la aproximación.",
+    "Mala visibilidad por niebla, lluvia o noche que impidió a la tripulación ver la pista a tiempo para corregir la trayectoria.",
+    "Falla mecánica del tren de aterrizaje (colapso o no extensión completa) que convirtió el aterrizaje en un golpe estructural.",
+    "Combustible escaso al final del trayecto transatlántico que presionó a la tripulación a aterrizar sin abortar una aproximación inestable.",
+    "Uso de una pista con ayudas limitadas (sin ILS operativo) que obligó a una aproximación más exigente y propensa al error."
+   ]
+  }
+ ]
+}
