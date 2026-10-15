@@ -159,3 +159,11 @@ La regla de decisión es la misma, con S1 en lugar de S2.
 2. **Estructural:** las familias de rivales de la skill vienen de los operadores O1–O21, escritos antes que los casos. Algunos tipos de causa plantados (medición, mezcla, decisión) coinciden con esas familias. Es lo que el marco predice que sirve, pero hace que la prueba sea favorable a S1. Por eso la regla exige 3 o más casos de diferencia.
 
 Versión que se prueba: SKILL.md `fdc5fbda0e8073e7…`, instrucciones-permanentes.md `71fbc41762231a2a…` (SHA-256).
+
+## Nota 2026-10-15 (6): abandonado sin correr, por decisión del usuario
+
+El usuario decidió no correr EXP-018. **No hay resultado:** no se puede afirmar ni negar que la skill `abduccion` forme el hábito.
+
+- **Qué queda:** los casos, el resultado del filtro de la respuesta promedio (nota 3) y la sonda fuera de protocolo en caso-02 (nota 4). La clave y los generadores siguen con el usuario; su SHA-256 sigue en el repositorio, por si se corre más adelante.
+- **Qué se libera:** la skill `abduccion` y las instrucciones permanentes ya no están congeladas. Cualquier cambio posterior invalida los SHA-256 registrados, así que una corrida futura de estos casos tendría que registrarse como experimento nuevo, con la versión de la skill que se pruebe.
+- **Lo que reemplaza la medición:** el acierto de los agentes se mide en uso real, con predicciones fechadas y resueltas en `campo/` (ver `campo/README.md`). Es una medición más lenta y sin casos controlados. Mide si el agente acierta más que la tasa base y el consenso, no si piensa distinto.

@@ -32,7 +32,7 @@ description: Usar ante preguntas sobre una acción o una empresa cotizada, por e
 1. **Qué descuenta el precio**, en una o dos líneas.
 2. **La explicación** y las rivales descartadas, cada una con la cifra y la fuente que la descartó.
 3. **Escenarios**, con precio y probabilidad, y el supuesto que los separa.
-4. **Predicciones fechadas:** qué debería verse, por ejemplo en el próximo trimestre, si tienes razón, con probabilidad, junto a la tasa base y al consenso. Regístralas con la skill `aprender-del-campo`.
+4. **Predicciones fechadas:** qué debería verse, por ejemplo en el próximo trimestre, si tienes razón, con probabilidad, junto a la tasa base y al consenso. Regístralas con la skill `red-abductiva`.
 5. **Qué cambiaría la conclusión.**
 
 Si el usuario pregunta qué hacer, sepáralo del análisis y di qué pasa si te equivocas.

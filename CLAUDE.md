@@ -8,7 +8,7 @@
 
 1. [README.md](README.md): la organización y el ciclo del conocimiento (marco → skills → campo → patrones → experimento → marco).
 2. [docs/marco-teorico/README.md](docs/marco-teorico/README.md): tesis, generación, principios y formalización. Es la referencia vigente; son cuatro documentos cortos. De aquí salen las skills.
-3. [docs/bitacora/README.md](docs/bitacora/README.md): experimentos y lecciones transversales. **Revisar las lecciones antes de diseñar un experimento.** El experimento en curso es [EXP-018](docs/bitacora/EXP-018-fuera-de-la-caja-con-datos.md).
+3. [docs/bitacora/README.md](docs/bitacora/README.md): experimentos y lecciones transversales. **Revisar las lecciones antes de diseñar un experimento.** No hay experimento en curso; EXP-018 se abandonó sin correr.
 4. Para escribir en `campo/` o `taller/`: sus README tienen las plantillas y las reglas.
 5. Solo si hace falta: [docs/experimentos-mentales/](docs/experimentos-mentales/README.md), las historias y axiomas de los que salen los principios.
 
@@ -33,7 +33,7 @@ Los agentes son **contribuidores**: todo aporte entra por un pull request que el
 - **Idioma:** español, en documentos y commits.
 - **La teoría no se modifica sin pedido del usuario:** marco teórico, experimentos mentales, axiomas, histórico y bitácora.
 - **Experimentos:** se registran en la bitácora **antes** de correrlos, con lo que contaría como fracaso. Cada cambio de parámetro hecho después de ver un resultado se declara. Las entradas no se reescriben: se agregan notas.
-- **EXP-018 en curso:** la clave y los generadores de los casos los guarda el usuario. No los busques ni los reconstruyas; en el repositorio solo está su SHA-256. La skill `abduccion` y las instrucciones permanentes tienen su SHA-256 registrado: no se tocan hasta cerrar EXP-018, y no se instala nada del taller mientras corre.
+- **Casos de EXP-018:** la clave y los generadores los guarda el usuario, por si se corren en un experimento futuro. No los busques ni los reconstruyas; en el repositorio solo está su SHA-256.
 - **Contra el sobreajuste:** un principio entra al marco solo si una historia o un experimento lo exige. Lo que llega de afuera (investigaciones, agentes, notas de campo) se verifica antes de usarlo. Ninguna skill se ajusta mirando los casos de su propia prueba.
 - **Las skills son cortas:** una página como máximo. Extienden a `abduccion` sin repetirla. Lo que no cabe, va al marco.
 - **El campo se agrega, no se reescribe:** una nota equivocada se corrige con otra que la enlaza. Lo predicho no se edita al resolver.
