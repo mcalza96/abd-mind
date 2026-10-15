@@ -34,6 +34,8 @@ Esto resuelve una contradicción que dejó abierta la revisión de la base (hist
 
 **Límite honesto (P6, [principios, P6](principios.md#p6--contacto)):** un operador **saca a la superficie** lo que el modelo sabe y no dice. No agrega conocimiento del mundo. Si el modelo nunca supo de bicilindros, ninguna pregunta se lo hará proponer. La recombinación de lo conocido en una configuración nueva sí está a su alcance, y Peirce sostenía que de eso está hecha la mayoría de las ideas nuevas. No prometemos más que eso.
 
+**Evidencia en contra, preliminar ([escenarios de generación](../experimentos-mentales/09-escenarios-generacion.md#lectura-ciega-2026-10-15-la-generación-libre-encontró-todo)).** Un modelo fuerte, con generación libre, puso la verdad oculta en primer lugar en los siete escenarios de desarrollo. La premisa "la generación libre se queda en lo obvio" queda **sin demostrar**. Puede depender del generador y de que los hechos traigan la pista sembrada. Se mide antes de construir (§6).
+
 ## 3. Los disparadores: cuándo hay algo que explicar
 
 Una abducción empieza con una sorpresa. Hoy el motor reconoce una sola: "ninguna hipótesis explica todo" (postulado 3). Las historias mostraron que hay más, y que la más peligrosa es la que **no parece sorpresa**:

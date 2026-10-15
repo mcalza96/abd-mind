@@ -38,6 +38,7 @@ Una sala cerrada con un objeto sólido. Hay ventanas en el techo, al frente y al
 | 5 | [La lámpara torcida](05-la-lampara-torcida.md) | Ante una contradicción hay tres sospechosos: instrumento, ley y objeto; las hipótesis auxiliares tienen que pagar | escrita |
 | 6 | [La acción que cae](06-la-accion-que-cae.md) | Fuera de la sala casi no hay leyes ni ventanas independientes; lo que sobrevive es disciplina, no ventaja | escrita |
 | 7 | [El objeto que cambia según quién mira](07-el-objeto-que-cambia.md) | Una hipótesis vale lo que prohíbe: puntuar por predicción, no por explicación | escrita |
+| 9 | [Escenarios de generación](09-escenarios-generacion.md) | Siete escenarios, uno por componente de una explicación. Una sonda ciega encontró la verdad en los siete sin operadores | escrita |
 | 8 | [El hueco interior](08-el-hueco-interior.md) | Hay preguntas no identificables: se dice, se acota y se busca otro instrumento | escrita |
 
 La historia 5 tiene ahora una forma concreta, propuesta por la lectura ciega: Tomás reporta "círculo", pero su ventana está oblicua y en realidad ve una elipse. Ninguna hipótesis explica todo, así que el motor expande y premia una forma monstruosa que acomoda el error, en vez de dudar del dato.
