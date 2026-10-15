@@ -140,3 +140,22 @@ El usuario probó un caso antes de la corrida formal, **pidiéndole explícitame
 | Análisis de datos | Lo hizo el agente; luego cargó sus resultados al motor como observaciones de "hermes-analisis" | Lo hizo el agente, con cuatro pruebas contra la explicación rival |
 
 Lectura (un caso, sin juicio): cuando el agente ya analiza los datos y pone a prueba la rival por su cuenta, el motor **reordena lo que el agente ya sabía** y no agrega una explicación ni una prueba nueva. Las 13 hipótesis quedaron "vivas". Es un indicio de costo sin beneficio, a confirmar con la corrida completa.
+
+## Nota 2026-10-15 (5): S1 (skill nueva) en lugar de S2 (antes de correr)
+
+Por [ADR-0017](../arquitectura/adr/0017-motor-como-investigacion-skills-como-producto.md), la pregunta pasa a ser si **las instrucciones** forman el hábito. Las condiciones son:
+
+| | S0 | S1 |
+|---|---|---|
+| Skill | Ninguna | [`abduccion`](../../hermes/skills/abduccion/SKILL.md) |
+| Líneas siempre activas | Ninguna | [`instrucciones-permanentes.md`](../../hermes/instrucciones-permanentes.md) |
+| MCP abd-mind | No | No |
+
+La regla de decisión es la misma, con S1 en lugar de S2.
+
+**Cómo se escribió la skill.** La escribió un agente sin acceso a los casos ni a la clave, a partir del marco teórico, los axiomas, el escenario G y EXP-016/017. Hubo dos contaminaciones posibles, ambas declaradas:
+
+1. **Mía:** en el encargo le di como ejemplo del hábito la comprobación del caso de las ventas y el menú, que es uno de los 12 casos. El agente lo copió en el paso 4, y lo reemplacé por un ejemplo de fútbol antes de subirlo. El caso de la sonda (caso-02) se informará aparte.
+2. **Estructural:** las familias de rivales de la skill vienen de los operadores O1–O21, escritos antes que los casos. Algunos tipos de causa plantados (medición, mezcla, decisión) coinciden con esas familias. Es lo que el marco predice que sirve, pero hace que la prueba sea favorable a S1. Por eso la regla exige 3 o más casos de diferencia.
+
+Versión que se prueba: SKILL.md `fdc5fbda0e8073e7…`, instrucciones-permanentes.md `71fbc41762231a2a…` (SHA-256).
