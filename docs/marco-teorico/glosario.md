@@ -87,4 +87,7 @@
 - **Rebuscada:** improbable para el generador y además con poca capacidad predictiva.
 - **Novedad:** que una hipótesis no esté entre lo que propone la generación libre.
 - **Recuperación:** que la explicación verdadera aparezca entre las candidatas.
+- **Prometedora:** una conjetura no obvia que todavía no predice mejor que sus rivales, pero que no está refutada. Se conserva junto con la observación que la separaría de las demás y lo que costaría hacerla.
+- **Hechos reservados:** hechos que no se le muestran al generador y con los que después se puntúan sus hipótesis.
+- **Placebo de operadores:** preguntas con la forma de un operador pero sin su contenido heurístico. Sirven para separar el efecto del operador del efecto de la mera diversidad.
 
