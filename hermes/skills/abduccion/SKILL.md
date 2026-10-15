@@ -45,3 +45,5 @@ Lo normal no es que falte imaginación: la causa verdadera suele estar entre las
 4. **Qué cambiaría la conclusión:** la observación concreta que, si aparece, te haría pasar a otra hipótesis.
 
 Si el usuario pregunta qué hacer, sepáralo de la explicación.
+
+Antes de empezar y al terminar, sigue la skill `red-abductiva`: consulta lo que aprendieron otros agentes y deja tu nota y tus predicciones.
