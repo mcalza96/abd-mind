@@ -87,3 +87,21 @@ Dos hallazgos, sin juez ciego y por lo tanto preliminares:
 2. **El agente no usa el MCP por iniciativa propia**, aunque tenga la skill instalada.
 
 El informe de A no se sube al repositorio, porque trae los hallazgos ocultos del oráculo.
+
+## Nota 2026-10-15 (2): el agente B también corrió; resultado descriptivo
+
+El usuario corrió B igual. Artefactos en [`corrida-2026-10-15/`](../../datasets/abd-bench/oraculo/corrida-2026-10-15/): los dos informes, la entrada del juez, la clave y los juicios. El juez es un agente de otra familia, ciego a la condición, con la rúbrica de EXP-016 sobre el núcleo.
+
+| | A | B |
+|---|---|---|
+| Modelo de Hermes | `muse-spark-1.2-contributor` | `mimo-v2.6-flash` |
+| Usó abd-mind | No | No |
+| Núcleo `sí` | **9 de 11** (R10 parcial, R12 no) | **8 de 11** (R04, R10 y R12 no) |
+| Brier | 0,142 | 0,154 |
+| Cierre prematuro (error con confianza ≥ 0,7) | 2 | 2 |
+| Apertura (núcleo en las alternativas) | R12 | R12 |
+| Pedidos útiles | 36 de 81 | 30 de 63 |
+
+**Según la regla registrada**, la diferencia es de 1 caso: sin diferencia detectable. Pero la comparación **no mide el MCP**: ninguno lo usó, los modelos son distintos y B ejecutó la prueba con un cliente MCP propio. La única diferencia, R04, la explica el oráculo: B pidió "registro de alarmas de la sala de control" y "registro de operación del horno" y no recibió nada; A pidió algo más vago ("horno de craqueo tras la explosión") y recibió los registros de control. **El oráculo depende de la redacción**, lo que es una amenaza para cualquier uso futuro. El juez fue indulgente con B en R14: le dio `sí` aunque anota que no dice que la tripulación insistió en aterrizar.
+
+**Lo que sí deja:** con observaciones, los dos agentes llegan al núcleo en 8 o 9 de 11 casos razonando por su cuenta, incluido R14, que en EXP-016 ningún generador encontró. Refuerza P6: el límite estaba en el contacto, no en la imaginación. Y ninguno de los dos usó lo que se le dio más allá del oráculo.
