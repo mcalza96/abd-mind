@@ -50,3 +50,18 @@ Misma sala. El objeto es un **cubo de 10 cm de lado, hueco por dentro**: una caj
 
 - **En el dominio exacto:** un objeto hueco y una pregunta de volumen. Se verifica que hoy el motor da 1.000 como respuesta determinada si nadie propone el hueco. Después se agregan (a) generación adversaria de rivales (A7), (b) detección de no identificabilidad, (c) cotas.
 - **En la serie U de abd-bench:** distinguir los casos donde falta información que **existe y se puede buscar** de los casos donde la pregunta no es identificable con las fuentes disponibles. Lo correcto es distinto en cada uno: sugerir qué buscar en el primero, decir que no se puede saber en el segundo.
+
+## Lectura ciega (2026-10-15)
+
+El agente sin contexto no conocía la verdad oculta. Llegó a lo mismo que el análisis: no hay respuesta determinada, la única respuesta honesta es una cota superior de 1.000, y ninguna ventana de silueta lo resuelve. Hay que cambiar de modalidad: pesar, medir el agua desplazada, radiografiar. Agregó cuatro puntos:
+
+1. **La cota inferior es casi cero, y tiene nombre.** Tres placas finas, una por eje, llenan las tres siluetas con un volumen ínfimo. La cota superior es un resultado clásico, la desigualdad de Loomis-Whitney: V² ≤ área₁ · área₂ · área₃. El intervalo honesto es **(casi 0, 1.000]**.
+2. **La parsimonia empuja siempre hacia el extremo.** Si alguien propone las placas, pagan por tres entidades contra una del cubo. La hipótesis "más simple" resulta ser la **cota máxima**, no el valor más probable. La parsimonia no es neutral frente a la pregunta.
+3. **"No hay empate" no equivale a "hay unicidad".** Con una sola candidata, el motor declara la respuesta determinada. Pero que no haya rivales propuestos no significa que no existan (A7). El agente propone una **expansión dirigida a la pregunta**: aunque todo esté explicado, buscar a propósito hipótesis compatibles que respondan distinto, empezando por el mínimo y el máximo de la variable.
+4. **El riesgo del remedio, dicho por el propio agente.** Si se busca siempre el contraejemplo, casi cualquier pregunta queda indeterminada con hipótesis rebuscadas (huecos, fractales), y Marcos no puede decidir nada. La salida es informar dos cosas separadas:
+   - **la cota segura:** como mucho 1.000;
+   - **la apuesta más probable:** cerca de 1.000 si es macizo, como suelen ser los objetos.
+
+   La apuesta no se presenta como si fuera la cota. Es A5 (la frecuencia es apuesta) unido a A28 (acotar).
+
+Detalles de la historia que señaló: "cuánto material" puede ser volumen o masa, y para fundir importa la masa; faltan las unidades; una lámpara puntual no da tamaños reales; y la pregunta "¿qué ventana habría que abrir?" supone que alguna basta, lo que es una trampa deliberada.
