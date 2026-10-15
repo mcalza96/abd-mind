@@ -62,6 +62,8 @@ def _parser() -> argparse.ArgumentParser:
     bench.add_argument("--salida", type=Path, help="carpeta de resultados")
     bench.add_argument("--listar", action="store_true", help="solo lista los casos elegidos")
 
+    oraculo = sub.add_parser("oraculo", help="servidor MCP del oráculo de la prueba A/B (EXP-017)")
+    oraculo.add_argument("--mundo", type=Path, default=None, help="archivo mundo.b64")
     serve = sub.add_parser("serve", help="servidor MCP para Hermes u otro cliente")
     serve.add_argument("--transport", choices=["stdio", "http"], default="stdio")
     serve.add_argument("--host", default="127.0.0.1", help="solo HTTP")
@@ -129,6 +131,14 @@ def _casos(args: argparse.Namespace) -> int:
         return 0
     finally:
         store.cerrar()
+
+
+def _oraculo(args: argparse.Namespace) -> int:
+    from factory.bench.oraculo import crear_servidor_oraculo, oraculo_de_entorno
+
+    config = cargar_config(args.config)
+    crear_servidor_oraculo(oraculo_de_entorno(config, args.mundo)).run("stdio")
+    return 0
 
 
 def _serve(args: argparse.Namespace) -> int:
@@ -285,6 +295,8 @@ def main(argv: Sequence[str] | None = None) -> int:
             return _casos(args)
         if args.comando == "serve":
             return _serve(args)
+        if args.comando == "oraculo":
+            return _oraculo(args)
         if args.comando == "bench":
             return _bench(args)
         return _doctor(args)
