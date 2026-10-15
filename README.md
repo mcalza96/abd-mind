@@ -1,20 +1,43 @@
 # abd-mind
 
-Investigación sobre pensamiento abductivo para agentes de IA. **Objetivo:** que un agente no se quede con la respuesta promedio, sino que busque la explicación no obvia, la compruebe y la distinga de la rebuscada ([tesis](docs/marco-teorico/tesis.md)).
+Una familia de skills de pensamiento abductivo para agentes de IA, con la teoría de la que salen y el registro de lo que se aprende al usarlas. **Objetivo:** que un agente no se quede con la respuesta promedio, sino que busque la explicación no obvia, la compruebe y la distinga de la rebuscada ([tesis](docs/marco-teorico/tesis.md)).
 
-## Qué se le da al agente
+No promete conocimiento fuera de la frontera. Promete **disciplina**: elegir bien qué explicar, comprobar rivales con datos, apostar antes de saber y llevar la cuenta de si acierta.
+
+## Cómo está organizado
+
+| Carpeta | Qué hay | Quién escribe |
+|---|---|---|
+| [`hermes/`](hermes/) | Lo que se instala en el agente: las skills **estables** y las [líneas siempre activas](hermes/instrucciones-permanentes.md) | El usuario |
+| [`taller/`](taller/README.md) | Skills en propuesta, borrador o prueba, y las reglas de la familia | Agentes proponen; el usuario decide |
+| [`campo/`](campo/README.md) | Notas de campo, predicciones y patrones: lo que los agentes aprenden al trabajar | Agentes |
+| [`docs/marco-teorico/`](docs/marco-teorico/README.md) | Tesis, generación, principios y formalización. De aquí salen todas las skills | Solo con pedido del usuario |
+| [`docs/bitacora/`](docs/bitacora/README.md) | Experimentos registrados antes de correrlos, y lecciones | Con pedido del usuario |
+| [`docs/experimentos-mentales/`](docs/experimentos-mentales/README.md) | Las historias y axiomas de los que salen los principios | Con pedido del usuario |
+| [`docs/historico/`](docs/historico/README.md) | El marco anterior, el motor y sus ADRs, skills retiradas | Nadie: es archivo |
+| [`datasets/`](datasets/abd-bench/README.md) | Los conjuntos usados en los experimentos | Con pedido del usuario |
+
+## El ciclo del conocimiento
+
+```text
+        marco teórico ──────────► skills (taller → hermes)
+             ▲                          │
+             │  solo con pedido         │  uso real
+             │  del usuario             ▼
+   bitácora (experimento) ◄── patrones ◄── notas de campo y predicciones
+```
+
+1. **Las skills salen del marco.** `abduccion` tiene el método general. Las demás lo extienden a un dominio, como [`abduccion-mercados`](taller/skills/abduccion-mercados/SKILL.md), o a una tarea, como [`aprender-del-campo`](taller/skills/aprender-del-campo/SKILL.md).
+2. **El uso deja rastro.** Al terminar un análisis, el agente escribe una nota de campo y registra predicciones fechadas.
+3. **Lo que se repite se vuelve patrón.** Con al menos 3 notas independientes, un agente lo propone y el usuario lo acepta o no.
+4. **Un patrón justifica una skill o un experimento**, nunca un cambio directo a la teoría. El marco cambia solo cuando un experimento o una historia lo exige y el usuario lo pide.
+5. **Las predicciones resueltas dicen si sirve.** La revisión periódica compara el acierto de los agentes con la tasa base y con el consenso.
+
+## Qué se instala hoy
 
 - [`hermes/skills/abduccion/SKILL.md`](hermes/skills/abduccion/SKILL.md): el método, en una página.
 - [`hermes/instrucciones-permanentes.md`](hermes/instrucciones-permanentes.md): siete líneas para las instrucciones siempre activas de Hermes. Son las que buscan volverlo un hábito.
 
-Se prueba en [EXP-018](docs/bitacora/EXP-018-fuera-de-la-caja-con-datos.md): el mismo agente con y sin estas instrucciones, ante preguntas con datos donde la explicación obvia suele estar equivocada.
+Se prueba en [EXP-018](docs/bitacora/EXP-018-fuera-de-la-caja-con-datos.md): el mismo agente con y sin estas instrucciones. **Mientras EXP-018 corre, no se instala nada del taller.** Al cerrarlo, el primer candidato es `aprender-del-campo`, porque es la que pone en marcha el ciclo.
 
 **El motor abductivo** (verificación, puntuación y servidor MCP) se construyó y se midió, pero no agregaba nada que un agente con sus herramientas no pudiera hacer, y se quitó ([ADR-0017](docs/historico/arquitectura/adr/0017-motor-como-investigacion-skills-como-producto.md)). Último commit con el motor: `44b51f694420cd3df004428e59c85fb000008c46`.
-
-## Documentación
-
-- [Marco teórico](docs/marco-teorico/README.md): tesis, generación abductiva, principios y formalización (vigente).
-- [Bitácora](docs/bitacora/README.md): experimentos, con su registro previo, y lecciones.
-- [Experimentos mentales](docs/experimentos-mentales/README.md): las historias y axiomas de los que salen los principios.
-- [Histórico](docs/historico/README.md): el marco anterior, la arquitectura y los ADRs del motor, y las skills anteriores.
-- [Datos](datasets/abd-bench/README.md): los conjuntos usados en los experimentos.
