@@ -78,3 +78,13 @@
 **Pregunta del caso.** Variable contrastiva cuyos valores son las respuestas posibles; la respuesta se decide entre clases de hipótesis, no entre mecanismos (11 §11.3).
 
 **Veredicto de tres valores.** `explica`, `neutral` o `contradice`; solo lo contradicho cuesta o derrota (11 §11.1).
+
+### Generación abductiva ([17](17-generacion-abductiva.md))
+
+- **Disparador:** lo que indica que hay algo que explicar. Puede ser una contradicción, una coincidencia, un residuo, una ausencia, un ajuste demasiado bueno, una regularidad sin mecanismo o una pregunta sin resolver.
+- **Operador abductivo:** una pregunta que cambia el marco del generador para que una explicación no obvia se vuelva probable. Por ejemplo: "¿qué otra cosa produciría exactamente lo mismo?"
+- **No obvia:** improbable para el generador con la pregunta habitual, pero con alta capacidad predictiva una vez propuesta.
+- **Rebuscada:** improbable para el generador y además con poca capacidad predictiva.
+- **Novedad:** que una hipótesis no esté entre lo que propone la generación libre.
+- **Recuperación:** que la explicación verdadera aparezca entre las candidatas.
+

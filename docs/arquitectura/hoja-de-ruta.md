@@ -14,6 +14,8 @@ Cada fase termina con algo que funciona y se puede probar. Ninguna fase depende 
 | 4b — Robustez epistémica | ✅ |
 | 4c — Explicación en dominios abiertos | ✅ |
 | 5 — Servidor MCP | ✅ |
+| 5b — Rumbo A + C | Parcial: A1 hecha (EXP-013); el resto queda subordinado a la fase 5c |
+| **5c — Generación abductiva** | **En curso: marco teórico** ([17](../marco-teorico/17-generacion-abductiva.md)) |
 | 6 — Integración con Hermes | Pendiente |
 | 7 — Benchmarks y calibración | Pendiente |
 
@@ -151,6 +153,15 @@ Decisión de [14](../marco-teorico/14-rumbo-estado-y-proyeccion.md) y [ADR-0016]
 2. **A:** casos secuenciales para medir anclaje y revisión. Primero sintéticos derivados de las variantes; después, el conjunto S de la segunda investigación.
 3. **C:** verificación híbrida por variables y dominio `mercado`, validado con el conjunto F.
 4. **Comunicación:** README y skill de Hermes dejan de prometer más precisión que un LLM en dominios abiertos.
+
+## Fase 5c — Generación abductiva (nuevo centro)
+
+Decisión del 2026-10-15: el objetivo es una IA a la que se le ocurran explicaciones no obvias ([17](../marco-teorico/17-generacion-abductiva.md)). La fase 5b no se descarta: sus piezas pasan a ser el filtro y la prueba de lo que se genera (17 §17.8).
+
+1. **Marco teórico:** documento 17, alineado con 01, el README, 16 y el glosario. Lectura ciega.
+2. **Escenarios:** un experimento mental por operador o grupo de operadores, cada uno con su lectura ciega. Cada escenario debe poder mostrar que el operador **no** ayuda.
+3. **Plan del MCP:** detección de disparadores, generación guiada por operadores, medición de novedad y de recuperación, y calificación de operadores por resultados resueltos.
+4. **Experimento central** (registrado antes de correr): generación libre frente a generación guiada, con el mismo modelo y el mismo cómputo, en las salas, el conjunto R y las perturbaciones P (17 §17.7).
 
 ## Fase 6 — Integración con Hermes
 

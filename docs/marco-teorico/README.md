@@ -1,6 +1,6 @@
 # Marco Teórico — abd-mind
 
-Motor de razonamiento abductivo: un pipeline orquestado que separa **percepción**, **generación de hipótesis**, **selección por virtudes explicativas** y **verificación determinista**, en lugar de usar un LLM como oráculo estadístico.
+Motor de razonamiento abductivo. **Objetivo (desde el 2026-10-15): una IA a la que se le ocurran explicaciones no obvias** ([17](17-generacion-abductiva.md)). La generación guiada por operadores abductivos es el centro; la selección por virtudes explicativas, la verificación y el registro son el filtro y la prueba de lo que se genera.
 
 Este directorio es la referencia conceptual del proyecto. Todo módulo de código debe poder rastrearse a una definición de aquí; si el código y este marco discrepan, se corrige uno de los dos de forma explícita (ver [08 — Decisiones](08-decisiones-y-limitaciones.md)).
 
@@ -24,15 +24,18 @@ Este directorio es la referencia conceptual del proyecto. Todo módulo de códig
 | 14 | [Rumbo: estado y proyección](14-rumbo-estado-y-proyeccion.md) | Qué hace el motor tras EXP-010 y EXP-012: juicio holístico en dominios abiertos, verificación exacta donde hay estructura |
 | 15 | [Forma y material](15-forma-y-material.md) | Revisión de la base: un motor hecho de juicios de LLM aporta forma, no contenido; el aporte posible es el compromiso previo con el mundo |
 | 16 | [Fundamentos desde las historias](16-fundamentos-desde-las-historias.md) | **Propuesta de nueva base:** seis principios (mediación, ley, riesgo, subdeterminación, pregunta, contacto) derivados de los [experimentos mentales](../experimentos-mentales/README.md) |
+| 17 | [Generación abductiva](17-generacion-abductiva.md) | **Centro del marco:** la creatividad abductiva como cambio de marco; disparadores, operadores abductivos, filtro entre lo no obvio y lo rebuscado, y cómo se mide |
 | — | [Glosario](glosario.md) | Términos y notación |
 
 ## Lectura rápida
 
 1. Una etiqueta no es la verdad: es una **proyección** $y_i = \pi_{O_i}(S)$ del estado real $S$ a través del marco de un observador.
-2. Cuando dos observadores discrepan, no se promedia: se busca la hipótesis $H$ que **produce ambas sombras**.
-3. Si ninguna hipótesis conocida lo logra, se **amplía la ontología** con una variable latente.
-4. El LLM **propone**; un backend determinista **decide** con $\text{Score}(H) = \alpha C(H) + \beta K(H) - \gamma P(H)$.
-5. Toda hipótesis aceptada es **derrotable**: evidencia nueva incompatible la descarta sin reentrenar.
+2. Una abducción empieza con una **sorpresa**: una contradicción, una coincidencia, un residuo, una ausencia, o también un ajuste demasiado bueno ([17 §17.4](17-generacion-abductiva.md#174-los-disparadores-cuándo-hay-algo-que-explicar)).
+3. **Lo obvio no necesita un motor.** Una explicación no obvia aparece cuando se cambia la pregunta, no cuando se piden más muestras: los **operadores abductivos** ([17 §17.5](17-generacion-abductiva.md#175-catálogo-inicial-de-operadores-abductivos)) cambian el marco del generador.
+4. **Lo no obvio se separa de lo rebuscado** por lo que predice: una buena conjetura hace que los hechos sean "cosa corriente" y prohíbe algo ([EXP-015](../bitacora/EXP-015-puntuacion-predictiva-en-el-motor.md)).
+5. Toda conjetura dice **qué observación la pondría a prueba**, y queda registrada antes de mirar. Con el tiempo, el registro dice qué operadores aciertan.
+
+*Versión anterior (hasta el documento 15):* el LLM propone y un backend determinista decide con $\text{Score}(H) = \alpha C + \beta K - \gamma P$. Se conserva como filtro, no como centro ([16](16-fundamentos-desde-las-historias.md), [17 §17.8](17-generacion-abductiva.md#178-qué-pasa-con-lo-construido)).
 
 ## Documentos fuente
 
