@@ -1,6 +1,6 @@
 # abd-mind — guía para agentes
 
-**Qué es:** un motor de razonamiento abductivo, servido por MCP a Hermes Agent, que el usuario usa por Telegram. **Objetivo vigente:** una IA a la que se le ocurran explicaciones no obvias y que sepa distinguirlas de las rebuscadas.
+**Qué es:** investigación sobre pensamiento abductivo para agentes. Lo que recibe el agente (Hermes, que el usuario usa por Telegram) son una skill y unas líneas siempre activas en `hermes/`. El motor y su servidor MCP quedan como investigación ([ADR-0017](docs/arquitectura/adr/0017-motor-como-investigacion-skills-como-producto.md)): se mantienen y sus tests pasan, pero no se les agregan funciones de producto. **La teoría (marco, experimentos mentales, axiomas, histórico) no se modifica sin pedido del usuario.** **Objetivo vigente:** una IA a la que se le ocurran explicaciones no obvias y que sepa distinguirlas de las rebuscadas.
 
 ## Qué leer
 

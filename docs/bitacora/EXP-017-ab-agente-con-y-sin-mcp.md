@@ -1,6 +1,6 @@
 # EXP-017 — ¿El MCP ayuda a un agente a pensar abductivamente? (A/B con dos Hermes)
 
-- **Fecha:** 2026-10-15 · **Estado:** registrado
+- **Fecha:** 2026-10-15 · **Estado:** cerrado (parcial)
 - **Registro previo:** sí. Este commit va antes de preparar los hallazgos ocultos y de correr.
 - **Origen:** la evaluación de alineación del 2026-10-15. Todos los experimentos anteriores midieron el motor contra un LLM en una sola llamada sobre texto cerrado; el objetivo es otro: **un agente con herramientas que investiga**. Decisiones del usuario: casos resueltos y abiertos (1c); el control recibe el mismo método sin herramientas (2b).
 
@@ -74,3 +74,34 @@ Son casos cuya respuesta todavía no existe, analizados con web por los dos agen
 ## Resultado
 
 *(pendiente)*
+
+## Nota 2026-10-15: cerrado como parcial
+
+Solo corrió el agente A. Desviaciones: el modelo de Hermes fue `muse-spark-1.2-contributor`, no DeepSeek, y **A no llamó a ninguna herramienta de abd-mind**. Hizo 81 pedidos al oráculo; 36 obtuvieron un hallazgo. B y A2 no se corren.
+
+Motivo del cierre: el diseño medía si el agente sabe investigar con un oráculo, no si piensa fuera de la caja, que es el objetivo del usuario. Lo reemplaza [EXP-018](EXP-018-fuera-de-la-caja-con-datos.md).
+
+Dos hallazgos, sin juez ciego y por lo tanto preliminares:
+
+1. **Comprobar resuelve lo que razonar no alcanza.** A llegó a R04 (las válvulas) y a R14 (la tripulación insistió en aterrizar), que ningún modelo encontró en EXP-016, porque pidió mirar los registros. Apoya P6.
+2. **El agente no usa el MCP por iniciativa propia**, aunque tenga la skill instalada.
+
+El informe de A no se sube al repositorio, porque trae los hallazgos ocultos del oráculo.
+
+## Nota 2026-10-15 (2): el agente B también corrió; resultado descriptivo
+
+El usuario corrió B igual. Artefactos en [`corrida-2026-10-15/`](../../datasets/abd-bench/oraculo/corrida-2026-10-15/): los dos informes, la entrada del juez, la clave y los juicios. El juez es un agente de otra familia, ciego a la condición, con la rúbrica de EXP-016 sobre el núcleo.
+
+| | A | B |
+|---|---|---|
+| Modelo de Hermes | `muse-spark-1.2-contributor` | `mimo-v2.6-flash` |
+| Usó abd-mind | No | No |
+| Núcleo `sí` | **9 de 11** (R10 parcial, R12 no) | **8 de 11** (R04, R10 y R12 no) |
+| Brier | 0,142 | 0,154 |
+| Cierre prematuro (error con confianza ≥ 0,7) | 2 | 2 |
+| Apertura (núcleo en las alternativas) | R12 | R12 |
+| Pedidos útiles | 36 de 81 | 30 de 63 |
+
+**Según la regla registrada**, la diferencia es de 1 caso: sin diferencia detectable. Pero la comparación **no mide el MCP**: ninguno lo usó, los modelos son distintos y B ejecutó la prueba con un cliente MCP propio. La única diferencia, R04, la explica el oráculo: B pidió "registro de alarmas de la sala de control" y "registro de operación del horno" y no recibió nada; A pidió algo más vago ("horno de craqueo tras la explosión") y recibió los registros de control. **El oráculo depende de la redacción**, lo que es una amenaza para cualquier uso futuro. El juez fue indulgente con B en R14: le dio `sí` aunque anota que no dice que la tripulación insistió en aterrizar.
+
+**Lo que sí deja:** con observaciones, los dos agentes llegan al núcleo en 8 o 9 de 11 casos razonando por su cuenta, incluido R14, que en EXP-016 ningún generador encontró. Refuerza P6: el límite estaba en el contacto, no en la imaginación. Y ninguno de los dos usó lo que se le dio más allá del oráculo.

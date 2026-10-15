@@ -15,8 +15,8 @@ Cada fase termina con algo que funciona y se puede probar. Ninguna fase depende 
 | 4c — Explicación en dominios abiertos | ✅ |
 | 5 — Servidor MCP | ✅ |
 | 5b — Rumbo A + C | Parcial: A1 hecha (EXP-013); el resto queda subordinado a la fase 5c |
-| **5c — Generación abductiva** | **En curso: marco teórico** ([17](../historico/marco-teorico/17-generacion-abductiva.md)) |
-| 6 — Integración con Hermes | Pendiente |
+| 5c — Generación abductiva | Marco teórico hecho; el motor queda como investigación ([ADR-0017](adr/0017-motor-como-investigacion-skills-como-producto.md)) |
+| **6 — Integración con Hermes** | **Replanteada: skill y líneas siempre activas, probadas en EXP-018** |
 | 7 — Benchmarks y calibración | Pendiente |
 
 ## Fase 0 — Base del proyecto
@@ -164,6 +164,8 @@ Decisión del 2026-10-15: el objetivo es una IA a la que se le ocurran explicaci
 4. **Experimento central** (registrado antes de correr): generación libre frente a generación guiada, con el mismo modelo y el mismo cómputo, en las salas, el conjunto R y las perturbaciones P (17 §17.7).
 
 ## Fase 6 — Integración con Hermes
+
+**Desde el 2026-10-15 ([ADR-0017](adr/0017-motor-como-investigacion-skills-como-producto.md)):** lo que se integra es `hermes/skills/abduccion/` y `hermes/instrucciones-permanentes.md`. **Término:** EXP-018 muestra que el agente con ellas supera al agente sin nada en los casos no obvios, sin volverse rebuscado. Lo que sigue es el plan anterior, con el motor.
 
 - `hermes/skills/razonamiento-abductivo/SKILL.md` final.
 - `hermes/config.example.yaml`.
