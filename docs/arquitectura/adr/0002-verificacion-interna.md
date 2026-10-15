@@ -1,6 +1,6 @@
 # ADR-0002 — La verificación de virtudes vive dentro del motor
 
-**Estado:** aceptada
+**Estado:** aceptada; independencia de modelos **suspendida** desde el 2026-10-15 (ver la nota al final)
 
 ## Contexto
 
@@ -24,3 +24,16 @@ Hermes puede **leer** los veredictos (vía `evaluar` y `auditoria`) pero no **es
 - **+** Los veredictos quedan registrados con justificación: se puede medir racionalización (declarado vs. verificado).
 - **−** abd-mind necesita su propio acceso a OpenCode Go (misma clave, roles distintos).
 - **−** Costo: una llamada por par (hipótesis, observación) en dominios reales. Se controla con presupuestos ([ADR-0008](0008-presupuestos-y-trabajos-largos.md)) y caché de veredictos.
+
+## Nota (2026-10-15): un solo modelo
+
+Por decisión del usuario, todos los roles usan DeepSeek V4.1 Flash. Muse, de otra familia, es un modelo *contributor*: entrena con los prompts y su acceso quedó bloqueado. **La verificación sigue ocurriendo dentro del motor**, pero el modelo que propone y el que juzga son el mismo.
+
+**Consecuencias:**
+
+- El sesgo de autoconfirmación puede volver.
+- Los juicios del verificador y del juez holístico valen como juicios del mismo observador, no de uno independiente (principio P1).
+- Donde hay proyección exacta, nada cambia.
+
+**Para volver a la independencia:** un verificador o un generador de otra familia que no sea *contributor*. En el plan hay candidatos, como Qwen, Kimi y GLM.
+
