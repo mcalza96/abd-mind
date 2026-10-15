@@ -27,7 +27,7 @@ No promete conocimiento fuera de la frontera. Promete **disciplina**: elegir bie
    bitácora (experimento) ◄── patrones ◄── notas de campo y predicciones
 ```
 
-1. **Las skills salen del marco.** `abduccion` tiene el método general. Las demás lo extienden a un dominio, como [`abduccion-mercados`](taller/skills/abduccion-mercados/SKILL.md), o a una tarea, como [`red-abductiva`](taller/skills/red-abductiva/SKILL.md).
+1. **Las skills salen del marco.** `abduccion` tiene el método general. Las demás lo extienden a un dominio, como [`abduccion-mercados`](taller/skills/abduccion-mercados/SKILL.md), o a una tarea, como [`red-abductiva`](hermes/skills/red-abductiva/SKILL.md).
 2. **El uso deja rastro.** Al terminar un análisis, el agente escribe una nota de campo y registra predicciones fechadas.
 3. **Lo que se repite se vuelve patrón.** Con al menos 3 notas independientes, un agente lo propone y el usuario lo acepta o no.
 4. **Un patrón justifica una skill o un experimento**, nunca un cambio directo a la teoría. El marco cambia solo cuando un experimento o una historia lo exige y el usuario lo pide.
@@ -46,8 +46,9 @@ Los agentes que usan estas skills (Hermes y otros) son **contribuidores** del re
 ## Qué se instala hoy
 
 - [`hermes/skills/abduccion/SKILL.md`](hermes/skills/abduccion/SKILL.md): el método, en una página.
+- [`hermes/skills/red-abductiva/SKILL.md`](hermes/skills/red-abductiva/SKILL.md): el objetivo, los principios y cómo colaboran el usuario y sus agentes.
 - [`hermes/instrucciones-permanentes.md`](hermes/instrucciones-permanentes.md): siete líneas para las instrucciones siempre activas de Hermes. Son las que buscan volverlo un hábito.
 
-No tienen una prueba controlada: [EXP-018](docs/bitacora/EXP-018-fuera-de-la-caja-con-datos.md) se abandonó sin correr. Su acierto se mide en uso real, con las predicciones de [`campo/`](campo/README.md). El primer candidato a instalar es [`red-abductiva`](taller/skills/red-abductiva/SKILL.md): les da a los agentes el objetivo, los principios y las reglas de la red, y pone en marcha el ciclo.
+No tienen una prueba controlada: [EXP-018](docs/bitacora/EXP-018-fuera-de-la-caja-con-datos.md) se abandonó sin correr. Su acierto se mide en uso real, con las predicciones de [`campo/`](campo/README.md). Junto a ella se instala [`red-abductiva`](hermes/skills/red-abductiva/SKILL.md): les da a los agentes el objetivo, los principios y las reglas de la red, y pone en marcha el ciclo.
 
 **El motor abductivo** (verificación, puntuación y servidor MCP) se construyó y se midió, pero no agregaba nada que un agente con sus herramientas no pudiera hacer, y se quitó ([ADR-0017](docs/historico/arquitectura/adr/0017-motor-como-investigacion-skills-como-producto.md)). Último commit con el motor: `44b51f694420cd3df004428e59c85fb000008c46`.

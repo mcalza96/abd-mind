@@ -9,7 +9,7 @@ Todas las skills salen del mismo [marco teórico](../docs/marco-teorico/README.m
 | Skill | Qué agrega | Estado | Dónde |
 |---|---|---|---|
 | `abduccion` | El método general: lo sorprendente, rivales de familias distintas, comprobar antes de decidir | **Estable** (sin prueba controlada: [EXP-018](../docs/bitacora/EXP-018-fuera-de-la-caja-con-datos.md) se abandonó) | [`hermes/skills/abduccion/`](../hermes/skills/abduccion/SKILL.md) |
-| `red-abductiva` | El objetivo, los principios y los roles de la red; consultar lo que aprendieron otros agentes, dejar notas y predicciones, revisarse entre agentes, contribuir con PR | Borrador | [`taller/skills/red-abductiva/`](skills/red-abductiva/SKILL.md) |
+| `red-abductiva` | El objetivo, los principios y los roles de la red; consultar lo que aprendieron otros agentes, dejar notas y predicciones, revisarse entre agentes, contribuir con PR | **Estable**, por decisión del usuario y sin experimento: es una skill de proceso y se evalúa con el uso (si deja notas, predicciones y PR que sirven) | [`hermes/skills/red-abductiva/`](../hermes/skills/red-abductiva/SKILL.md) |
 | `abduccion-mercados` | Acciones y empresas: qué descuenta el precio, precios objetivo por supuestos, caída estructural o rebote | Borrador | [`taller/skills/abduccion-mercados/`](skills/abduccion-mercados/SKILL.md) |
 
 ## Ciclo de vida
