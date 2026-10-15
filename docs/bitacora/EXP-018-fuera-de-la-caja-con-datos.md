@@ -111,3 +111,9 @@ A pedido del usuario, que tiene dos agentes Hermes, se corren solo **S0** (sin s
 - **Regla de decisión:** S2 acierta 3 o más casos no obvios más que S0, sin más de 1 caso de control rebuscado adicional → nuestro paquete (skill y MCP juntos) forma el hábito. Si la diferencia es de 2 o menos, no hay efecto detectable.
 - **Lo que se pierde:** si S2 gana, no se sabe si es por la skill o por el MCP. Eso lo respondería S1.
 - **El usuario envía las preguntas** sin ver la clave, para no insinuar la respuesta.
+
+## Nota 2026-10-15 (2): casos construidos y ajuste del filtro (antes de correr a los agentes)
+
+- **Construcción:** un agente sin contexto armó los 12 casos (9 no obvios, 3 de control) y su script de huella, que da OK en los 12. Declaró dos riesgos: dos casos tienen pistas en notas de texto, como en la vida real, y uno es un patrón conocido. El filtro de la respuesta promedio los vigila.
+- **Ajuste declarado del filtro:** en la prueba de humo, DeepSeek respondió "no se puede determinar con el extracto". Se agregó al mensaje: "El extracto es parcial: no tienes más datos. Aun así, da tu mejor respuesta… No respondas que faltan datos." El ajuste se hizo sobre un solo caso de control, antes de correr el filtro completo.
+- **Conteo:** como la clave ya existe, un agente sin contexto recibe las 10 respuestas de cada caso, la causa plantada y el señuelo, y cuenta en cuántas respuestas cada uno aparece como causa principal o como alternativa. "En la respuesta promedio" significa: causa principal en 3 o más de las 10.
