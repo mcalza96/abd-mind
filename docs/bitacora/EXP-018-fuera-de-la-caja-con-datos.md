@@ -127,3 +127,16 @@ A pedido del usuario, que tiene dos agentes Hermes, se corren solo **S0** (sin s
 - Los agentes reciben **los 12 casos**, para no delatar nada; los 3 excluidos se informan aparte.
 - La regla de decisión no cambia: 3 o más aciertos de diferencia, ahora sobre 6 casos. Es más exigente.
 - Qué carpetas salieron no se escribe aquí, porque el agente S2 tiene el repositorio. Está en la clave. Compromiso: [`compromiso-sha256.txt`](../../datasets/abd-bench/fuera-de-la-caja/compromiso-sha256.txt).
+
+## Nota 2026-10-15 (4): sonda en caso-02, fuera de protocolo
+
+El usuario probó un caso antes de la corrida formal, **pidiéndole explícitamente al agente 1 que usara abd-mind**. Eso se sale del protocolo (mensaje natural) y no cuenta para la decisión.
+
+| | Agente 1 (abd-mind, pedido explícito) | Agente 2 (sin MCP) |
+|---|---|---|
+| Tiempo | ~45 min (caso abierto 14:44, último juicio 15:27) | ~2 min |
+| Llamadas LLM del motor | 99 | 0 |
+| Conclusión | La misma | La misma |
+| Análisis de datos | Lo hizo el agente; luego cargó sus resultados al motor como observaciones de "hermes-analisis" | Lo hizo el agente, con cuatro pruebas contra la explicación rival |
+
+Lectura (un caso, sin juicio): cuando el agente ya analiza los datos y pone a prueba la rival por su cuenta, el motor **reordena lo que el agente ya sabía** y no agrega una explicación ni una prueba nueva. Las 13 hipótesis quedaron "vivas". Es un indicio de costo sin beneficio, a confirmar con la corrida completa.
