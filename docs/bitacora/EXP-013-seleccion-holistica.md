@@ -2,7 +2,7 @@
 
 - **Fecha:** 2026-10-14 · **Estado:** corrido
 - **Registro previo:** sí
-- **Origen:** [14](../historico/marco-teorico/14-rumbo-estado-y-proyeccion.md), [ADR-0016](../arquitectura/adr/0016-seleccion-holistica-y-proyeccion.md)
+- **Origen:** [14](../historico/marco-teorico/14-rumbo-estado-y-proyeccion.md), [ADR-0016](../historico/arquitectura/adr/0016-seleccion-holistica-y-proyeccion.md)
 
 ## Pregunta
 Con la selección holística (un juez ve todas las observaciones y todas las hipótesis), ¿el motor deja de rendir por debajo de la línea base en casos estáticos?

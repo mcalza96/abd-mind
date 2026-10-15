@@ -25,4 +25,4 @@ Dominio `abierto`, pregunta `tipo_de_causa`, generación contrastiva, verificado
 - **Advertencia de sobreajuste:** la propuesta siguiente nace de solo 2 casos. Debe validarse en casos que no la motivaron.
 
 ## Decisiones derivadas
-EXP-009: verificación comparativa y parsimonia juzgada por un tercero, con [ADR-0015](../arquitectura/adr/0015-verificacion-comparativa.md).
+EXP-009: verificación comparativa y parsimonia juzgada por un tercero, con [ADR-0015](../historico/arquitectura/adr/0015-verificacion-comparativa.md).

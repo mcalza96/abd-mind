@@ -162,7 +162,7 @@ Las reglas duras descartan sin apelación ($K = 0$). Si la regla es empírica y 
 Convertir las reglas duras en blandas reabriría la puerta a las alucinaciones que las reglas existen para cerrar. Propuesta:
 
 - Cada regla declara su naturaleza: `axiomatica` (contable, física, lógica) o `empirica` (regularidad del dominio).
-- Las reglas siguen descartando igual. Pero si una hipótesis descartada por una regla **empírica** habría superado a $H^*$ con $K = 1$, el sistema emite una **alerta de revisión**: "H₇ sería la mejor explicación si no violara R". La regla la revisa un humano ([ADR-0004](../../arquitectura/adr/0004-reglas-solo-lectura.md)).
+- Las reglas siguen descartando igual. Pero si una hipótesis descartada por una regla **empírica** habría superado a $H^*$ con $K = 1$, el sistema emite una **alerta de revisión**: "H₇ sería la mejor explicación si no violara R". La regla la revisa un humano ([ADR-0004](../arquitectura/adr/0004-reglas-solo-lectura.md)).
 
 ## 9.6 Parsimonia y realidad compleja (no se cambia)
 
