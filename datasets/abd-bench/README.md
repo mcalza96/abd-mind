@@ -1,5 +1,7 @@
 # abd-bench — casos frontera
 
+> Los comandos `abd-mind …` de este documento eran del motor, quitado el 2026-10-15. Para correrlos, usar el commit `44b51f694420cd3df004428e59c85fb000008c46`.
+
 Casos para poner a prueba el motor abductivo. El esquema está en `src/factory/bench/casos.py`, y `tests/units/test_bench.py` valida cada archivo.
 
 | Archivo | Casos | Origen |

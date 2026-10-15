@@ -2,7 +2,7 @@
 
 - **Fecha:** 2026-10-14 · **Estado:** abortado (ver Resultado); continúa en [EXP-010](EXP-010-juez-comparativo.md)
 - **Registro previo:** sí
-- **Commit / artefactos:** teoría en [13](../historico/marco-teorico/13-verificacion-comparativa.md), [ADR-0015](../arquitectura/adr/0015-verificacion-comparativa.md)
+- **Commit / artefactos:** teoría en [13](../historico/marco-teorico/13-verificacion-comparativa.md), [ADR-0015](../historico/arquitectura/adr/0015-verificacion-comparativa.md)
 
 ## Pregunta
 ¿La verificación comparativa y la parsimonia juzgada hacen que el motor decida cuando la evidencia lo permite, sin perder precisión y sin romper lo que ya funcionaba?

@@ -27,7 +27,7 @@ Al cerrar un caso se registra lo que realmente ocurrió. Sirve para calibrar ω,
 
 Para que un registro sea fiable, el observador que establece la verdad debe ser independiente de los observadores del caso. Si no lo es, la calibración aprendería a confiar en quien se confirma a sí mismo. Por ahora esto es una advertencia en la skill de Hermes, no una verificación automática.
 
-([ADR-0014](../../arquitectura/adr/0014-verdad-como-observacion.md))
+([ADR-0014](../arquitectura/adr/0014-verdad-como-observacion.md))
 
 ## 12.2 Datos sintéticos
 

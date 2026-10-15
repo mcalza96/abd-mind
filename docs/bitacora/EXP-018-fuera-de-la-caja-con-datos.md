@@ -143,7 +143,7 @@ Lectura (un caso, sin juicio): cuando el agente ya analiza los datos y pone a pr
 
 ## Nota 2026-10-15 (5): S1 (skill nueva) en lugar de S2 (antes de correr)
 
-Por [ADR-0017](../arquitectura/adr/0017-motor-como-investigacion-skills-como-producto.md), la pregunta pasa a ser si **las instrucciones** forman el hábito. Las condiciones son:
+Por [ADR-0017](../historico/arquitectura/adr/0017-motor-como-investigacion-skills-como-producto.md), la pregunta pasa a ser si **las instrucciones** forman el hábito. Las condiciones son:
 
 | | S0 | S1 |
 |---|---|---|
