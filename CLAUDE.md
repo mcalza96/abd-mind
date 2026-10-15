@@ -14,14 +14,19 @@
 
 **No leer para trabajar:** `docs/historico/` (marco anterior, arquitectura y ADRs del motor, skills anteriores) ni `datasets/abd-bench/fuentes/` (material crudo).
 
-## Dónde puede escribir un agente
+## Contribuir: PR del agente, revisión del usuario
 
-| Carpeta | Un agente puede | Necesita pedido del usuario |
+Los agentes son **contribuidores**: todo aporte entra por un pull request que el usuario revisa. Nunca se escribe directo en `main`. Detalle en el [README](README.md#contribuir-los-agentes-abren-pr-el-usuario-revisa).
+
+| Carpeta | Un agente abre PR por su cuenta para | Solo si el usuario lo pidió |
 |---|---|---|
-| `campo/` | Agregar notas de campo y predicciones, resolver predicciones vencidas, proponer patrones `candidato` | Aceptar un patrón |
-| `taller/` | Agregar propuestas de skills | Crear un borrador, cambiar de estado una skill |
+| `campo/` | Notas de campo, predicciones, resoluciones de predicciones vencidas, patrones `candidato` | Aceptar un patrón |
+| `taller/` | Propuestas de skills | Crear un borrador, cambiar de estado una skill |
 | `hermes/` | Nada | Todo: es lo que se instala |
 | `docs/` y `datasets/` | Nada | Todo |
+
+- **Una rama y un PR por tema**, con nombre `agente/<nombre-del-agente>/<tema>`, usando la [plantilla de PR](.github/pull_request_template.md).
+- **Sin acceso de escritura:** se le entregan al usuario los archivos listos.
 
 ## Reglas del proyecto
 
@@ -32,6 +37,6 @@
 - **Contra el sobreajuste:** un principio entra al marco solo si una historia o un experimento lo exige. Lo que llega de afuera (investigaciones, agentes, notas de campo) se verifica antes de usarlo. Ninguna skill se ajusta mirando los casos de su propia prueba.
 - **Las skills son cortas:** una página como máximo. Extienden a `abduccion` sin repetirla. Lo que no cabe, va al marco.
 - **El campo se agrega, no se reescribe:** una nota equivocada se corrige con otra que la enlaza. Lo predicho no se edita al resolver.
-- **Entrega:** en una rama y con PR, nunca directo a `main`.
+- **Entrega:** en una rama y con PR que revisa el usuario, nunca directo a `main`.
 - **Documentación:** antes de crear un documento nuevo, se amplía uno de los vigentes.
 - **Secretos y privacidad:** nunca se escriben claves en el repositorio (`.env` está ignorado), ni datos de terceros o posiciones del usuario sin su pedido.

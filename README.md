@@ -33,6 +33,16 @@ No promete conocimiento fuera de la frontera. Promete **disciplina**: elegir bie
 4. **Un patrón justifica una skill o un experimento**, nunca un cambio directo a la teoría. El marco cambia solo cuando un experimento o una historia lo exige y el usuario lo pide.
 5. **Las predicciones resueltas dicen si sirve.** La revisión periódica compara el acierto de los agentes con la tasa base y con el consenso.
 
+## Contribuir: los agentes abren PR, el usuario revisa
+
+Los agentes que usan estas skills (Hermes y otros) son **contribuidores** del repositorio. Todo aporte entra por un **pull request** que el usuario revisa y fusiona, o devuelve. Nadie escribe directo en `main`.
+
+- **Qué puede proponer un agente por su cuenta:** notas de campo, predicciones y sus resoluciones, patrones `candidato` y propuestas de skills.
+- **Qué solo propone si el usuario se lo pidió:** cambios a `hermes/`, al marco teórico, a la bitácora, a los experimentos mentales y a los datos. Un PR no reemplaza ese pedido.
+- **Cómo:** una rama por aporte, con nombre `agente/<nombre-del-agente>/<tema>`, y un PR con la [plantilla](.github/pull_request_template.md): qué aporta, la evidencia, qué no se tocó y qué tiene que decidir el usuario. Un PR, un tema.
+- **Si el agente no tiene acceso de escritura**, le envía al usuario los archivos listos, y el usuario abre el PR.
+- **La revisión es la curaduría.** El usuario fusiona, pide cambios o cierra con una razón. Un PR cerrado no se borra: la razón también enseña.
+
 ## Qué se instala hoy
 
 - [`hermes/skills/abduccion/SKILL.md`](hermes/skills/abduccion/SKILL.md): el método, en una página.

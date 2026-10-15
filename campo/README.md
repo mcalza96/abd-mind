@@ -89,4 +89,4 @@ Con menos de 30 predicciones resueltas por dominio, el puntaje es solo una indic
 
 - **Los agentes agregan; no reescriben.** Una nota equivocada se corrige con una nota nueva que la enlaza.
 - **Nada privado sin permiso:** ni claves, ni datos de terceros, ni posiciones o montos del usuario, salvo que él lo pida.
-- **Entrega:** si el agente puede escribir en el repositorio, lo hace en una rama y abre un PR. Si no puede, le envía al usuario los archivos listos. Nunca a `main` directamente: el PR es la curaduría.
+- **Entrega por PR:** el agente es un contribuidor. Trabaja en una rama `agente/<nombre-del-agente>/<tema>` y abre un PR con la [plantilla](../.github/pull_request_template.md); el usuario lo revisa. Si no tiene acceso de escritura, le envía al usuario los archivos listos. Nunca a `main` directamente: la revisión del PR es la curaduría.

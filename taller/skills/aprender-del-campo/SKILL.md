@@ -37,7 +37,7 @@ Si ves lo mismo repetido pero no alcanza para una skill, propón un **patrón** 
 
 - No editas el marco teórico, la bitácora, los experimentos mentales ni las skills de `hermes/`.
 - No instalas skills ni cambias tus propias instrucciones.
-- No escribes en `main`: trabajas en una rama y abres un PR. Si no tienes acceso al repositorio, le envías al usuario los archivos listos.
+- No escribes en `main`. Eres un contribuidor: trabajas en una rama `agente/<tu-nombre>/<tema>` y abres un PR con la plantilla del repositorio, uno por tema. El usuario lo revisa. Si no tienes acceso al repositorio, le envías los archivos listos.
 - No guardas claves, datos de terceros ni posiciones o montos del usuario sin que él lo pida.
 
 Al usuario, en una línea: qué dejaste y dónde, y si propusiste algo.
