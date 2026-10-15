@@ -1,3 +1,5 @@
 id,fecha,nota,dominio,afirmacion,probabilidad,resolver_el,tasa_base,consenso,resultado,resuelta_el,fuente_resultado
 P-20261015-01,2026-10-15,campo/notas/2026-10-15-bolsas-asia-cxmt-caida-corea-japon.md,bolsas Asia,"KOSPI cierra el 16-oct-2026 sobre 5.554 con rebote intradiario de al menos +2% desde el minimo",0.6,2026-10-16,rebote parcial tras halt por sobreventa,rebote tecnico acotado,,,,
 P-20261015-02,2026-10-15,campo/notas/2026-10-15-bolsas-asia-cxmt-caida-corea-japon.md,bolsas Asia,"Samsung confirma el 29-oct-2026 guia y precios firmes de memoria sin recorte",0.65,2026-10-29,guia intacta segun TrendForce y MS,precios firmes hasta 2027,,,,
+P-20261015-03,2026-10-15,campo/notas/2026-10-15-sprc-caida-ia-dilucion.md,SPRC,"SPRC cierra el 22-oct-2026 bajo 2,50 sin recuperar el cierre previo de 3,63",0.7,2026-10-22,fades dilutivos quedan bajo spike previo,rebote tecnico parcial,,,,
+P-20261015-04,2026-10-15,campo/notas/2026-10-15-sprc-caida-ia-dilucion.md,SPRC,"SPRC informa antes del 30-nov-2026 aumento de acciones en circulacion por la conversion a 1,50",0.8,2026-11-30,conversiones inducidas se registran en semanas,sin consenso,,,,
