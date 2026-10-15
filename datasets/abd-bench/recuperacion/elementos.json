@@ -1,0 +1,259 @@
+{
+ "casos": [
+  {
+   "id": "R01",
+   "elementos": [
+    {
+     "id": "e1",
+     "texto": "El avión volaba muy por encima de su peso máximo.",
+     "nucleo": false
+    },
+    {
+     "id": "e2",
+     "texto": "Volaba demasiado lento en condiciones de engelamiento severo.",
+     "nucleo": false
+    },
+    {
+     "id": "e3",
+     "texto": "El piloto perdió velocidad y control hasta entrar en pérdida sustentadora.",
+     "nucleo": true
+    },
+    {
+     "id": "e4",
+     "texto": "La operadora despachaba vuelos sobrecargados de forma rutinaria sin supervisión suficiente de la FAA.",
+     "nucleo": false
+    }
+   ]
+  },
+  {
+   "id": "R02",
+   "elementos": [
+    {
+     "id": "e1",
+     "texto": "El tapón de contrapeso del elevador izquierdo se instaló distinto a lo especificado y sin su o-ring de seguridad.",
+     "nucleo": false
+    },
+    {
+     "id": "e2",
+     "texto": "El tapón se aflojó en vuelo.",
+     "nucleo": false
+    },
+    {
+     "id": "e3",
+     "texto": "El tapón suelto trabó el elevador contra la estructura del estabilizador.",
+     "nucleo": true
+    },
+    {
+     "id": "e4",
+     "texto": "El piloto quedó sin control de cabeceo en el aterrizaje.",
+     "nucleo": false
+    }
+   ]
+  },
+  {
+   "id": "R03",
+   "elementos": [
+    {
+     "id": "e1",
+     "texto": "Falló un tubo de venteo del Reactor 6.",
+     "nucleo": false
+    },
+    {
+     "id": "e2",
+     "texto": "La presión y temperatura subieron hasta desbocar la reacción del azúcar del caramelo.",
+     "nucleo": true
+    },
+    {
+     "id": "e3",
+     "texto": "El sistema de alivio no estaba diseñado para ese escenario y el reactor reventó.",
+     "nucleo": false
+    },
+    {
+     "id": "e4",
+     "texto": "La empresa nunca evaluó el peligro reactivo del azúcar.",
+     "nucleo": false
+    }
+   ]
+  },
+  {
+   "id": "R04",
+   "elementos": [
+    {
+     "id": "e1",
+     "texto": "Un ingeniero sin experiencia en la tarea abrió a la vez las dos válvulas que aislaban el Horno 5.",
+     "nucleo": true
+    },
+    {
+     "id": "e2",
+     "texto": "El doble paso dejó retornar gas craqueado inflamable al fogón encendido.",
+     "nucleo": false
+    },
+    {
+     "id": "e3",
+     "texto": "El gas se encendió y el horno estalló seis minutos después.",
+     "nucleo": false
+    },
+    {
+     "id": "e4",
+     "texto": "Una interfaz confusa y controles solo administrativos facilitaron el error.",
+     "nucleo": false
+    }
+   ]
+  },
+  {
+   "id": "R06",
+   "elementos": [
+    {
+     "id": "e1",
+     "texto": "La trazabilidad de los casos enfermos apuntaba a la lechuga iceberg de Taylor Farms del centro de México.",
+     "nucleo": true
+    },
+    {
+     "id": "e2",
+     "texto": "Esa lechuga se mantuvo como fuente probable del brote.",
+     "nucleo": false
+    },
+    {
+     "id": "e3",
+     "texto": "La prueba de laboratorio que parecía confirmarlo resultó ser un falso positivo.",
+     "nucleo": false
+    }
+   ]
+  },
+  {
+   "id": "R07",
+   "elementos": [
+    {
+     "id": "e1",
+     "texto": "El polvo de hoja de moringa importado de India llegaba contaminado con la cepa del brote de Salmonella Typhimurium.",
+     "nucleo": true
+    },
+    {
+     "id": "e2",
+     "texto": "La bacteria sobrevivía dentro de las cápsulas hasta el consumidor.",
+     "nucleo": false
+    },
+    {
+     "id": "e3",
+     "texto": "El consumo enfermó a 34 personas en 14 estados.",
+     "nucleo": false
+    }
+   ]
+  },
+  {
+   "id": "R09",
+   "elementos": [
+    {
+     "id": "e1",
+     "texto": "El cabezal de la bomba se fabricó fuera de tolerancia y el enchufe entraba forzado.",
+     "nucleo": false
+    },
+    {
+     "id": "e2",
+     "texto": "El ajuste forzado abría los terminales y dejaba la conexión suelta.",
+     "nucleo": false
+    },
+    {
+     "id": "e3",
+     "texto": "La unión floja ofrecía alta resistencia y se calentaba hasta derretirse.",
+     "nucleo": true
+    },
+    {
+     "id": "e4",
+     "texto": "El sobrecalentamiento podía prender fuego aun con el auto apagado.",
+     "nucleo": false
+    }
+   ]
+  },
+  {
+   "id": "R10",
+   "elementos": [
+    {
+     "id": "e1",
+     "texto": "Personal ya desenmascarado reevaluó a posteriori la respuesta de nueve pacientes tras cerrar la base de datos.",
+     "nucleo": true
+    },
+    {
+     "id": "e2",
+     "texto": "La reevaluación hizo que el fármaco pareciera eficaz.",
+     "nucleo": false
+    },
+    {
+     "id": "e3",
+     "texto": "No se declaró en el artículo y, al saberse, los autores pidieron la retractación.",
+     "nucleo": false
+    }
+   ]
+  },
+  {
+   "id": "R12",
+   "elementos": [
+    {
+     "id": "e1",
+     "texto": "La válvula del regulador quedó entreabierta y acumuló presión de vapor en los cilindros.",
+     "nucleo": true
+    },
+    {
+     "id": "e2",
+     "texto": "El inversor estaba fuera de la posición que impide el arranque.",
+     "nucleo": false
+    },
+    {
+     "id": "e3",
+     "texto": "El freno de aire no estaba bien aplicado porque la dotación no había sido instruida en ese sistema.",
+     "nucleo": false
+    },
+    {
+     "id": "e4",
+     "texto": "La máquina partió sola con el operario en medio.",
+     "nucleo": false
+    }
+   ]
+  },
+  {
+   "id": "R13",
+   "elementos": [
+    {
+     "id": "e1",
+     "texto": "La reparación del pandeo no liberó la tensión térmica del riel soldado.",
+     "nucleo": true
+    },
+    {
+     "id": "e2",
+     "texto": "El desalineamiento persistió con 93 °F sin inspección ese día.",
+     "nucleo": false
+    },
+    {
+     "id": "e3",
+     "texto": "La vía se abrió al pasar el tren.",
+     "nucleo": false
+    },
+    {
+     "id": "e4",
+     "texto": "Un acople con un vacío interno de fábrica se quebró y agravó el descarrilamiento.",
+     "nucleo": false
+    }
+   ]
+  },
+  {
+   "id": "R14",
+   "elementos": [
+    {
+     "id": "e1",
+     "texto": "La tripulación insistió en aterrizar bajo lluvia intensa.",
+     "nucleo": false
+    },
+    {
+     "id": "e2",
+     "texto": "Perdió las referencias visuales externas.",
+     "nucleo": false
+    },
+    {
+     "id": "e3",
+     "texto": "Perdió el control del avión en el toque, produciendo el aterrizaje brusco sin falla mecánica.",
+     "nucleo": true
+    }
+   ]
+  }
+ ]
+}

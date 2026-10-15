@@ -1,0 +1,270 @@
+{
+ "casos": [
+  {
+   "id": "R01",
+   "trivial": false,
+   "elementos": [
+    {
+     "id": "e1",
+     "inferible": "si",
+     "razon": "El reporte preliminar indica 1.058 libras sobre el límite de peso para vuelo en engelamiento."
+    },
+    {
+     "id": "e2",
+     "inferible": "parcial",
+     "razon": "Engelamiento severo con SLD y sobrepeso sugieren a un experto baja velocidad relativa a la de pérdida, pero no hay datos de velocidad."
+    },
+    {
+     "id": "e3",
+     "inferible": "parcial",
+     "razon": "Sobrepeso más hielo y pérdida de contacto súbita hacen plausible una pérdida de sustentación, aunque nada lo afirma."
+    },
+    {
+     "id": "e4",
+     "inferible": "no",
+     "razon": "Las observaciones solo tratan este vuelo; no hay datos de prácticas rutinarias ni de supervisión de la FAA."
+    }
+   ]
+  },
+  {
+   "id": "R02",
+   "trivial": false,
+   "elementos": [
+    {
+     "id": "e1",
+     "inferible": "parcial",
+     "razon": "Se menciona una modificación a medida y un aviso del fabricante sobre contrapesos, pero no la instalación no conforme ni la falta del o-ring."
+    },
+    {
+     "id": "e2",
+     "inferible": "si",
+     "razon": "Que el tapón apareciera separado a 10 pies de los restos indica que se soltó."
+    },
+    {
+     "id": "e3",
+     "inferible": "si",
+     "razon": "El tapón tenía marcas de haber trabado el elevador; casi se enuncia, salvo el contacto con el estabilizador."
+    },
+    {
+     "id": "e4",
+     "inferible": "si",
+     "razon": "Las oscilaciones y el ascenso violento en el aterrizaje, con el elevador trabado, implican pérdida de control de cabeceo."
+    }
+   ]
+  },
+  {
+   "id": "R03",
+   "trivial": false,
+   "elementos": [
+    {
+     "id": "e1",
+     "inferible": "no",
+     "razon": "No se menciona el tubo de venteo ni el número de reactor."
+    },
+    {
+     "id": "e2",
+     "inferible": "parcial",
+     "razon": "Que un reactor por lotes explote produciendo caramelo hace plausible una reacción desbocada de azúcares, pero no se informa ni presión ni temperatura."
+    },
+    {
+     "id": "e3",
+     "inferible": "parcial",
+     "razon": "Reventar un reactor implica que el alivio fue insuficiente; que no estuviera diseñado para ese escenario es una hipótesis típica."
+    },
+    {
+     "id": "e4",
+     "inferible": "no",
+     "razon": "No hay información sobre las evaluaciones de peligro de la empresa."
+    }
+   ]
+  },
+  {
+   "id": "R04",
+   "trivial": false,
+   "elementos": [
+    {
+     "id": "e1",
+     "inferible": "no",
+     "razon": "Nada sugiere un error en las válvulas de aislamiento ni la intervención de un ingeniero inexperto."
+    },
+    {
+     "id": "e2",
+     "inferible": "parcial",
+     "razon": "Una explosión en un horno de craqueo con liberación de etileno es compatible con que entrara hidrocarburo a la cámara de combustión; es una hipótesis genérica."
+    },
+    {
+     "id": "e3",
+     "inferible": "parcial",
+     "razon": "La explosión seguida de incendio es compatible con la ignición del gas, pero no hay dato del tiempo de seis minutos."
+    },
+    {
+     "id": "e4",
+     "inferible": "no",
+     "razon": "No hay información sobre la interfaz ni sobre los controles."
+    }
+   ]
+  },
+  {
+   "id": "R06",
+   "trivial": true,
+   "elementos": [
+    {
+     "id": "e1",
+     "inferible": "si",
+     "razon": "El retiro por vínculo probable con el brote casi enuncia que la trazabilidad apuntaba a esa lechuga."
+    },
+    {
+     "id": "e2",
+     "inferible": "si",
+     "razon": "El retiro amplio por parte de Walmart y Taco Bell indica que se mantuvo como fuente probable."
+    },
+    {
+     "id": "e3",
+     "inferible": "no",
+     "razon": "No se menciona ninguna prueba de laboratorio ni un falso positivo."
+    }
+   ]
+  },
+  {
+   "id": "R07",
+   "trivial": false,
+   "elementos": [
+    {
+     "id": "e1",
+     "inferible": "parcial",
+     "razon": "El brote se liga a las cápsulas, así que un ingrediente contaminado es plausible, pero no se menciona el origen indio del polvo ni la coincidencia de cepa."
+    },
+    {
+     "id": "e2",
+     "inferible": "parcial",
+     "razon": "Salmonella sobrevive en productos secos, y que las cápsulas causaran el brote lo implica; no se dice explícitamente."
+    },
+    {
+     "id": "e3",
+     "inferible": "no",
+     "razon": "No se dan cifras de enfermos ni de estados."
+    }
+   ]
+  },
+  {
+   "id": "R09",
+   "trivial": false,
+   "elementos": [
+    {
+     "id": "e1",
+     "inferible": "no",
+     "razon": "No se menciona la bomba, la tolerancia de fabricación ni el enchufe."
+    },
+    {
+     "id": "e2",
+     "inferible": "no",
+     "razon": "No hay información sobre los terminales ni la conexión."
+    },
+    {
+     "id": "e3",
+     "inferible": "parcial",
+     "razon": "Se habla de revisar el cableado y del riesgo de incendio; una conexión floja que se calienta es una hipótesis eléctrica típica."
+    },
+    {
+     "id": "e4",
+     "inferible": "si",
+     "razon": "La orden de estacionar afuera y no en garajes implica riesgo de incendio con el vehículo apagado."
+    }
+   ]
+  },
+  {
+   "id": "R10",
+   "trivial": false,
+   "elementos": [
+    {
+     "id": "e1",
+     "inferible": "no",
+     "razon": "Las observaciones no mencionan la reevaluación desenmascarada ni el cierre de la base de datos."
+    },
+    {
+     "id": "e2",
+     "inferible": "parcial",
+     "razon": "Que el CDER niegue la existencia de evidencia válida de eficacia sugiere que los datos de eficacia estaban viciados, pero no dice cómo."
+    },
+    {
+     "id": "e3",
+     "inferible": "no",
+     "razon": "No hay información sobre el artículo, su declaración ni una retractación."
+    }
+   ]
+  },
+  {
+   "id": "R12",
+   "trivial": false,
+   "elementos": [
+    {
+     "id": "e1",
+     "inferible": "parcial",
+     "razon": "Una locomotora a vapor que se mueve sola sugiere a un experto un regulador con fuga o entreabierto, pero no se informa."
+    },
+    {
+     "id": "e2",
+     "inferible": "parcial",
+     "razon": "Para que la máquina se mueva, el inversor no podía estar en punto muerto; es una hipótesis razonable."
+    },
+    {
+     "id": "e3",
+     "inferible": "no",
+     "razon": "No hay información sobre el freno de aire ni sobre la instrucción de la dotación."
+    },
+    {
+     "id": "e4",
+     "inferible": "si",
+     "razon": "Las observaciones dicen que se movió sin orden con el operario entre las máquinas."
+    }
+   ]
+  },
+  {
+   "id": "R13",
+   "trivial": false,
+   "elementos": [
+    {
+     "id": "e1",
+     "inferible": "parcial",
+     "razon": "Un pandeo térmico previo en riel soldado continuo reparado solo con alineación y balasto sugiere a un experto que la tensión no se liberó."
+    },
+    {
+     "id": "e2",
+     "inferible": "parcial",
+     "razon": "Un nuevo desalineamiento en julio es plausible por el calor, pero no se dan la temperatura ni la ausencia de inspección."
+    },
+    {
+     "id": "e3",
+     "inferible": "parcial",
+     "razon": "Es compatible con el descarrilamiento en esa vía, aunque no se dice que la vía se abriera bajo el tren."
+    },
+    {
+     "id": "e4",
+     "inferible": "no",
+     "razon": "No se menciona ningún acople ni defecto de fábrica."
+    }
+   ]
+  },
+  {
+   "id": "R14",
+   "trivial": false,
+   "elementos": [
+    {
+     "id": "e1",
+     "inferible": "no",
+     "razon": "No hay datos meteorológicos ni de las decisiones de la tripulación."
+    },
+    {
+     "id": "e2",
+     "inferible": "no",
+     "razon": "No se mencionan visibilidad ni referencias visuales."
+    },
+    {
+     "id": "e3",
+     "inferible": "parcial",
+     "razon": "Un golpe sin heridos tras un vuelo largo (posible fatiga) es compatible con un aterrizaje brusco por pérdida de control, pero no se dice nada de la causa ni de fallas mecánicas."
+    }
+   ]
+  }
+ ]
+}
