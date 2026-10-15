@@ -4,7 +4,7 @@
 
 ## Contexto
 
-La limitación L1 del marco teórico reconoce que solo puede ganar una hipótesis que alguien llegó a proponer. La diversidad de fuentes es la principal defensa ([06 §6.4](../../marco-teorico/06-arquitectura.md#64-generación-aproximar-una-búsqueda-no-guiada-por-verosimilitud)). Hermes tiene contexto que el motor no tiene: la conversación con el usuario, su memoria, los documentos que leyó, búsquedas web.
+La limitación L1 del marco teórico reconoce que solo puede ganar una hipótesis que alguien llegó a proponer. La diversidad de fuentes es la principal defensa ([06 §6.4](../../historico/marco-teorico/06-arquitectura.md#64-generación-aproximar-una-búsqueda-no-guiada-por-verosimilitud)). Hermes tiene contexto que el motor no tiene: la conversación con el usuario, su memoria, los documentos que leyó, búsquedas web.
 
 ## Decisión
 

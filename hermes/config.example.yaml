@@ -14,6 +14,9 @@ mcp_servers:
     # Modo stdio (recomendado: Hermes y abd-mind en el mismo PC)
     command: uv
     args: ["--directory", "/ruta/a/abd-mind", "run", "abd-mind", "serve", "--transport", "stdio"]
+    # evaluar y generar_hipotesis pueden tardar minutos en dominios con LLM.
+    # Subir el tiempo límite por llamada (nombre de la clave según la versión de Hermes).
+    timeout: 600
 
   # Modo HTTP (abd-mind en otra máquina o proceso aparte). Usar uno u otro.
   # abd-mind:

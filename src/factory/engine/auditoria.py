@@ -3,7 +3,7 @@
 import json
 import math
 
-from factory.contracts.case import EstadoHipotesis
+from factory.contracts.case import EstadoHipotesis, Relacion
 from factory.engine.modelos import Auditoria
 
 
@@ -22,7 +22,31 @@ def auditoria_markdown(a: Auditoria) -> str:
         f"**Pesos:** α={caso.pesos.alpha}, β={caso.pesos.beta}, γ={caso.pesos.gamma},"
         f" τ={caso.pesos.tau}",
     ]
+    if caso.pregunta is not None:
+        lineas.append(
+            f"**Pregunta:** {caso.pregunta.descripcion or caso.pregunta.variable} "
+            f"({caso.pregunta.variable} ∈ {', '.join(caso.pregunta.valores)})"
+        )
+    if caso.verdades:
+        lineas.append(f"**Lo que ocurrió** (estado: {caso.estado_verdad.value}):")
+        for verdad in caso.verdades:
+            valor = f" (valor: {verdad.valor})" if verdad.valor else ""
+            lineas.append(
+                f"- {verdad.momento} · {verdad.fuente}, ω={verdad.confiabilidad:g}: "
+                f"{verdad.descripcion}{valor}"
+            )
     lineas += [f"> Aviso: {aviso}" for aviso in caso.avisos]
+
+    r = caso.resumen.respuesta
+    if caso.pregunta is not None and r is not None:
+        lineas += ["", "## Respuesta", ""]
+        if r.determinada:
+            margen = "∞" if r.margen_veredictos is None else str(r.margen_veredictos)
+            fragil = " — **frágil**" if r.fragil else ""
+            lineas.append(f"**{r.valor}** (margen: {margen} veredictos{fragil})")
+        else:
+            lineas.append("No determinada por la evidencia.")
+        lineas += [f"- {k}: {_score(v)}" for k, v in r.scores_por_valor.items()]
 
     h = caso.resumen.h_estrella
     lineas += ["", "## Mejor explicación", ""]
@@ -44,19 +68,30 @@ def auditoria_markdown(a: Auditoria) -> str:
         for opinion in a.opiniones.get(o.id, []):
             lineas.append(f"  - opinión (no es evidencia): {opinion}")
 
-    lineas += ["", "## Hechos", "", "| Id | Observador | Hecho | Estado |", "|---|---|---|---|"]
+    lineas += [
+        "",
+        "## Hechos",
+        "",
+        "| Id | Observador | Hecho | Rol | Estado |",
+        "|---|---|---|---|---|",
+    ]
     for obs in a.observaciones:
-        lineas.append(f"| {obs.id} | {obs.observador_id} | {obs.contenido} | {obs.estado.value} |")
+        lineas.append(
+            f"| {obs.id} | {obs.observador_id} | {obs.contenido} | {obs.rol.value} "
+            f"| {obs.estado.value} |"
+        )
 
-    veredictos: dict[str, dict[str, bool]] = {}
+    veredictos: dict[str, dict[str, Relacion]] = {}
     for v in a.veredictos:
-        veredictos.setdefault(v.id_hipotesis, {})[v.id_observacion] = v.explica
+        veredictos.setdefault(v.id_hipotesis, {})[v.id_observacion] = v.relacion
     lineas += ["", "## Hipótesis", ""]
     for hip in a.hipotesis:
         estado = hip.estado.value
         if hip.estado is EstadoHipotesis.DERROTADA:
             estado += f" por {', '.join(hip.derrotada_por)}"
-        explica = sorted(i for i, ok in veredictos.get(hip.id_hipotesis, {}).items() if ok)
+        propios = veredictos.get(hip.id_hipotesis, {})
+        explica = sorted(i for i, r in propios.items() if r is Relacion.EXPLICA)
+        contradice = sorted(i for i, r in propios.items() if r is Relacion.CONTRADICE)
         lineas += [
             f"### {hip.id_hipotesis} — {estado}",
             "",
@@ -64,17 +99,20 @@ def auditoria_markdown(a: Auditoria) -> str:
             "",
             f"- Origen: {hip.origen}",
             f"- Entidades latentes: {', '.join(hip.entidades_latentes) or '—'}",
+            f"- Postulados según el juez: {', '.join(hip.entidades_juzgadas) or '—'}",
             f"- Afirmaciones: `{json.dumps(hip.afirmaciones, ensure_ascii=False)}`",
+            *[f"- Predice: {p.que} → {p.esperado} ({p.horizonte})" for p in hip.predicciones],
             f"- Explica: {', '.join(explica) or '—'}",
+            f"- Contradice: {', '.join(contradice) or '—'}",
             "",
         ]
 
-    lineas += ["## Veredictos", "", "| Hipótesis | Hecho | Explica | Fuente | Justificación |"]
+    lineas += ["## Veredictos", "", "| Hipótesis | Hecho | Relación | Fuente | Justificación |"]
     lineas.append("|---|---|---|---|---|")
     for v in a.veredictos:
         justificacion = v.justificacion.replace("|", "\\|").replace("\n", " ")
         lineas.append(
-            f"| {v.id_hipotesis} | {v.id_observacion} | {'sí' if v.explica else 'no'} "
+            f"| {v.id_hipotesis} | {v.id_observacion} | {v.relacion.value} "
             f"| {v.fuente} | {justificacion} |"
         )
 

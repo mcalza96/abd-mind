@@ -35,11 +35,7 @@ def _cortex(usuario: str) -> str:
     )
 
 
-def _verificador(usuario: str) -> str:
-    hipotesis = re.search(r"Hipótesis: (.*)", usuario)
-    observacion = re.search(r"Observación: (.*)", usuario)
-    assert hipotesis and observacion
-    h, o = hipotesis.group(1).lower(), observacion.group(1).lower()
+def _explica(h: str, o: str) -> bool:
     if "precios" in h:
         explica = "precios de lista" not in o
     elif "demanda" in h:
@@ -50,7 +46,36 @@ def _verificador(usuario: str) -> str:
         explica = True
     else:
         explica = False
-    return json.dumps({"justificacion": "regla de prueba", "explica": explica})
+    return explica
+
+
+def _verificador(usuario: str) -> str:
+    """Verificador comparativo simulado: muy_esperable o inesperado según reglas fijas."""
+    observacion = re.search(r"Observación: (.*)", usuario)
+    assert observacion
+    o = observacion.group(1).lower()
+    calificaciones = [
+        {
+            "id_hipotesis": m.group(1),
+            "justificacion": "regla de prueba",
+            "nivel": "muy_esperable" if _explica(m.group(2).lower(), o) else "inesperado",
+        }
+        for m in re.finditer(r"^- (\w+): (.*?) \| afirmaciones", usuario, re.MULTILINE)
+    ]
+    return json.dumps({"calificaciones": calificaciones})
+
+
+def _juicio(usuario: str) -> str:
+    """Juez holístico simulado: ordena por cuántas observaciones explica según `_explica`."""
+    observaciones = re.findall(r"^- \S+ \(observador [^)]*\): (.*)$", usuario, re.MULTILINE)
+    hipotesis = re.findall(r"^- (h\d+): (.*?) \| afirmaciones", usuario, re.MULTILINE)
+    puntos = {i: sum(_explica(m.lower(), o.lower()) for o in observaciones) for i, m in hipotesis}
+    orden = sorted(puntos, key=lambda i: (-puntos[i], i))
+    # Si las dos primeras explican lo mismo, el juez no decide (empate honesto).
+    decide = len(orden) < 2 or puntos[orden[0]] > puntos[orden[1]]
+    return json.dumps(
+        {"justificacion": "regla de prueba", "orden": orden, "decide": decide, "confianza": "media"}
+    )
 
 
 def _generador() -> str:
@@ -75,6 +100,10 @@ def responder(ruta: str, cuerpo: JSON) -> str:
         return _cortex(usuario)
     if "verificador independiente" in sistema:
         return _verificador(usuario)
+    if "juez de un sistema" in sistema:
+        return _juicio(usuario)
+    if "juez de parsimonia" in sistema:
+        return json.dumps({"juicios": []})
     if "generador de hipótesis" in sistema:
         return _generador()
     raise AssertionError(f"petición inesperada: {sistema[:60]}")

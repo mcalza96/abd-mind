@@ -16,20 +16,26 @@ modelos:
 roles:
   cortex: { modelo: deepseek-v4.1-flash, temperatura: 0.0, max_tokens: 8000 }
   # fallback: modelo que responde si el principal falla (error del proveedor o JSON inválido).
+  # Un solo modelo para todos los roles (decisión del usuario, 2026-10-15). Muse 1.2 y 1.3 son
+  # modelos "contributor": entrenan con los prompts y su acceso se bloqueó. Con un solo modelo,
+  # generador y verificador no son independientes (ADR-0002 suspendida, ver la nota en el ADR).
   generadores:
-    - modelo: muse-spark-1.3-contributor
-      fallback: muse-spark-1.2-contributor
-      temperatura: 1.0
-      max_tokens: 16000
-  # Distinto de los generadores (ADR-0002).
-  verificador: { modelo: deepseek-v4.1-flash, temperatura: 0.0, max_tokens: 8000 }
+    - { modelo: deepseek-v4.1-flash, temperatura: 1.0, max_tokens: 32000 }
+  verificador: { modelo: deepseek-v4.1-flash, temperatura: 0.0, max_tokens: 32000 }
   # Línea base: una sola llamada, sin pipeline (D10).
   linea_base:
-    - { modelo: muse-spark-1.3-contributor, max_tokens: 16000 }
-    - { modelo: muse-spark-1.2-contributor, max_tokens: 16000 }
-    - { modelo: deepseek-v4.1-flash, max_tokens: 8000 }
+    - { modelo: deepseek-v4.1-flash, max_tokens: 32000 }
 
-pesos: { alpha: 1.5, beta: 10.0, gamma: 1.0, tau: null }   # tau se calibra en la fase 7
+pesos:
+  alpha: 1.5
+  beta: 10.0
+  gamma: 1.0
+  tau: null             # umbral de aceptación; se calibra en la fase 7
+  lambda_residuo: 1.0   # costo de atribuir un hecho a error del observador (ADR-0009)
+  omega_derrota: 0.95   # confiabilidad mínima para que un hecho derrote por sí solo
+  delta_empate: 1.0e-6  # diferencia de score que cuenta como empate (ADR-0010)
+  peso_esperable: 0.5   # peso en C de un hecho "esperable" no predicho (ADR-0015; a priori)
+  veredictos_fragil: 1  # respuesta frágil si cambiar este número de veredictos LLM la invierte (ADR-0012)
 
 presupuestos:
   hipotesis_por_ronda: 5

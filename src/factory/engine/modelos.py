@@ -9,9 +9,9 @@ from typing import Literal
 from pydantic import BaseModel, Field
 
 from factory.config import ConfigPesos
-from factory.contracts.abduction import Valor
-from factory.contracts.case import EstadoHipotesis, Veredicto
-from factory.contracts.observation import EstadoObservacion, Observador
+from factory.contracts.abduction import Prediccion, Valor
+from factory.contracts.case import EstadoHipotesis, Pregunta, Respuesta, Veredicto
+from factory.contracts.observation import EstadoObservacion, Observador, RolObservacion
 
 
 class CodigoError(StrEnum):
@@ -25,6 +25,7 @@ class CodigoError(StrEnum):
     LIMITE_HIPOTESIS = "limite_hipotesis"
     PROVEEDOR_LLM_NO_DISPONIBLE = "proveedor_llm_no_disponible"
     RESPUESTA_LLM_INVALIDA = "respuesta_llm_invalida"
+    VALOR_INVALIDO = "valor_invalido"
 
 
 class ErrorCaso(Exception):
@@ -52,9 +53,47 @@ class ResumenCaso(BaseModel):
     n_hipotesis_derrotadas: int = 0
     h_estrella: ResumenHipotesis | None = None
     expansion_sugerida: bool = False
+    subdeterminada: bool = False
+    empatadas: list[str] = Field(default_factory=list)
+    respuesta: Respuesta | None = None
     evaluado_en_evento: int | None = Field(
         default=None, description="Cantidad de eventos cuando se evaluó por última vez"
     )
+
+
+class EntradaVerdad(BaseModel):
+    """Lo que alguien reporta que realmente ocurrió (ADR-0014). Es una observación, no la verdad."""
+
+    descripcion: str
+    valor: str | None = Field(default=None, description="Valor de la pregunta que reporta")
+    fuente: str = Field(description="Quién lo establece: debe ser independiente del caso")
+    marco: str | None = None
+    confiabilidad: float | None = Field(
+        default=None, gt=0.0, le=1.0, description="ω de la fuente; si no, la del dominio"
+    )
+
+
+class Verdad(EntradaVerdad):
+    confiabilidad: float = Field(gt=0.0, le=1.0)
+    momento: str
+
+
+class EstadoVerdad(StrEnum):
+    SIN_VERDAD = "sin_verdad"
+    TENTATIVA = "tentativa"  # ningún registro alcanza ω_d
+    ESTABLECIDA = "establecida"  # los registros con ω ≥ ω_d coinciden: sirve para calibrar
+    DISPUTADA = "disputada"  # registros con ω ≥ ω_d discrepan
+
+
+def estado_verdad(verdades: list[Verdad], omega_derrota: float) -> EstadoVerdad:
+    """Estado del historial de verdades (12 §12.1)."""
+    if not verdades:
+        return EstadoVerdad.SIN_VERDAD
+    firmes = [v for v in verdades if v.confiabilidad >= omega_derrota]
+    if not firmes:
+        return EstadoVerdad.TENTATIVA
+    valores = {v.valor for v in firmes}
+    return EstadoVerdad.ESTABLECIDA if len(valores) == 1 else EstadoVerdad.DISPUTADA
 
 
 class RegistroCaso(BaseModel):
@@ -65,6 +104,10 @@ class RegistroCaso(BaseModel):
     hash_reglas: str
     pesos: ConfigPesos
     sesion: str = Field(description="x-opencode-session estable del caso")
+    pregunta: Pregunta | None = None
+    verdades: list[Verdad] = Field(
+        default_factory=list, description="Historial de lo que se reportó que ocurrió"
+    )
     estado: Literal["abierto", "cerrado"] = "abierto"
     llamadas: int = 0
     resumen: ResumenCaso = Field(default_factory=ResumenCaso)
@@ -80,6 +123,12 @@ class EntradaObservador(BaseModel):
     marco: str | None = None
     parametros: dict[str, Valor] = Field(default_factory=dict)
     tolerancia: float = 0.0
+    confiabilidad: float | None = Field(
+        default=None,
+        gt=0.0,
+        le=1.0,
+        description="Solo con calibración independiente; si no, la del dominio (ADR-0009)",
+    )
 
 
 class EntradaHipotesis(BaseModel):
@@ -88,6 +137,9 @@ class EntradaHipotesis(BaseModel):
     afirmaciones: dict[str, Valor] = Field(default_factory=dict)
     predicados: list[str] = Field(default_factory=list)
     observaciones_explicadas: list[str] = Field(default_factory=list)
+    predicciones: list[Prediccion] = Field(
+        default_factory=list, description="Consecuencias futuras que espera; no puntúan"
+    )
 
 
 # --- salidas ------------------------------------------------------------------------------
@@ -98,6 +150,9 @@ class InfoCaso(BaseModel):
     descripcion: str
     dominio: str
     version_reglas: int
+    pregunta: Pregunta | None = None
+    verdades: list[Verdad] = Field(default_factory=list)
+    estado_verdad: EstadoVerdad = EstadoVerdad.SIN_VERDAD
     pesos: ConfigPesos
     estado: str
     llamadas: int
@@ -113,6 +168,7 @@ class ObservacionRegistrada(BaseModel):
     valor: Valor | None = None
     variables: dict[str, Valor] = Field(default_factory=dict)
     estado: EstadoObservacion = EstadoObservacion.ACTIVA
+    rol: RolObservacion = RolObservacion.EXPLANANDUM
 
 
 class ResultadoObservacion(BaseModel):
@@ -123,6 +179,10 @@ class ResultadoObservacion(BaseModel):
     derrotadas: list[str] = Field(
         default_factory=list, description="Hipótesis vivas que estos hechos derrotaron"
     )
+    en_tension: list[str] = Field(
+        default_factory=list,
+        description="Contradicen estos hechos pero siguen vivas: el observador no alcanza ω_d",
+    )
     avisos: list[str] = Field(default_factory=list)
 
 
@@ -130,7 +190,11 @@ class HipotesisRegistrada(BaseModel):
     id_hipotesis: str
     mecanismo: str
     entidades_latentes: list[str]
+    entidades_juzgadas: list[str] = Field(
+        default_factory=list, description="Postulados no observados según el juez (ADR-0015)"
+    )
     afirmaciones: dict[str, Valor]
+    predicciones: list[Prediccion] = Field(default_factory=list)
     origen: str
 
 
@@ -148,6 +212,13 @@ class EntradaRanking(BaseModel):
     parsimonia_p: int
     coherencia_k: float
     score_final: float
+    atribuidas_a_error: dict[str, float] = Field(
+        default_factory=dict,
+        description="Hechos que esta hipótesis contradice y supone erróneos, con su costo",
+    )
+    sin_explicar: list[str] = Field(
+        default_factory=list, description="Explananda ante los que es neutral"
+    )
     veredictos: list[Veredicto]
     declaradas_no_verificadas: list[str] = Field(
         default_factory=list, description="Declaró explicarlas y el verificador lo negó"
@@ -160,6 +231,16 @@ class Descartada(BaseModel):
     reglas: list[str]
 
 
+class JuicioRegistrado(BaseModel):
+    """Juicio holístico usado para elegir (ADR-0016). Es un juicio, no un cálculo."""
+
+    modelo: str
+    orden: list[str]
+    decide: bool
+    confianza: str
+    justificacion: str
+
+
 class ResultadoEvaluacionCaso(BaseModel):
     caso_id: str
     m: int
@@ -167,13 +248,50 @@ class ResultadoEvaluacionCaso(BaseModel):
     descartadas_por_reglas: list[Descartada]
     h_estrella: ResumenHipotesis | None
     expansion_sugerida: bool
+    subdeterminada: bool = False
+    empatadas: list[str] = Field(default_factory=list)
+    respuesta: Respuesta | None = None
+    metodo: Literal["score", "holistica"] = "score"
+    juicio: JuicioRegistrado | None = None
     avisos: list[str] = Field(default_factory=list)
+
+
+class PrediccionVigilada(Prediccion):
+    id_hipotesis: str
+    clase: str | None = Field(description="Lo que la hipótesis responde a la pregunta, o su id")
 
 
 class ResultadoMejorExplicacion(BaseModel):
     caso_id: str
     h_estrella: ResumenHipotesis | None
+    respuesta: Respuesta | None = None
+    metodo: Literal["score", "holistica"] = "score"
+    juicio: JuicioRegistrado | None = None
+    que_vigilar: list[PrediccionVigilada] = Field(
+        default_factory=list,
+        description="Predicciones de las candidatas en disputa: lo que cambiaría la respuesta",
+    )
+    empatadas: list[ResumenHipotesis] = Field(default_factory=list)
+    atribuidas_a_error: dict[str, float] = Field(default_factory=dict)
     motivo: str
+
+
+class ConsultaDiscriminante(BaseModel):
+    observador_sugerido: str
+    marco: str
+    parametros: dict[str, Valor] = Field(
+        default_factory=dict, description="Parámetros del marco, si el dominio los define"
+    )
+    que_observar: str
+    predicciones: dict[str, str] = Field(description="Predicción de cada hipótesis empatada")
+    clases: int = Field(description="Cuántas predicciones distintas: más es más discriminante")
+
+
+class ResultadoSugerencias(BaseModel):
+    caso_id: str
+    empatadas: list[str]
+    consultas: list[ConsultaDiscriminante]
+    avisos: list[str] = Field(default_factory=list)
 
 
 class ResultadoEvidencia(BaseModel):
@@ -194,7 +312,9 @@ class HipotesisAuditada(BaseModel):
     mecanismo: str
     origen: str
     entidades_latentes: list[str]
+    entidades_juzgadas: list[str] = Field(default_factory=list)
     afirmaciones: dict[str, Valor]
+    predicciones: list[Prediccion] = Field(default_factory=list)
     estado: EstadoHipotesis
     derrotada_por: list[str]
 

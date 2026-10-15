@@ -5,7 +5,8 @@ from enum import StrEnum
 from pydantic import BaseModel, Field
 
 from factory.config import ConfigRol
-from factory.contracts.abduction import HipotesisCandidata
+from factory.contracts.abduction import HipotesisCandidata, Prediccion
+from factory.contracts.case import Pregunta
 from factory.contracts.observation import Observacion, Observador
 from factory.contracts.rules import ConjuntoReglas
 from factory.organ.texto import normalizar
@@ -13,6 +14,7 @@ from factory.transition.stochastic.contexto import (
     describir_dominio,
     describir_hipotesis,
     describir_observaciones,
+    describir_pregunta,
 )
 from factory.transition.stochastic.esquemas import GeneracionLLM, HipotesisLLM, a_diccionario
 from factory.transition.stochastic.llm_client import ClienteLLM, ErrorLLM
@@ -34,7 +36,10 @@ guiones bajos).
 - En 'entidades_latentes' declara toda entidad o mecanismo que postulas y que NO está en el \
 vocabulario conocido. Cada entidad nueva tiene un costo: postúlala solo si hace falta.
 - En 'observaciones_explicadas' lista los ids de las observaciones que la hipótesis explica.
-- En 'predicados_de_consistencia' enuncia las condiciones que la hipótesis asume."""
+- En 'predicados_de_consistencia' enuncia las condiciones que la hipótesis asume.
+- En 'predicciones' da de 1 a 3 consecuencias futuras observables que la hipótesis espera, \
+con su horizonte: qué se observaría, en qué plazo y con qué resultado. Prefiere las que la \
+distinguen de las hipótesis rivales."""
 
 INSTRUCCION_MODO = {
     "contrastivo": (
@@ -61,6 +66,7 @@ class ContextoGeneracion(BaseModel):
     observaciones: list[Observacion]
     existentes: list[HipotesisCandidata] = Field(default_factory=list)
     vocabulario: set[str] = Field(default_factory=set)
+    pregunta: Pregunta | None = None
 
 
 class ResultadoGeneracion(BaseModel):
@@ -114,7 +120,7 @@ class Generador:
                 resultado.avisos.append(f"{rol.modelo}: {e}")
                 continue
             for propuesta in bruto.hipotesis:
-                h, avisos = self._convertir(propuesta, modelo, contexto.dominio, ids)
+                h, avisos = self._convertir(propuesta, modelo, contexto, ids)
                 resultado.avisos += avisos
                 firma = _firma(h, contexto.dominio)
                 if firma is not None and firma in firmas:
@@ -147,17 +153,23 @@ class Generador:
                 "Hipótesis ya existentes (no las repitas):\n"
                 + "\n".join(describir_hipotesis(h) for h in vistas)
             )
+        if contexto.pregunta is not None:
+            partes.append(describir_pregunta(contexto.pregunta))
         partes.append(INSTRUCCION_MODO[modo].format(n=n))
         return "\n\n".join(partes)
 
     @staticmethod
     def _convertir(
-        propuesta: HipotesisLLM, modelo: str, dominio: ConjuntoReglas, ids: set[str]
+        propuesta: HipotesisLLM, modelo: str, contexto: ContextoGeneracion, ids: set[str]
     ) -> tuple[HipotesisCandidata, list[str]]:
         avisos = []
         afirmaciones = a_diccionario(propuesta.afirmaciones)
+        dominio = contexto.dominio
         if dominio.variables:
-            for nombre in sorted(set(afirmaciones) - set(dominio.variables)):
+            permitidas = set(dominio.variables)
+            if contexto.pregunta is not None:
+                permitidas.add(contexto.pregunta.variable)
+            for nombre in sorted(set(afirmaciones) - permitidas):
                 del afirmaciones[nombre]
                 avisos.append(f"{modelo}: se ignoró la variable desconocida '{nombre}'")
         n = len(ids) + 1
@@ -171,6 +183,7 @@ class Generador:
                 observaciones_explicadas=propuesta.observaciones_explicadas,
                 predicados_de_consistencia=propuesta.predicados_de_consistencia,
                 afirmaciones=afirmaciones,
+                predicciones=[Prediccion(**p.model_dump()) for p in propuesta.predicciones],
                 origen=f"motor:{modelo}",
             ),
             avisos,

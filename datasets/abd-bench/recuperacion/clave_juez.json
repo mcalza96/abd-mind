@@ -1,0 +1,824 @@
+{
+ "R12-81cb8a": {
+  "caso": "R12",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "libre",
+  "corrida": 2
+ },
+ "R12-0a6e5d": {
+  "caso": "R12",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "diversa",
+  "corrida": 3
+ },
+ "R12-4ed3d2": {
+  "caso": "R12",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "diversa",
+  "corrida": 2
+ },
+ "R12-0e035b": {
+  "caso": "R12",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "diversa",
+  "corrida": 2
+ },
+ "R12-edf0f4": {
+  "caso": "R12",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "libre",
+  "corrida": 1
+ },
+ "R12-e9e028": {
+  "caso": "R12",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "libre",
+  "corrida": 3
+ },
+ "R12-97aae3": {
+  "caso": "R12",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "libre",
+  "corrida": 1
+ },
+ "R12-72dc1a": {
+  "caso": "R12",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "diversa",
+  "corrida": 1
+ },
+ "R12-9e9cd1": {
+  "caso": "R12",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "diversa",
+  "corrida": 3
+ },
+ "R12-b93b91": {
+  "caso": "R12",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "libre",
+  "corrida": 2
+ },
+ "R12-843762": {
+  "caso": "R12",
+  "modelo": "referencia",
+  "pregunta": "libre",
+  "corrida": 1
+ },
+ "R12-d72f1a": {
+  "caso": "R12",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "libre",
+  "corrida": 3
+ },
+ "R12-2c0062": {
+  "caso": "R12",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "diversa",
+  "corrida": 1
+ },
+ "R09-7837c1": {
+  "caso": "R09",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "diversa",
+  "corrida": 3
+ },
+ "R09-fad267": {
+  "caso": "R09",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "libre",
+  "corrida": 2
+ },
+ "R09-4f1bdb": {
+  "caso": "R09",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "diversa",
+  "corrida": 1
+ },
+ "R09-9e24c2": {
+  "caso": "R09",
+  "modelo": "referencia",
+  "pregunta": "libre",
+  "corrida": 1
+ },
+ "R09-9bc518": {
+  "caso": "R09",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "diversa",
+  "corrida": 1
+ },
+ "R09-a20037": {
+  "caso": "R09",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "libre",
+  "corrida": 3
+ },
+ "R09-ebf8c4": {
+  "caso": "R09",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "diversa",
+  "corrida": 2
+ },
+ "R09-e83df0": {
+  "caso": "R09",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "diversa",
+  "corrida": 2
+ },
+ "R09-21a79e": {
+  "caso": "R09",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "libre",
+  "corrida": 1
+ },
+ "R09-54195f": {
+  "caso": "R09",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "libre",
+  "corrida": 3
+ },
+ "R09-f6e9f9": {
+  "caso": "R09",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "libre",
+  "corrida": 2
+ },
+ "R09-06b0d1": {
+  "caso": "R09",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "libre",
+  "corrida": 1
+ },
+ "R09-e3e86c": {
+  "caso": "R09",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "diversa",
+  "corrida": 3
+ },
+ "R13-cffb9f": {
+  "caso": "R13",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "libre",
+  "corrida": 1
+ },
+ "R13-bd0e31": {
+  "caso": "R13",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "diversa",
+  "corrida": 3
+ },
+ "R13-10e8e0": {
+  "caso": "R13",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "libre",
+  "corrida": 3
+ },
+ "R13-1603f3": {
+  "caso": "R13",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "libre",
+  "corrida": 3
+ },
+ "R13-ccce3b": {
+  "caso": "R13",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "diversa",
+  "corrida": 3
+ },
+ "R13-a3850f": {
+  "caso": "R13",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "diversa",
+  "corrida": 1
+ },
+ "R13-f477d5": {
+  "caso": "R13",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "diversa",
+  "corrida": 2
+ },
+ "R13-244c05": {
+  "caso": "R13",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "libre",
+  "corrida": 2
+ },
+ "R13-74a3a6": {
+  "caso": "R13",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "diversa",
+  "corrida": 2
+ },
+ "R13-a3d41d": {
+  "caso": "R13",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "libre",
+  "corrida": 1
+ },
+ "R13-33a9bb": {
+  "caso": "R13",
+  "modelo": "referencia",
+  "pregunta": "libre",
+  "corrida": 1
+ },
+ "R13-2fae74": {
+  "caso": "R13",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "libre",
+  "corrida": 2
+ },
+ "R13-3e3731": {
+  "caso": "R13",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "diversa",
+  "corrida": 1
+ },
+ "R03-05b423": {
+  "caso": "R03",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "diversa",
+  "corrida": 3
+ },
+ "R03-7a538f": {
+  "caso": "R03",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "diversa",
+  "corrida": 2
+ },
+ "R03-7d2790": {
+  "caso": "R03",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "libre",
+  "corrida": 3
+ },
+ "R03-3b707a": {
+  "caso": "R03",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "libre",
+  "corrida": 3
+ },
+ "R03-3543d3": {
+  "caso": "R03",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "diversa",
+  "corrida": 1
+ },
+ "R03-4b62b9": {
+  "caso": "R03",
+  "modelo": "referencia",
+  "pregunta": "libre",
+  "corrida": 1
+ },
+ "R03-8902c5": {
+  "caso": "R03",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "diversa",
+  "corrida": 2
+ },
+ "R03-c6d36e": {
+  "caso": "R03",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "libre",
+  "corrida": 2
+ },
+ "R03-d06144": {
+  "caso": "R03",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "libre",
+  "corrida": 2
+ },
+ "R03-13c156": {
+  "caso": "R03",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "diversa",
+  "corrida": 3
+ },
+ "R03-cf5a38": {
+  "caso": "R03",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "libre",
+  "corrida": 1
+ },
+ "R03-edcd4b": {
+  "caso": "R03",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "libre",
+  "corrida": 1
+ },
+ "R03-eecc6c": {
+  "caso": "R03",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "diversa",
+  "corrida": 1
+ },
+ "R02-3a358d": {
+  "caso": "R02",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "libre",
+  "corrida": 1
+ },
+ "R02-d4f68e": {
+  "caso": "R02",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "diversa",
+  "corrida": 2
+ },
+ "R02-376b9d": {
+  "caso": "R02",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "diversa",
+  "corrida": 2
+ },
+ "R02-914987": {
+  "caso": "R02",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "libre",
+  "corrida": 2
+ },
+ "R02-3b547b": {
+  "caso": "R02",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "libre",
+  "corrida": 1
+ },
+ "R02-e95b7e": {
+  "caso": "R02",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "libre",
+  "corrida": 3
+ },
+ "R02-de345e": {
+  "caso": "R02",
+  "modelo": "referencia",
+  "pregunta": "libre",
+  "corrida": 1
+ },
+ "R02-484a26": {
+  "caso": "R02",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "diversa",
+  "corrida": 1
+ },
+ "R02-cca52e": {
+  "caso": "R02",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "diversa",
+  "corrida": 3
+ },
+ "R02-799eb4": {
+  "caso": "R02",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "libre",
+  "corrida": 3
+ },
+ "R02-407380": {
+  "caso": "R02",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "diversa",
+  "corrida": 1
+ },
+ "R02-4330e0": {
+  "caso": "R02",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "libre",
+  "corrida": 2
+ },
+ "R02-ceaab3": {
+  "caso": "R02",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "diversa",
+  "corrida": 3
+ },
+ "R10-0b3e90": {
+  "caso": "R10",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "diversa",
+  "corrida": 3
+ },
+ "R10-f9f7ad": {
+  "caso": "R10",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "diversa",
+  "corrida": 2
+ },
+ "R10-9bfc27": {
+  "caso": "R10",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "libre",
+  "corrida": 2
+ },
+ "R10-9704b2": {
+  "caso": "R10",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "diversa",
+  "corrida": 1
+ },
+ "R10-3f5d01": {
+  "caso": "R10",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "libre",
+  "corrida": 1
+ },
+ "R10-27040a": {
+  "caso": "R10",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "libre",
+  "corrida": 3
+ },
+ "R10-9c24ba": {
+  "caso": "R10",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "libre",
+  "corrida": 2
+ },
+ "R10-ff7add": {
+  "caso": "R10",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "diversa",
+  "corrida": 3
+ },
+ "R10-7baf1a": {
+  "caso": "R10",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "diversa",
+  "corrida": 1
+ },
+ "R10-f1c3e5": {
+  "caso": "R10",
+  "modelo": "referencia",
+  "pregunta": "libre",
+  "corrida": 1
+ },
+ "R10-6b159d": {
+  "caso": "R10",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "libre",
+  "corrida": 3
+ },
+ "R10-e24cf2": {
+  "caso": "R10",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "diversa",
+  "corrida": 2
+ },
+ "R10-445e4d": {
+  "caso": "R10",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "libre",
+  "corrida": 1
+ },
+ "R14-1dc1ee": {
+  "caso": "R14",
+  "modelo": "referencia",
+  "pregunta": "libre",
+  "corrida": 1
+ },
+ "R14-ecbbc4": {
+  "caso": "R14",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "libre",
+  "corrida": 3
+ },
+ "R14-2937e5": {
+  "caso": "R14",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "libre",
+  "corrida": 2
+ },
+ "R14-fe33b2": {
+  "caso": "R14",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "diversa",
+  "corrida": 3
+ },
+ "R14-1adbf5": {
+  "caso": "R14",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "libre",
+  "corrida": 1
+ },
+ "R14-ab6f9d": {
+  "caso": "R14",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "diversa",
+  "corrida": 2
+ },
+ "R14-57ca78": {
+  "caso": "R14",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "diversa",
+  "corrida": 1
+ },
+ "R04-001bae": {
+  "caso": "R04",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "diversa",
+  "corrida": 3
+ },
+ "R04-717b6c": {
+  "caso": "R04",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "libre",
+  "corrida": 2
+ },
+ "R04-aa9384": {
+  "caso": "R04",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "libre",
+  "corrida": 3
+ },
+ "R04-ca54d2": {
+  "caso": "R04",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "libre",
+  "corrida": 3
+ },
+ "R04-682027": {
+  "caso": "R04",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "diversa",
+  "corrida": 3
+ },
+ "R04-1c679b": {
+  "caso": "R04",
+  "modelo": "referencia",
+  "pregunta": "libre",
+  "corrida": 1
+ },
+ "R04-89dfe7": {
+  "caso": "R04",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "libre",
+  "corrida": 1
+ },
+ "R04-0bbcfd": {
+  "caso": "R04",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "diversa",
+  "corrida": 2
+ },
+ "R04-c5c0a5": {
+  "caso": "R04",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "diversa",
+  "corrida": 2
+ },
+ "R04-1d858d": {
+  "caso": "R04",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "libre",
+  "corrida": 2
+ },
+ "R04-4b6bd6": {
+  "caso": "R04",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "libre",
+  "corrida": 1
+ },
+ "R04-71f5c7": {
+  "caso": "R04",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "diversa",
+  "corrida": 1
+ },
+ "R04-69e849": {
+  "caso": "R04",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "diversa",
+  "corrida": 1
+ },
+ "R07-b2db92": {
+  "caso": "R07",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "libre",
+  "corrida": 2
+ },
+ "R07-45ff37": {
+  "caso": "R07",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "libre",
+  "corrida": 3
+ },
+ "R07-ebe4be": {
+  "caso": "R07",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "diversa",
+  "corrida": 3
+ },
+ "R07-5874ba": {
+  "caso": "R07",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "libre",
+  "corrida": 2
+ },
+ "R07-37b06e": {
+  "caso": "R07",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "diversa",
+  "corrida": 2
+ },
+ "R07-611639": {
+  "caso": "R07",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "libre",
+  "corrida": 1
+ },
+ "R07-0b8024": {
+  "caso": "R07",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "diversa",
+  "corrida": 2
+ },
+ "R07-2f114f": {
+  "caso": "R07",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "libre",
+  "corrida": 1
+ },
+ "R07-bf64e1": {
+  "caso": "R07",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "diversa",
+  "corrida": 1
+ },
+ "R07-92d252": {
+  "caso": "R07",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "diversa",
+  "corrida": 1
+ },
+ "R07-31b6db": {
+  "caso": "R07",
+  "modelo": "referencia",
+  "pregunta": "libre",
+  "corrida": 1
+ },
+ "R07-4f8976": {
+  "caso": "R07",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "diversa",
+  "corrida": 3
+ },
+ "R07-137dce": {
+  "caso": "R07",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "libre",
+  "corrida": 3
+ },
+ "R01-285988": {
+  "caso": "R01",
+  "modelo": "referencia",
+  "pregunta": "libre",
+  "corrida": 1
+ },
+ "R01-10b83a": {
+  "caso": "R01",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "diversa",
+  "corrida": 3
+ },
+ "R01-4d1a1f": {
+  "caso": "R01",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "libre",
+  "corrida": 2
+ },
+ "R01-4e1b5f": {
+  "caso": "R01",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "diversa",
+  "corrida": 3
+ },
+ "R01-50cd7a": {
+  "caso": "R01",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "libre",
+  "corrida": 3
+ },
+ "R01-6909b9": {
+  "caso": "R01",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "libre",
+  "corrida": 3
+ },
+ "R01-d5c17a": {
+  "caso": "R01",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "diversa",
+  "corrida": 2
+ },
+ "R01-15d2da": {
+  "caso": "R01",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "diversa",
+  "corrida": 2
+ },
+ "R01-b56b28": {
+  "caso": "R01",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "libre",
+  "corrida": 1
+ },
+ "R01-3af9ec": {
+  "caso": "R01",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "libre",
+  "corrida": 2
+ },
+ "R01-ce5cc2": {
+  "caso": "R01",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "libre",
+  "corrida": 1
+ },
+ "R01-d1e9d5": {
+  "caso": "R01",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "diversa",
+  "corrida": 1
+ },
+ "R01-849fdd": {
+  "caso": "R01",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "diversa",
+  "corrida": 1
+ },
+ "R06-629453": {
+  "caso": "R06",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "diversa",
+  "corrida": 2
+ },
+ "R06-290646": {
+  "caso": "R06",
+  "modelo": "referencia",
+  "pregunta": "libre",
+  "corrida": 1
+ },
+ "R06-6cd8d1": {
+  "caso": "R06",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "libre",
+  "corrida": 1
+ },
+ "R06-c46c9a": {
+  "caso": "R06",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "diversa",
+  "corrida": 1
+ },
+ "R06-d28102": {
+  "caso": "R06",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "diversa",
+  "corrida": 1
+ },
+ "R06-1c06d3": {
+  "caso": "R06",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "libre",
+  "corrida": 3
+ },
+ "R06-6c6194": {
+  "caso": "R06",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "libre",
+  "corrida": 1
+ },
+ "R06-d32048": {
+  "caso": "R06",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "libre",
+  "corrida": 2
+ },
+ "R06-aee4d5": {
+  "caso": "R06",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "diversa",
+  "corrida": 3
+ },
+ "R06-1647a1": {
+  "caso": "R06",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "diversa",
+  "corrida": 3
+ },
+ "R06-cfc9ab": {
+  "caso": "R06",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "libre",
+  "corrida": 2
+ },
+ "R06-b29d54": {
+  "caso": "R06",
+  "modelo": "deepseek-v4.1-flash",
+  "pregunta": "diversa",
+  "corrida": 2
+ },
+ "R06-0ae27c": {
+  "caso": "R06",
+  "modelo": "muse-spark-1.3-contributor",
+  "pregunta": "libre",
+  "corrida": 3
+ }
+}

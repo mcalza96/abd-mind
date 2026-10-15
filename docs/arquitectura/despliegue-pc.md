@@ -84,6 +84,10 @@ hermes mcp add abd-mind --command "uv --directory /ruta/a/abd-mind run abd-mind 
 hermes mcp test abd-mind
 ```
 
+`hermes mcp test` debe listar 17 herramientas (de `crear_caso` a `auditoria`).
+
+**Tiempo límite.** En dominios con LLM, `evaluar` y `generar_hipotesis` pueden tardar varios minutos: cada hipótesis se verifica contra cada hecho. Como referencia, el caso financiero completo hizo 42 llamadas en unos 5 minutos. Sube el tiempo límite de llamada a herramientas de Hermes para este servidor, por ejemplo a 600 s. Si es corto, Hermes corta la llamada, aunque el motor guarda los veredictos ya obtenidos y repetir la operación no los vuelve a pagar.
+
 Equivalente en `~/.hermes/config.yaml` (orientativo):
 
 ```yaml
@@ -98,8 +102,11 @@ mcp_servers:
 En la máquina del motor:
 
 ```bash
-ABD_MIND_TOKEN=<token-largo> uv run abd-mind serve --transport http --host 127.0.0.1 --port 8765
+python3 -c "import secrets; print(secrets.token_urlsafe(32))"   # generar un token (≥ 16 caracteres)
+ABD_MIND_TOKEN=<token> uv run abd-mind serve --transport http --host 127.0.0.1 --port 8765
 ```
+
+Sin `ABD_MIND_TOKEN` el servidor no arranca. Toda petición sin `Authorization: Bearer <token>` recibe 401. El endpoint es `/mcp` (Streamable HTTP).
 
 En Hermes:
 

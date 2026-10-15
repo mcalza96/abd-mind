@@ -125,4 +125,4 @@ tests/units/test_ibe_evaluator.py
 
 Los módulos con LLM (córtex, generador, verificador) se agregan junto a estos, detrás de una interfaz de cliente que no fija proveedor ni modelo: la asignación de modelos a roles es configuración.
 
-La arquitectura de implementación (acoplamiento a Hermes Agent vía MCP, estructura completa del repositorio, contrato de herramientas) está en [docs/arquitectura](../arquitectura/README.md).
+La arquitectura de implementación (acoplamiento a Hermes Agent vía MCP, estructura completa del repositorio, contrato de herramientas) está en [docs/arquitectura](../../arquitectura/README.md).

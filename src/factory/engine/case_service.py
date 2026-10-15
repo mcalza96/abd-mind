@@ -8,28 +8,44 @@ obtienen, así que un caso se reconstruye sin volver a llamar al verificador.
 import hashlib
 import uuid
 from collections.abc import Iterator
+from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 from dataclasses import dataclass, field
 from pathlib import Path
 
 from factory.config import Config, ConfigPesos
 from factory.contracts.abduction import HipotesisCandidata, Valor
-from factory.contracts.case import EstadoHipotesis, ResultadoEvaluacion, Veredicto
-from factory.contracts.observation import EstadoObservacion, Observacion, Observador
+from factory.contracts.case import (
+    EstadoHipotesis,
+    Pregunta,
+    Respuesta,
+    ResultadoEvaluacion,
+    Veredicto,
+)
+from factory.contracts.observation import (
+    EstadoObservacion,
+    Observacion,
+    Observador,
+    RolObservacion,
+)
 from factory.contracts.rules import ConjuntoReglas
 from factory.engine.modelos import (
     Auditoria,
     CodigoError,
+    ConsultaDiscriminante,
     Descartada,
     EntradaHipotesis,
     EntradaObservador,
     EntradaRanking,
+    EntradaVerdad,
     ErrorCaso,
     HipotesisAuditada,
     HipotesisRegistrada,
     InfoCaso,
+    JuicioRegistrado,
     ObservacionAuditada,
     ObservacionRegistrada,
+    PrediccionVigilada,
     RegistroCaso,
     ResultadoEvaluacionCaso,
     ResultadoEvidencia,
@@ -37,21 +53,33 @@ from factory.engine.modelos import (
     ResultadoMejorExplicacion,
     ResultadoObservacion,
     ResultadoRetractacion,
+    ResultadoSugerencias,
     ResumenHipotesis,
+    Verdad,
+    estado_verdad,
 )
 from factory.engine.store import CacheSQLite, Store, ahora
 from factory.organ.projections import VerificadorProyeccion
 from factory.organ.rule_engine import RuleEngine, cargar_reglas, directorio_reglas
 from factory.organ.texto import normalizar
-from factory.organ.verifier import Verificador, VerificadorLLM
+from factory.organ.verifier import Verificador, VerificadorComparativo
 from factory.transition.deterministic.ibe_evaluator import IBEEvaluator
-from factory.transition.deterministic.state_tree import ArbolHipotesis
+from factory.transition.deterministic.respuesta import clase_de
+from factory.transition.deterministic.state_tree import ArbolHipotesis, ResultadoArbol
+from factory.transition.stochastic.contexto import (
+    describir_dominio,
+    describir_hipotesis,
+    describir_observaciones,
+)
 from factory.transition.stochastic.cortex import Cortex
+from factory.transition.stochastic.esquemas import ConsultasLLM
 from factory.transition.stochastic.generator import (
     ContextoGeneracion,
     Generador,
     ModoGeneracion,
 )
+from factory.transition.stochastic.juez import juzgar_postulados
+from factory.transition.stochastic.juicio import juzgar_explicaciones
 from factory.transition.stochastic.llm_client import (
     Cache,
     ClienteLLM,
@@ -60,6 +88,13 @@ from factory.transition.stochastic.llm_client import (
     RespuestaInvalida,
     Transporte,
 )
+
+SISTEMA_CONSULTAS = """Eres el planificador de observaciones de un sistema de razonamiento \
+abductivo. Varias hipótesis incompatibles explican igual de bien la evidencia disponible. \
+Propón observaciones nuevas que las distingan: para cada una, quién debería observar, desde qué \
+marco (perspectiva, instrumento o método), qué medir y qué resultado predice cada hipótesis. \
+Una observación solo sirve si las predicciones difieren entre hipótesis. Prefiere observaciones \
+factibles y concretas."""
 
 
 def _hash_reglas(reglas: ConjuntoReglas) -> str:
@@ -100,6 +135,7 @@ class _Contexto:
     reglas: ConjuntoReglas
     arbol: ArbolHipotesis
     cliente: ClienteLLM | None
+    verificador: Verificador | None = None
     opiniones: dict[str, list[str]] = field(default_factory=dict)
     grupos_observacion: int = 0
     avisos: list[str] = field(default_factory=list)
@@ -130,8 +166,13 @@ class ServicioCasos:
         return self._reglas_de_archivo(dominio)
 
     def crear_caso(
-        self, descripcion: str, dominio: str, pesos: ConfigPesos | None = None
+        self,
+        descripcion: str,
+        dominio: str,
+        pesos: ConfigPesos | None = None,
+        pregunta: Pregunta | None = None,
     ) -> InfoCaso:
+        """`pregunta`: variable contrastiva que cada hipótesis debe fijar (ADR-0012)."""
         reglas = self._reglas_de_archivo(dominio)
         numero = self.store.nuevo_numero()
         momento = ahora()
@@ -143,6 +184,7 @@ class ServicioCasos:
             hash_reglas=_hash_reglas(reglas),
             pesos=pesos or self.config.pesos,
             sesion=f"abd-mind-{uuid.uuid4()}",
+            pregunta=pregunta,
             creado=momento,
             actualizado=momento,
         )
@@ -150,9 +192,48 @@ class ServicioCasos:
         self.store.agregar_evento(
             registro.id,
             "caso_creado",
-            {"descripcion": descripcion, "dominio": dominio, "version_reglas": reglas.version},
+            {
+                "descripcion": descripcion,
+                "dominio": dominio,
+                "version_reglas": reglas.version,
+                "pregunta": pregunta.model_dump(mode="json") if pregunta else None,
+            },
         )
         return self._info(registro)
+
+    def registrar_verdad(self, caso_id: str, verdad: EntradaVerdad) -> InfoCaso:
+        """Agrega lo que una fuente reporta que ocurrió, aunque el caso esté cerrado.
+
+        Nada se sobrescribe: una verdad corregida después convive con la anterior y el caso
+        queda `disputado` si ambas son firmes y discrepan (12 §12.1).
+        """
+        registro = self._registro(caso_id)
+        self._agregar_verdad(registro, verdad)
+        registro.actualizado = ahora()
+        self.store.guardar_caso(registro)
+        return self._info(registro)
+
+    def _agregar_verdad(self, registro: RegistroCaso, entrada: EntradaVerdad) -> None:
+        pregunta = registro.pregunta
+        if entrada.valor is not None and (
+            pregunta is None or clase_de({pregunta.variable: entrada.valor}, pregunta) is None
+        ):
+            raise ErrorCaso(
+                CodigoError.VALOR_INVALIDO,
+                f"'{entrada.valor}' no es un valor de la pregunta del caso",
+            )
+        reglas = ConjuntoReglas.model_validate_json(registro.reglas_json)
+        verdad = Verdad(
+            **entrada.model_dump(exclude={"confiabilidad"}),
+            confiabilidad=entrada.confiabilidad or reglas.confiabilidad_por_defecto,
+            momento=ahora(),
+        )
+        if pregunta is not None and verdad.valor is not None:
+            verdad.valor = clase_de({pregunta.variable: verdad.valor}, pregunta)
+        registro.verdades.append(verdad)
+        self.store.agregar_evento(
+            registro.id, "verdad_registrada", {"verdad": verdad.model_dump(mode="json")}
+        )
 
     def listar_casos(self, estado: str | None = None, limite: int = 50) -> list[InfoCaso]:
         return [self._info(r) for r in self.store.listar_casos(estado, limite)]
@@ -160,8 +241,11 @@ class ServicioCasos:
     def estado_caso(self, caso_id: str) -> InfoCaso:
         return self._info(self._registro(caso_id))
 
-    def cerrar_caso(self, caso_id: str) -> InfoCaso:
+    def cerrar_caso(self, caso_id: str, verdad: EntradaVerdad | None = None) -> InfoCaso:
+        """Cierra el caso; `verdad`, si se da, se agrega al historial (ADR-0014)."""
         registro = self._registro(caso_id)
+        if verdad is not None:
+            self._agregar_verdad(registro, verdad)
         registro.estado = "cerrado"
         registro.actualizado = ahora()
         self.store.agregar_evento(caso_id, "caso_cerrado", {})
@@ -178,14 +262,20 @@ class ServicioCasos:
         *,
         fuente: str | None = None,
         valor: Valor | None = None,
+        rol: RolObservacion = RolObservacion.EXPLANANDUM,
+        extraer: bool = True,
     ) -> ResultadoObservacion:
         """Registra lo que reportó un observador.
 
-        Con `valor` el hecho se registra tal cual; si no, el córtex separa hechos de opiniones.
+        Con `valor`, o con `extraer=False`, el contenido se registra tal cual como un único hecho;
+        si no, el córtex separa hechos de opiniones.
         Los hechos nuevos ponen a prueba a las hipótesis existentes (pueden derrotarlas).
+        `rol`: explanandum (exige explicación) o evidencia (solo discrimina), ADR-0011.
         """
         with self._operacion(caso_id) as ctx:
-            return self._agregar_observacion(ctx, observador, contenido, fuente, valor)
+            return self._agregar_observacion(
+                ctx, observador, contenido, fuente, valor, rol, extraer
+            )
 
     def corregir_observacion(
         self,
@@ -233,6 +323,7 @@ class ServicioCasos:
                 contenido=texto,
                 valor=valor if valor is not None else original.valor,
                 variables=original.variables,
+                rol=original.rol,
             )
             ctx.arbol.agregar_observacion(corregida, como_prueba=False)
             self.store.agregar_evento(
@@ -263,10 +354,11 @@ class ServicioCasos:
         *,
         fuente: str | None = None,
         valor: Valor | None = None,
+        rol: RolObservacion = RolObservacion.EXPLANANDUM,
     ) -> ResultadoEvidencia:
         with self._operacion(caso_id) as ctx:
             anterior = ctx.registro.resumen.h_estrella
-            observacion = self._agregar_observacion(ctx, observador, contenido, fuente, valor)
+            observacion = self._agregar_observacion(ctx, observador, contenido, fuente, valor, rol)
             evaluacion = self._evaluar(ctx, permitir_vacio=True)
             return ResultadoEvidencia(
                 observacion=observacion, h_estrella_anterior=anterior, evaluacion=evaluacion
@@ -309,24 +401,36 @@ class ServicioCasos:
         with self._operacion(caso_id) as ctx:
             self._exigir_cupo(ctx, len(hipotesis))
             avisos: list[str] = []
-            nuevas = []
+            nuevas: list[HipotesisCandidata] = []
+            pregunta = ctx.registro.pregunta
             for entrada in hipotesis:
                 afirmaciones = dict(entrada.afirmaciones)
                 if ctx.reglas.variables:
-                    for nombre in sorted(set(afirmaciones) - set(ctx.reglas.variables)):
+                    permitidas = set(ctx.reglas.variables)
+                    if pregunta is not None:
+                        permitidas.add(pregunta.variable)
+                    for nombre in sorted(set(afirmaciones) - permitidas):
                         del afirmaciones[nombre]
                         avisos.append(f"se ignoró la variable desconocida '{nombre}'")
+                if pregunta is not None and clase_de(afirmaciones, pregunta) is None:
+                    avisos.append(
+                        f"'{entrada.mecanismo}' no fija '{pregunta.variable}' con un valor de "
+                        f"{pregunta.valores}: no cuenta para la respuesta"
+                    )
                 h = HipotesisCandidata(
-                    id_hipotesis=self._siguiente_id_hipotesis(ctx),
+                    id_hipotesis=self._siguiente_id_hipotesis(
+                        ctx, {c.id_hipotesis for c in nuevas}
+                    ),
                     mecanismo_latente=entrada.mecanismo,
                     entidades_latentes=entrada.entidades_latentes,
                     afirmaciones=afirmaciones,
                     predicados_de_consistencia=entrada.predicados,
                     observaciones_explicadas=entrada.observaciones_explicadas,
+                    predicciones=entrada.predicciones,
                     origen=origen,
                 )
-                self._registrar_hipotesis(ctx, h)
                 nuevas.append(h)
+            nuevas = [self._registrar_hipotesis(ctx, h) for h in self._juzgar(ctx, nuevas)]
             return ResultadoHipotesis(
                 caso_id=caso_id, hipotesis=[_hipotesis_registrada(h) for h in nuevas], avisos=avisos
             )
@@ -354,18 +458,21 @@ class ServicioCasos:
                     observaciones=ctx.arbol.observaciones_activas(),
                     existentes=ctx.arbol.todas_las_hipotesis(),
                     vocabulario=ctx.arbol.vocabulario,
+                    pregunta=ctx.registro.pregunta,
                 ),
                 n,
                 modo_real,
             )
-            for h in generacion.hipotesis[:cupo]:
+            registradas = [
                 self._registrar_hipotesis(ctx, h)
+                for h in self._juzgar(ctx, generacion.hipotesis[:cupo])
+            ]
             avisos = [f"modo: {modo_real.value}", *generacion.avisos, *ctx.cliente.avisos]
             if len(generacion.hipotesis) > cupo:
                 avisos.append(f"se descartaron {len(generacion.hipotesis) - cupo} por el límite")
             return ResultadoHipotesis(
                 caso_id=caso_id,
-                hipotesis=[_hipotesis_registrada(h) for h in generacion.hipotesis[:cupo]],
+                hipotesis=[_hipotesis_registrada(h) for h in registradas],
                 avisos=avisos,
             )
 
@@ -379,7 +486,16 @@ class ServicioCasos:
         with self._operacion(caso_id) as ctx:
             evaluacion = self._evaluar(ctx)
             h = evaluacion.h_estrella
-            if h is not None:
+            por_id = {r.id_hipotesis: r for r in evaluacion.ranking}
+            empatadas = [
+                _resumen(ctx.arbol, ctx.arbol.evaluar_registro(i)) for i in evaluacion.empatadas
+            ]
+            if evaluacion.subdeterminada:
+                motivo = (
+                    f"subdeterminación: {len(empatadas)} hipótesis explican la evidencia igual de "
+                    "bien; usar sugerir_observacion para saber qué observar"
+                )
+            elif h is not None:
                 motivo = (
                     f"explica {h.consiliencia_c} de {evaluacion.m} observaciones, postula "
                     f"{h.parsimonia_p} entidades no verificadas y respeta las reglas del dominio"
@@ -389,12 +505,85 @@ class ServicioCasos:
             else:
                 tau = ctx.registro.pesos.tau
                 motivo = f"ninguna hipótesis alcanza el umbral de aceptación τ = {tau}"
-            if h is not None and h.consiliencia_c < evaluacion.m:
+            entrada = por_id[h.id_hipotesis] if h is not None else None
+            if entrada is not None and entrada.sin_explicar:
+                motivo += f"; deja sin explicar {', '.join(entrada.sin_explicar)}"
+            residuo = entrada.atribuidas_a_error if entrada is not None else {}
+            if residuo:
+                motivo += f"; supone que {', '.join(sorted(residuo))} son errores de observación"
+            if evaluacion.expansion_sugerida:
+                motivo += "; conviene generar hipótesis en modo expansión"
+            respuesta = evaluacion.respuesta
+            if ctx.registro.pregunta is not None and respuesta is not None:
+                if respuesta.determinada:
+                    motivo = f"respuesta: {respuesta.valor}. " + motivo
+                else:
+                    disputa = (
+                        ", ".join(str(ctx.arbol.clase(i)) for i in respuesta.candidatas)
+                        or "ninguna clase alcanza el umbral"
+                    )
+                    motivo = f"respuesta no determinada ({disputa}). " + motivo
+            if respuesta is not None and respuesta.determinada and respuesta.fragil:
                 motivo += (
-                    f"; no explica todas las observaciones ({h.consiliencia_c}/{evaluacion.m}): "
-                    "conviene generar hipótesis en modo expansión"
+                    f"; resultado frágil: {respuesta.margen_veredictos} veredicto(s) del "
+                    "verificador lo invertirían"
                 )
-            return ResultadoMejorExplicacion(caso_id=caso_id, h_estrella=h, motivo=motivo)
+            vigiladas = respuesta.candidatas if respuesta is not None else []
+            que_vigilar = [
+                PrediccionVigilada(**p.model_dump(), id_hipotesis=i, clase=ctx.arbol.clase(i))
+                for i in vigiladas
+                for p in ctx.arbol.hipotesis(i).predicciones
+            ]
+            if evaluacion.juicio is not None:
+                motivo = (
+                    f"juicio holístico de {evaluacion.juicio.modelo} (confianza "
+                    f"{evaluacion.juicio.confianza}): {evaluacion.juicio.justificacion}. " + motivo
+                )
+            return ResultadoMejorExplicacion(
+                caso_id=caso_id,
+                h_estrella=h,
+                respuesta=respuesta,
+                metodo=evaluacion.metodo,
+                juicio=evaluacion.juicio,
+                que_vigilar=que_vigilar,
+                empatadas=empatadas,
+                atribuidas_a_error=residuo,
+                motivo=motivo,
+            )
+
+    def sugerir_observacion(self, caso_id: str) -> ResultadoSugerencias:
+        """Abducción activa (ADR-0010, ADR-0012): qué observar para separar a las candidatas.
+
+        Actúa si hay empate de mecanismos, si la respuesta no está determinada o si es frágil.
+        Con pregunta, las candidatas son la mejor hipótesis de cada clase en disputa.
+        """
+        with self._operacion(caso_id) as ctx:
+            evaluacion = self._evaluar(ctx)
+            respuesta = evaluacion.respuesta
+            ids: list[str] = []
+            if respuesta is not None and (not respuesta.determinada or respuesta.fragil):
+                ids = respuesta.candidatas
+            if len(ids) < 2 and ctx.registro.pregunta is None and evaluacion.subdeterminada:
+                ids = evaluacion.empatadas
+            if len(ids) < 2:
+                return ResultadoSugerencias(
+                    caso_id=caso_id,
+                    empatadas=[],
+                    consultas=[],
+                    avisos=["el resultado no está en disputa: no hace falta discriminar"],
+                )
+            empatadas = [ctx.arbol.hipotesis(i) for i in ids]
+            if ctx.reglas.verificador == "proyeccion":
+                consultas = self._consultas_por_proyeccion(ctx, empatadas)
+            else:
+                consultas = self._consultas_por_llm(ctx, empatadas)
+            avisos = [] if consultas else ["no se encontró una observación que las separe"]
+            return ResultadoSugerencias(
+                caso_id=caso_id,
+                empatadas=ids,
+                consultas=sorted(consultas, key=lambda c: -c.clases),
+                avisos=avisos,
+            )
 
     # --- auditoría -----------------------------------------------------------------------
 
@@ -416,7 +605,9 @@ class ServicioCasos:
                     mecanismo=h.mecanismo_latente,
                     origen=h.origen,
                     entidades_latentes=h.entidades_latentes,
+                    entidades_juzgadas=h.entidades_juzgadas,
                     afirmaciones=h.afirmaciones,
+                    predicciones=h.predicciones,
                     estado=arbol.estado(h.id_hipotesis),
                     derrotada_por=arbol.derrotada_por(h.id_hipotesis),
                 )
@@ -464,6 +655,9 @@ class ServicioCasos:
             descripcion=registro.descripcion,
             dominio=registro.dominio,
             version_reglas=reglas.version,
+            pregunta=registro.pregunta,
+            verdades=registro.verdades,
+            estado_verdad=estado_verdad(registro.verdades, registro.pesos.omega_derrota),
             pesos=registro.pesos,
             estado=registro.estado,
             llamadas=registro.llamadas,
@@ -494,17 +688,48 @@ class ServicioCasos:
         reglas = ConjuntoReglas.model_validate_json(registro.reglas_json)
         pesos = registro.pesos
         evaluador = IBEEvaluator(
-            pesos.alpha, pesos.beta, pesos.gamma, pesos.tau, RuleEngine(reglas)
+            pesos.alpha,
+            pesos.beta,
+            pesos.gamma,
+            pesos.tau,
+            RuleEngine(reglas),
+            lambda_residuo=pesos.lambda_residuo,
         )
         base: Verificador
+        # El verificador comparativo necesita el conjunto vivo; el árbol se crea después.
+        arboles: list[ArbolHipotesis] = []
+
+        def vivas() -> list[HipotesisCandidata]:
+            arbol = arboles[0]
+            return [
+                h
+                for h in arbol.todas_las_hipotesis()
+                if arbol.estado(h.id_hipotesis) is EstadoHipotesis.VIVA
+            ]
+
         if reglas.verificador == "proyeccion":
             base = VerificadorProyeccion()
         elif cliente is not None:
-            base = VerificadorLLM(cliente, self.config.roles.verificador)
+            base = VerificadorComparativo(
+                cliente, self.config.roles.verificador, vivas, pesos.peso_esperable
+            )
         else:
             base = _SinVerificador()
-        arbol = ArbolHipotesis(evaluador, VerificadorPersistente(self.store, registro.id, base))
-        ctx = _Contexto(registro=registro, reglas=reglas, arbol=arbol, cliente=cliente)
+        arbol = ArbolHipotesis(
+            evaluador,
+            VerificadorPersistente(self.store, registro.id, base),
+            set(reglas.vocabulario),
+            omega_derrota=pesos.omega_derrota,
+            delta_empate=pesos.delta_empate,
+            pregunta=registro.pregunta,
+            veredictos_fragil=pesos.veredictos_fragil,
+            puntuacion=reglas.puntuacion,
+            proyector=base if isinstance(base, VerificadorProyeccion) else None,
+        )
+        arboles.append(arbol)
+        ctx = _Contexto(
+            registro=registro, reglas=reglas, arbol=arbol, cliente=cliente, verificador=base
+        )
 
         for evento in self.store.eventos(registro.id):
             datos = evento.datos
@@ -565,6 +790,7 @@ class ServicioCasos:
             marco=entrada.marco,
             parametros=entrada.parametros,
             tolerancia=entrada.tolerancia,
+            confiabilidad=entrada.confiabilidad or ctx.reglas.confiabilidad_por_defecto,
         )
         ctx.arbol.agregar_observador(observador)
         self.store.agregar_evento(
@@ -581,13 +807,21 @@ class ServicioCasos:
         contenido: str,
         fuente: str | None,
         valor: Valor | None,
+        rol: RolObservacion = RolObservacion.EXPLANANDUM,
+        extraer: bool = True,
     ) -> ResultadoObservacion:
         observador = self._registrar_observador(ctx, entrada)
         grupo = f"o{ctx.grupos_observacion + 1}"
         avisos: list[str] = []
-        if valor is not None:
+        if valor is not None or not extraer:
             hechos = [
-                Observacion(id=grupo, observador_id=observador.id, contenido=contenido, valor=valor)
+                Observacion(
+                    id=grupo,
+                    observador_id=observador.id,
+                    contenido=contenido,
+                    valor=valor,
+                    rol=rol,
+                )
             ]
             opiniones: list[str] = []
         else:
@@ -595,15 +829,17 @@ class ServicioCasos:
             extraccion = Cortex(ctx.cliente, self.config.roles.cortex).extraer(
                 observador, contenido, ctx.reglas
             )
-            hechos = extraccion.a_observaciones(observador.id, grupo)
+            hechos = extraccion.a_observaciones(observador.id, grupo, rol)
             opiniones = extraccion.opiniones
             avisos += [f"duda: {d}" for d in extraccion.dudas]
             if not hechos:
                 avisos.append("no se extrajo ningún hecho; nada se agregó como evidencia")
 
         derrotadas: list[str] = []
+        en_tension: list[str] = []
         for hecho in hechos:
             derrotadas += ctx.arbol.agregar_observacion(hecho)
+            en_tension += ctx.arbol.en_tension(hecho.id)
         ctx.grupos_observacion += 1
         ctx.opiniones.setdefault(observador.id, []).extend(opiniones)
         self.store.agregar_evento(
@@ -626,21 +862,107 @@ class ServicioCasos:
             hechos=[_registrada(h) for h in hechos],
             opiniones=opiniones,
             derrotadas=sorted(set(derrotadas)),
+            en_tension=sorted(set(en_tension)),
             avisos=avisos,
         )
 
-    def _siguiente_id_hipotesis(self, ctx: _Contexto) -> str:
-        existentes = {h.id_hipotesis for h in ctx.arbol.todas_las_hipotesis()}
+    def _consultas_por_proyeccion(
+        self, ctx: _Contexto, empatadas: list[HipotesisCandidata]
+    ) -> list[ConsultaDiscriminante]:
+        proyector = VerificadorProyeccion()
+        consultas = []
+        for marco in ctx.reglas.marcos_posibles:
+            observador = Observador(
+                id=normalizar(marco.nombre), nombre=marco.nombre, parametros=marco.parametros
+            )
+            predicciones = {
+                h.id_hipotesis: str(proyector.proyeccion(h, observador) or "desconocido")
+                for h in empatadas
+            }
+            clases = len({normalizar(p) for p in predicciones.values()})
+            if clases >= 2:
+                consultas.append(
+                    ConsultaDiscriminante(
+                        observador_sugerido=marco.nombre,
+                        marco=marco.marco,
+                        parametros=marco.parametros,
+                        que_observar="silueta del objeto",
+                        predicciones=predicciones,
+                        clases=clases,
+                    )
+                )
+        return consultas
+
+    def _consultas_por_llm(
+        self, ctx: _Contexto, empatadas: list[HipotesisCandidata]
+    ) -> list[ConsultaDiscriminante]:
+        assert ctx.cliente is not None
+        usuario = "\n\n".join(
+            [
+                describir_dominio(ctx.reglas),
+                describir_observaciones(ctx.arbol.observadores, ctx.arbol.observaciones_activas()),
+                "Hipótesis empatadas (explican la evidencia igual de bien):\n"
+                + "\n".join(describir_hipotesis(h) for h in empatadas),
+                "Propón hasta 3 observaciones nuevas (quién debería observar, desde qué marco y "
+                "qué medir) cuyo resultado sería distinto según cuál hipótesis es cierta. Para "
+                "cada una, da la predicción de cada hipótesis por su id.",
+            ]
+        )
+        bruto = ctx.cliente.completar_json(
+            self.config.roles.generadores[0], SISTEMA_CONSULTAS, usuario, ConsultasLLM
+        )
+        ids = {h.id_hipotesis for h in empatadas}
+        consultas = []
+        for c in bruto.consultas:
+            predicciones = {
+                p.id_hipotesis: p.prediccion for p in c.predicciones if p.id_hipotesis in ids
+            }
+            clases = len({normalizar(p) for p in predicciones.values()})
+            # Solo sirven las que dan una predicción por hipótesis y separan al menos dos.
+            if set(predicciones) == ids and clases >= 2:
+                consultas.append(
+                    ConsultaDiscriminante(
+                        observador_sugerido=c.observador_sugerido,
+                        marco=c.marco,
+                        que_observar=c.que_observar,
+                        predicciones=predicciones,
+                        clases=clases,
+                    )
+                )
+        return consultas
+
+    def _siguiente_id_hipotesis(self, ctx: _Contexto, reservados: set[str] | None = None) -> str:
+        existentes = {h.id_hipotesis for h in ctx.arbol.todas_las_hipotesis()} | (
+            reservados or set()
+        )
         n = len(existentes) + 1
         while f"h{n}" in existentes:
             n += 1
         return f"h{n}"
 
-    def _registrar_hipotesis(self, ctx: _Contexto, h: HipotesisCandidata) -> None:
+    def _juzgar(self, ctx: _Contexto, nuevas: list[HipotesisCandidata]) -> list[HipotesisCandidata]:
+        """Parsimonia juzgada (ADR-0015): un juez independiente lista los postulados del lote."""
+        if ctx.reglas.verificador != "llm" or ctx.cliente is None or not nuevas:
+            return nuevas
+        juicio = juzgar_postulados(
+            ctx.cliente,
+            self.config.roles.verificador,
+            nuevas,
+            ctx.arbol.observadores,
+            ctx.arbol.observaciones_activas(),
+            juzgadas=ctx.arbol.todas_las_hipotesis(),
+        )
+        return [
+            h.model_copy(update={"entidades_juzgadas": juicio.get(h.id_hipotesis, [])})
+            for h in nuevas
+        ]
+
+    def _registrar_hipotesis(self, ctx: _Contexto, h: HipotesisCandidata) -> HipotesisCandidata:
         ctx.arbol.agregar_hipotesis(h)
         self.store.agregar_evento(
             ctx.registro.id, "hipotesis_registrada", {"hipotesis": h.model_dump(mode="json")}
         )
+        return h
 
     def _exigir_cupo(self, ctx: _Contexto, pedidas: int) -> int:
         maximo = self.config.presupuestos.hipotesis_vivas_max
@@ -657,8 +979,92 @@ class ServicioCasos:
             )
         return cupo
 
+    def _aplicar_juicio(
+        self, ctx: _Contexto, resultado: ResultadoArbol
+    ) -> tuple[ResultadoArbol, JuicioRegistrado]:
+        """Selección holística (ADR-0016) sobre las hipótesis vivas que respetan las reglas."""
+        assert ctx.cliente is not None
+        arbol = ctx.arbol
+        coherentes = [r for r in resultado.ranking if not r.violaciones]
+        if not coherentes:
+            vacio = JuicioRegistrado(
+                modelo="—",
+                orden=[],
+                decide=False,
+                confianza="baja",
+                justificacion="ninguna hipótesis viva respeta las reglas del dominio",
+            )
+            return resultado, vacio
+        rol = self.config.roles.juez or self.config.roles.verificador
+        bruto = juzgar_explicaciones(
+            ctx.cliente,
+            rol,
+            [arbol.hipotesis(r.evaluacion.id_hipotesis) for r in coherentes],
+            arbol.observadores,
+            arbol.observaciones_activas(),
+            ctx.registro.pregunta,
+        )
+        juicio = JuicioRegistrado(**bruto.model_dump())
+        self.store.agregar_evento(ctx.registro.id, "juicio_holistico", juicio.model_dump())
+        por_id = {r.evaluacion.id_hipotesis: r for r in coherentes}
+        lider = juicio.orden[0]
+        clase_lider = arbol.clase(lider)
+        rival = next((i for i in juicio.orden[1:] if arbol.clase(i) != clase_lider), None)
+        decide = juicio.decide and clase_lider is not None
+        respuesta = Respuesta(
+            valor=clase_lider if decide else None,
+            determinada=decide,
+            candidatas=[lider] + ([rival] if rival else []),
+            lider=lider if decide else None,
+            rival=rival,
+            fragil=decide and juicio.confianza == "baja",
+            sin_responder=resultado.respuesta.sin_responder if resultado.respuesta else [],
+        )
+        actualizado = resultado.model_copy(
+            update={
+                "ranking": [por_id[i] for i in juicio.orden]
+                + [r for r in resultado.ranking if r.violaciones],
+                "h_estrella": por_id[lider] if decide else None,
+                "subdeterminada": not decide,
+                "empatadas": [] if decide else respuesta.candidatas,
+                "respuesta": respuesta,
+            }
+        )
+        return actualizado, juicio
+
+    def _precalificar(self, ctx: _Contexto) -> None:
+        """Califica en paralelo las observaciones que tienen hipótesis vivas sin veredicto.
+
+        Las calificaciones de distintas observaciones son independientes; hacerlas a la vez no
+        cambia el resultado, solo la latencia. Quedan en la memoria del verificador comparativo
+        y el árbol las persiste al pedirlas.
+        """
+        verificador = ctx.verificador
+        if not isinstance(verificador, VerificadorComparativo):
+            return
+        arbol = ctx.arbol
+        vivas = [
+            h
+            for h in arbol.todas_las_hipotesis()
+            if arbol.estado(h.id_hipotesis) is EstadoHipotesis.VIVA
+        ]
+        pendientes = []
+        for o in arbol.observaciones_activas():
+            faltan = [
+                h
+                for h in vivas
+                if self.store.veredicto(ctx.registro.id, h.id_hipotesis, o.id) is None
+            ]
+            if faltan:
+                pendientes.append((faltan[0], o, arbol.observadores[o.observador_id]))
+        if len(pendientes) < 2:
+            return
+        with ThreadPoolExecutor(max_workers=self.config.presupuestos.llamadas_paralelas) as grupo:
+            list(grupo.map(lambda p: verificador.verificar(*p), pendientes))
+
     def _evaluar(self, ctx: _Contexto, permitir_vacio: bool = False) -> ResultadoEvaluacionCaso:
         arbol = ctx.arbol
+        self._precalificar(ctx)
         if not permitir_vacio:
             if not arbol.observaciones_activas():
                 raise ErrorCaso(CodigoError.SIN_OBSERVACIONES, "el caso no tiene observaciones")
@@ -669,6 +1075,9 @@ class ServicioCasos:
                 raise ErrorCaso(CodigoError.SIN_HIPOTESIS, "el caso no tiene hipótesis vivas")
 
         resultado = arbol.evaluar()
+        juicio: JuicioRegistrado | None = None
+        if ctx.reglas.modo_seleccion() == "holistica" and ctx.cliente is not None:
+            resultado, juicio = self._aplicar_juicio(ctx, resultado)
         ranking = [self._entrada_ranking(ctx, r) for r in resultado.ranking if not r.violaciones]
         descartadas = [
             Descartada(
@@ -685,12 +1094,47 @@ class ServicioCasos:
         resumen = ctx.registro.resumen
         resumen.h_estrella = h_estrella
         resumen.expansion_sugerida = resultado.expansion_sugerida
+        resumen.subdeterminada = resultado.subdeterminada
+        resumen.empatadas = resultado.empatadas
+        resumen.respuesta = resultado.respuesta
         resumen.evaluado_en_evento = self.store.contar_eventos(ctx.registro.id)
         avisos = list(ctx.cliente.avisos) if ctx.cliente else []
         if resultado.expansion_sugerida:
             avisos.append(
-                "ninguna hipótesis coherente explica todas las observaciones: "
-                "conviene generar hipótesis en modo expansión"
+                "lo que la mejor hipótesis deja sin explicar cuesta más que postular una entidad "
+                "nueva: conviene generar hipótesis en modo expansión"
+            )
+        respuesta = resultado.respuesta
+        if juicio is not None:
+            avisos.append(
+                f"la mejor explicación la elige un juicio holístico de {juicio.modelo} "
+                f"(confianza {juicio.confianza}), no un cálculo (ADR-0016)"
+            )
+        if ctx.registro.pregunta is not None and respuesta is not None:
+            if respuesta.determinada:
+                if respuesta.fragil and juicio is None:
+                    avisos.append(
+                        f"la respuesta '{respuesta.valor}' es frágil: cambiar "
+                        f"{respuesta.margen_veredictos} veredicto(s) del verificador la invertiría"
+                    )
+            else:
+                avisos.append(
+                    "la evidencia no determina la respuesta a la pregunta; sugerir_observacion "
+                    "propone qué observar"
+                )
+            if respuesta.sin_responder:
+                avisos.append(
+                    f"hipótesis que no responden la pregunta: {', '.join(respuesta.sin_responder)}"
+                )
+        elif respuesta is not None and respuesta.fragil and respuesta.determinada:
+            avisos.append(
+                f"H* es frágil: cambiar {respuesta.margen_veredictos} veredicto(s) del verificador "
+                "la invertiría"
+            )
+        if resultado.subdeterminada:
+            avisos.append(
+                f"{len(resultado.empatadas)} hipótesis empatan ({', '.join(resultado.empatadas)}): "
+                "no hay una mejor explicación; sugerir_observacion propone cómo distinguirlas"
             )
         return ResultadoEvaluacionCaso(
             caso_id=ctx.registro.id,
@@ -699,6 +1143,11 @@ class ServicioCasos:
             descartadas_por_reglas=descartadas,
             h_estrella=h_estrella,
             expansion_sugerida=resultado.expansion_sugerida,
+            subdeterminada=resultado.subdeterminada,
+            empatadas=resultado.empatadas,
+            respuesta=resultado.respuesta,
+            metodo="holistica" if juicio is not None else "score",
+            juicio=juicio,
             avisos=avisos,
         )
 
@@ -714,6 +1163,8 @@ class ServicioCasos:
             parsimonia_p=e.parsimonia_p,
             coherencia_k=e.coherencia_k,
             score_final=e.score_final,
+            atribuidas_a_error=r.atribuidas_a_error,
+            sin_explicar=r.sin_explicar,
             veredictos=r.veredictos,
             declaradas_no_verificadas=r.declaradas_no_verificadas,
         )
@@ -721,7 +1172,12 @@ class ServicioCasos:
 
 def _registrada(o: Observacion) -> ObservacionRegistrada:
     return ObservacionRegistrada(
-        id=o.id, contenido=o.contenido, valor=o.valor, variables=o.variables, estado=o.estado
+        id=o.id,
+        contenido=o.contenido,
+        valor=o.valor,
+        variables=o.variables,
+        estado=o.estado,
+        rol=o.rol,
     )
 
 
@@ -730,7 +1186,9 @@ def _hipotesis_registrada(h: HipotesisCandidata) -> HipotesisRegistrada:
         id_hipotesis=h.id_hipotesis,
         mecanismo=h.mecanismo_latente,
         entidades_latentes=h.entidades_latentes,
+        entidades_juzgadas=h.entidades_juzgadas,
         afirmaciones=h.afirmaciones,
+        predicciones=h.predicciones,
         origen=h.origen,
     )
 

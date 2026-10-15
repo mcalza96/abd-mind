@@ -138,12 +138,10 @@ def test_listar_modelos() -> None:
 
 def test_config_de_ejemplo_y_avisos() -> None:
     config = cargar_config(Path(__file__).resolve().parents[2] / "config/abd-mind.example.yaml")
-    assert config.roles.generadores[0].modelos() == [
-        "muse-spark-1.3-contributor",
-        "muse-spark-1.2-contributor",
-    ]
-    # Un solo generador (con fallback) reduce la diversidad: se avisa, no es un error.
-    assert [a for a in config.avisos() if "diversidad" not in a] == []
+    assert config.roles.generadores[0].modelos() == ["deepseek-v4.1-flash"]
+    # Un solo modelo para todo (decisión del 2026-10-15): se avisa la pérdida de diversidad y de
+    # independencia (ADR-0002), no es un error.
+    assert all("diversidad" in a or "independencia" in a for a in config.avisos())
     assert config.modelo("muse-spark-1.3-contributor").api == "responses"
     assert config.modelo("desconocido") == ConfigModelo()
 

@@ -8,7 +8,7 @@ Hermes corre en un PC del usuario. El cliente MCP de Hermes admite servidores lo
 
 ## Decisión
 
-El servidor se implementa con **FastMCP** y un solo punto de entrada con dos modos:
+El servidor se implementa con **FastMCP** (en el SDK oficial `mcp` 2.x se llama `MCPServer`) y un solo punto de entrada con dos modos:
 
 ```bash
 abd-mind serve --transport stdio                  # por defecto

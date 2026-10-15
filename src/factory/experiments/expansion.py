@@ -1,4 +1,4 @@
-"""Experimento 5.2 — Expansión ontológica (docs/marco-teorico/05-experimentos-canonicos.md)."""
+"""Experimento 5.2 — Expansión ontológica (histórico 05)."""
 
 from factory.contracts.abduction import HipotesisCandidata
 from factory.experiments.base import ResultadoExperimento, tabla_hipotesis

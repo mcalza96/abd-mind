@@ -3,7 +3,17 @@
 from collections.abc import Callable
 
 from factory.config import Config
-from factory.experiments import cilindro, con_llm, expansion, finanzas, tercer_observador
+from factory.experiments import (
+    cilindro,
+    comparacion_puntuacion,
+    con_llm,
+    expansion,
+    finanzas,
+    reservado,
+    robustez,
+    salas,
+    tercer_observador,
+)
 from factory.experiments.base import ResultadoExperimento
 from factory.transition.stochastic.llm_client import ClienteLLM
 
@@ -12,6 +22,11 @@ EXPERIMENTOS: dict[str, Callable[[], ResultadoExperimento]] = {
     "cilindro": cilindro.ejecutar,
     "expansion": expansion.ejecutar,
     "tercer-observador": tercer_observador.ejecutar,
+    "errata": robustez.errata,
+    "empate": robustez.empate,
+    "reservado": reservado.ejecutar,
+    "salas": salas.ejecutar,
+    "puntuacion": comparacion_puntuacion.ejecutar,
 }
 
 # Con LLM: requieren proveedor configurado.

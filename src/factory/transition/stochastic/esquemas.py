@@ -1,6 +1,8 @@
 """Esquemas de salida que se piden a los modelos. Planos y estrictos para json_schema."""
 
-from pydantic import BaseModel
+from typing import Literal
+
+from pydantic import BaseModel, Field
 
 from factory.contracts.abduction import Valor
 
@@ -32,12 +34,19 @@ class ExtraccionLLM(BaseModel):
     dudas: list[str]
 
 
+class PrediccionFuturaLLM(BaseModel):
+    que: str
+    horizonte: str
+    esperado: str
+
+
 class HipotesisLLM(BaseModel):
     mecanismo_latente: str
     entidades_latentes: list[str]
     afirmaciones: list[ParVariable]
     predicados_de_consistencia: list[str]
     observaciones_explicadas: list[str]
+    predicciones: list[PrediccionFuturaLLM] = Field(default_factory=list)
 
 
 class GeneracionLLM(BaseModel):
@@ -46,9 +55,51 @@ class GeneracionLLM(BaseModel):
 
 class VeredictoLLM(BaseModel):
     justificacion: str
-    explica: bool
+    relacion: Literal["explica", "neutral", "contradice"]
 
 
 class RespuestaDirectaLLM(BaseModel):
     respuesta: str
     afirmaciones: list[ParVariable]
+
+
+class PrediccionLLM(BaseModel):
+    id_hipotesis: str
+    prediccion: str
+
+
+class ConsultaLLM(BaseModel):
+    observador_sugerido: str
+    marco: str
+    que_observar: str
+    predicciones: list[PrediccionLLM]
+
+
+class ConsultasLLM(BaseModel):
+    consultas: list[ConsultaLLM]
+
+
+class CalificacionLLM(BaseModel):
+    id_hipotesis: str
+    justificacion: str
+    nivel: Literal["muy_esperable", "esperable", "indiferente", "inesperado"]
+
+
+class ComparacionLLM(BaseModel):
+    calificaciones: list[CalificacionLLM]
+
+
+class JuicioHolisticoLLM(BaseModel):
+    justificacion: str
+    orden: list[str]
+    decide: bool
+    confianza: Literal["alta", "media", "baja"]
+
+
+class JuicioHipotesisLLM(BaseModel):
+    id_hipotesis: str
+    postulados: list[str]
+
+
+class JuicioParsimoniaLLM(BaseModel):
+    juicios: list[JuicioHipotesisLLM]

@@ -1,0 +1,12 @@
+# Dominio abierto: sin variables ni reglas propias. Lo usan los casos de abd-bench y cualquier
+# caso que no tenga un dominio formalizado. Sin reglas, K no discrimina: decide C frente a P.
+# Solo lectura para el agente (ADR-0004).
+dominio: abierto
+version: 1
+descripcion: >-
+  Observadores de cualquier área reportan hechos que parecen contradecirse. Se busca la causa
+  que explica por qué cada observador reportó lo que reportó desde su marco.
+verificador: llm
+# Sin calibración por fuente: todo observador puede equivocarse (ADR-0009).
+confiabilidad_por_defecto: 0.9
+reglas: []

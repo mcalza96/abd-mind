@@ -5,6 +5,7 @@ description = "Motor de razonamiento abductivo: selección de hipótesis por vir
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "mcp>=1.9",
     "pydantic>=2.7",
     "pyyaml>=6.0",
 ]

@@ -11,6 +11,7 @@
 """
 
 import hashlib
+import http.client
 import json
 import os
 import re
@@ -108,7 +109,13 @@ class TransporteHTTP:
                 detalle = e.read().decode(errors="replace")[:500]
                 if e.code < 500 or intento == self.reintentos:
                     raise ErrorProveedor(e.code, detalle) from e
-            except (urllib.error.URLError, TimeoutError) as e:
+            except (
+                urllib.error.URLError,
+                TimeoutError,
+                ConnectionError,
+                http.client.HTTPException,
+            ) as e:
+                # Incluye conexiones cortadas por el proveedor a mitad de respuesta (EXP-010).
                 if intento == self.reintentos:
                     raise ErrorLLM(f"no se pudo contactar al proveedor: {e}") from e
             time.sleep(2**intento)
@@ -240,6 +247,28 @@ class Uso(BaseModel):
     @property
     def llamadas(self) -> int:
         return sum(u.llamadas for u in self.por_modelo.values())
+
+
+ESFUERZO = {
+    "desactivado": "minimal",
+    "minimo": "minimal",
+    "bajo": "low",
+    "medio": "medium",
+    "alto": "high",
+}
+
+
+def parametros_razonamiento(api: str, nivel: str) -> JSON:
+    """Parámetros de razonamiento según la API (probados contra OpenCode Go, ver EXP-011).
+
+    /responses (Muse): `reasoning.effort`, sin opción de apagarlo (lo mínimo es "minimal").
+    /chat/completions (DeepSeek): `reasoning_effort`, o `thinking: disabled` para apagarlo.
+    """
+    if api == "responses":
+        return {"reasoning": {"effort": ESFUERZO[nivel]}}
+    if nivel == "desactivado":
+        return {"thinking": {"type": "disabled"}}
+    return {"reasoning_effort": "low" if nivel == "minimo" else ESFUERZO[nivel]}
 
 
 class ClienteLLM:
@@ -375,6 +404,8 @@ class ClienteLLM:
                 cuerpo["response_format"] = {"type": "json_object"}
         if rol.temperatura is not None:
             cuerpo["temperature"] = rol.temperatura
+        if rol.razonamiento is not None:
+            cuerpo.update(parametros_razonamiento(modelo.api, rol.razonamiento))
 
         clave = hashlib.sha256(
             json.dumps(

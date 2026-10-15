@@ -1,4 +1,4 @@
-"""Experimento 5.4 — Informes financieros contradictorios (docs/marco-teorico/05 §5.4).
+"""Experimento 5.4 — Informes financieros contradictorios (docs/historico/marco-teorico/05 §5.4).
 
 Recorre el motor de casos completo con LLM real: el córtex separa hechos de opiniones, el
 verificador LLM decide la consiliencia y las reglas del dominio descartan lo incoherente. Luego
@@ -30,8 +30,12 @@ INFORMES = [
     ),
 ]
 
+# Un comunicado oficial auditado tiene calibración propia: supera el umbral de derrota (0.95).
+# Los analistas y la prensa usan la confiabilidad por defecto del dominio (0.9, ADR-0009).
 EVIDENCIA_NUEVA = (
-    EntradaObservador(nombre="Empresa X", marco="comunicado oficial de la empresa"),
+    EntradaObservador(
+        nombre="Empresa X", marco="comunicado oficial auditado de la empresa", confiabilidad=0.98
+    ),
     "La empresa X informa que sus precios de lista no han cambiado en los últimos 12 meses.",
 )
 
@@ -172,11 +176,40 @@ def finanzas_llm(
         final = evidencia.evaluacion
     resultado.tablas.append(_tabla("Tras el comunicado (y generación si hizo falta)", final))
     h = final.h_estrella
-    resultado.notas.append(
-        f"nueva mejor explicación: {h.id_hipotesis} — {h.mecanismo} ({h.consiliencia_c}/{final.m})"
-        if h
-        else "sin explicación suficiente tras el comunicado"
-    )
+    if h:
+        resultado.notas.append(
+            f"nueva mejor explicación: {h.id_hipotesis} — {h.mecanismo} "
+            f"({h.consiliencia_c}/{final.m})"
+        )
+        if final.respuesta is not None:
+            margen = final.respuesta.margen_veredictos
+            resultado.notas.append(
+                f"margen: {'∞' if margen is None else margen} veredictos"
+                + (" (frágil)" if final.respuesta.fragil else "")
+            )
+    elif final.subdeterminada:
+        resultado.notas.append(
+            f"subdeterminación: empatan {', '.join(final.empatadas)}; se piden observaciones"
+        )
+        sugerencias = servicio.sugerir_observacion(caso)
+        resultado.notas += sugerencias.avisos
+        resultado.tablas.append(
+            Tabla(
+                titulo="Abducción activa: observaciones que separan a las empatadas",
+                columnas=["Observador", "Qué observar", "Clases", "Predicciones"],
+                filas=[
+                    [
+                        c.observador_sugerido[:40],
+                        c.que_observar[:60],
+                        str(c.clases),
+                        "; ".join(f"{k}: {v[:40]}" for k, v in c.predicciones.items()),
+                    ]
+                    for c in sugerencias.consultas
+                ],
+            )
+        )
+    else:
+        resultado.notas.append("sin explicación suficiente tras el comunicado")
     resultado.comprobar(
         "Tras el comunicado la mejor explicación ya no es la de reducción de precios",
         h is None or h.id_hipotesis != ids["precios"],

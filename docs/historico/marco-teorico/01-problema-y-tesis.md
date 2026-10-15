@@ -1,5 +1,7 @@
 # 01 — Problema y tesis central
 
+> **Nota (2026-10-15).** La tesis de §1.3 y el alcance de §1.5 ponen el peso en **seleccionar** de forma determinista. Los experimentos EXP-007 a EXP-015 mostraron que ese no es el cuello de botella: el problema que describe §1.4 (el LLM poda lo improbable) se resuelve **generando** de otra manera, no eligiendo mejor. El nuevo centro está en [17 — Generación abductiva](17-generacion-abductiva.md). Esta sección se conserva tal como se escribió.
+
 ## 1.1 El supuesto que se rechaza
 
 El aprendizaje supervisado convencional descansa en un axioma de medición: la etiqueta humana $y$ es el estado real $S$ contaminado por ruido estocástico de media cero.

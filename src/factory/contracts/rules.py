@@ -63,6 +63,16 @@ class VariableDominio(BaseModel):
     )
 
 
+class MarcoPosible(BaseModel):
+    """Un marco desde el que se podría observar (para sugerir observaciones, ADR-0010)."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    nombre: str
+    marco: str
+    parametros: dict[str, Valor] = Field(default_factory=dict)
+
+
 class ConjuntoReglas(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -74,6 +84,33 @@ class ConjuntoReglas(BaseModel):
         description="Cómo se decide π_i(H) ≈ y_i: proyección computable o verificador LLM",
     )
     variables: dict[str, VariableDominio] = Field(default_factory=dict)
+    vocabulario: list[str] = Field(
+        default_factory=list, description="Entidades verificadas del dominio: no cuentan en P"
+    )
+    confiabilidad_por_defecto: float = Field(
+        default=1.0, gt=0.0, le=1.0, description="ω de un observador sin calibración propia"
+    )
+    marcos_posibles: list[MarcoPosible] = Field(default_factory=list)
+    seleccion: Literal["score", "holistica"] | None = Field(
+        default=None,
+        description=(
+            "Cómo se elige H* (ADR-0016). None: 'score' con proyección, 'holistica' con LLM"
+        ),
+    )
+
+    puntuacion: Literal["consiliencia", "predictiva"] = Field(
+        default="consiliencia",
+        description=(
+            "Score de selección con proyección: consiliencia (04, 09) o predictiva, que puntúa "
+            "lo que la hipótesis predice de cada observación oculta (16 P3, EXP-015)"
+        ),
+    )
+
+    def modo_seleccion(self) -> str:
+        if self.seleccion is not None:
+            return self.seleccion
+        return "holistica" if self.verificador == "llm" else "score"
+
     reglas: list[Regla]
 
     def variables_entidad(self) -> set[str]:

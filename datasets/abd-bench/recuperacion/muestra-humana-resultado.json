@@ -1,0 +1,142 @@
+[
+ {
+  "n": 1,
+  "caso": "R10",
+  "elemento": "e1",
+  "juez": "no",
+  "humano": "no"
+ },
+ {
+  "n": 2,
+  "caso": "R03",
+  "elemento": "e4",
+  "juez": "no",
+  "humano": "parcial"
+ },
+ {
+  "n": 3,
+  "caso": "R10",
+  "elemento": "e1",
+  "juez": "parcial",
+  "humano": "parcial"
+ },
+ {
+  "n": 4,
+  "caso": "R03",
+  "elemento": "e2",
+  "juez": "si",
+  "humano": "si"
+ },
+ {
+  "n": 5,
+  "caso": "R01",
+  "elemento": "e3",
+  "juez": "si",
+  "humano": "si"
+ },
+ {
+  "n": 6,
+  "caso": "R01",
+  "elemento": "e2",
+  "juez": "parcial",
+  "humano": "parcial"
+ },
+ {
+  "n": 7,
+  "caso": "R09",
+  "elemento": "e2",
+  "juez": "no",
+  "humano": "parcial"
+ },
+ {
+  "n": 8,
+  "caso": "R02",
+  "elemento": "e2",
+  "juez": "si",
+  "humano": "parcial"
+ },
+ {
+  "n": 9,
+  "caso": "R06",
+  "elemento": "e2",
+  "juez": "si",
+  "humano": "si"
+ },
+ {
+  "n": 10,
+  "caso": "R09",
+  "elemento": "e1",
+  "juez": "parcial",
+  "humano": "parcial"
+ },
+ {
+  "n": 11,
+  "caso": "R13",
+  "elemento": "e2",
+  "juez": "parcial",
+  "humano": "no"
+ },
+ {
+  "n": 12,
+  "caso": "R01",
+  "elemento": "e3",
+  "juez": "si",
+  "humano": "si"
+ },
+ {
+  "n": 13,
+  "caso": "R09",
+  "elemento": "e1",
+  "juez": "no",
+  "humano": "parcial"
+ },
+ {
+  "n": 14,
+  "caso": "R13",
+  "elemento": "e1",
+  "juez": "no",
+  "humano": "si"
+ },
+ {
+  "n": 15,
+  "caso": "R09",
+  "elemento": "e2",
+  "juez": "no",
+  "humano": "no"
+ },
+ {
+  "n": 16,
+  "caso": "R03",
+  "elemento": "e2",
+  "juez": "no",
+  "humano": "no"
+ },
+ {
+  "n": 17,
+  "caso": "R06",
+  "elemento": "e1",
+  "juez": "si",
+  "humano": "si"
+ },
+ {
+  "n": 18,
+  "caso": "R02",
+  "elemento": "e3",
+  "juez": "parcial",
+  "humano": "no"
+ },
+ {
+  "n": 19,
+  "caso": "R01",
+  "elemento": "e1",
+  "juez": "si",
+  "humano": "si"
+ },
+ {
+  "n": 20,
+  "caso": "R09",
+  "elemento": "e4",
+  "juez": "parcial",
+  "humano": "si"
+ }
+]

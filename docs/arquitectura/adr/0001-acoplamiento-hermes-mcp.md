@@ -8,7 +8,7 @@ Construir desde cero un agente conversacional (bucle de herramientas, memoria, m
 
 Hermes admite varias vías de extensión: herramientas propias, skills (estándar agentskills), plugins y servidores **MCP** (stdio o HTTP, con descubrimiento automático de herramientas).
 
-El marco teórico exige que la selección de hipótesis ocurra fuera del LLM ([06 §6.3](../../marco-teorico/06-arquitectura.md#63-frontera-estocástico--determinista)).
+El marco teórico exige que la selección de hipótesis ocurra fuera del LLM ([06 §6.3](../../historico/marco-teorico/06-arquitectura.md#63-frontera-estocástico--determinista)).
 
 ## Decisión
 

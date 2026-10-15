@@ -1,6 +1,6 @@
 # Entorno sintético de sólidos (experimentos 5.1–5.3).
 dominio: sintetico
-version: 3
+version: 4
 verificador: proyeccion   # las siluetas se calculan; no hace falta un LLM para C
 descripcion: >-
   Un objeto físico es observado desde distintas vistas (frontal, cenital, lateral). Cada
@@ -17,6 +17,13 @@ variables:
   dimension:
     tipo: numero
     descripcion: Número de dimensiones del objeto (2 si es una figura plana, 3 si es un sólido)
+# Las siluetas se calculan exactamente: los observadores sintéticos son infalibles.
+confiabilidad_por_defecto: 1.0
+vocabulario: [esfera, cubo, cilindro, cono, elipsoide]
+marcos_posibles:
+  - { nombre: Vista frontal, marco: vista frontal, parametros: { vista: frontal } }
+  - { nombre: Vista cenital, marco: vista cenital, parametros: { vista: cenital } }
+  - { nombre: Vista lateral, marco: vista lateral, parametros: { vista: lateral } }
 reglas:
   - id: objeto_tridimensional
     tipo: dura

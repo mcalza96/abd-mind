@@ -25,6 +25,14 @@ Este directorio define **cómo** se construye el sistema descrito en el [marco t
 | [0006](adr/0006-experimentos-sin-hermes.md) | Los experimentos corren sin Hermes |
 | [0007](adr/0007-persistencia-sqlite.md) | Persistencia de casos en SQLite |
 | [0008](adr/0008-presupuestos-y-trabajos-largos.md) | Presupuestos por caso y trabajos largos |
+| [0009](adr/0009-observadores-falibles.md) | Observadores falibles y atribución de error |
+| [0010](adr/0010-subdeterminacion.md) | Subdeterminación y abducción activa |
+| [0011](adr/0011-veredicto-ternario-y-explananda.md) | Veredicto de tres valores y explananda |
+| [0012](adr/0012-pregunta-y-margen.md) | Pregunta del caso y margen de victoria |
+| [0013](adr/0013-predicciones.md) | Predicciones y cierre del ciclo |
+| [0014](adr/0014-verdad-como-observacion.md) | La verdad de cierre es una observación |
+| [0015](adr/0015-verificacion-comparativa.md) | Verificación comparativa y parsimonia juzgada |
+| [0016](adr/0016-seleccion-holistica-y-proyeccion.md) | Selección holística en dominios abiertos y proyección calculable |
 
 ## Visión general
 

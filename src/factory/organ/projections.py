@@ -1,4 +1,4 @@
-"""Proyecciones computables y relación de consistencia ≈ (docs/marco-teorico/03 §3.3, D5).
+"""Proyecciones computables y relación de consistencia ≈ (docs/historico/marco-teorico/03 §3.3, D5).
 
 El entorno sintético de sólidos actúa como "realidad" verificable: dado el sólido que afirma una
 hipótesis y la vista de un observador, la silueta se calcula sin ningún LLM.
@@ -7,7 +7,7 @@ hipótesis y la vista de un observador, la silueta se calcula sin ningún LLM.
 from collections.abc import Callable, Iterable, Mapping
 
 from factory.contracts.abduction import HipotesisCandidata, Valor
-from factory.contracts.case import Veredicto
+from factory.contracts.case import Relacion, Veredicto
 from factory.contracts.observation import Observacion, Observador
 from factory.organ.texto import normalizar
 
@@ -75,26 +75,40 @@ class VerificadorProyeccion:
         # (p. ej. la que extrae el córtex de un texto libre).
         self.variable_observada = variable_observada
 
+    def observado(self, observacion: Observacion) -> Valor:
+        if observacion.valor is not None:
+            return observacion.valor
+        if self.variable_observada and self.variable_observada in observacion.variables:
+            return observacion.variables[self.variable_observada]
+        return observacion.contenido
+
+    def predecir(self, hipotesis: HipotesisCandidata, observador: Observador) -> Valor | None:
+        return self.proyeccion(hipotesis, observador)
+
+    def consistente(
+        self, predicho: Valor, observacion: Observacion, observador: Observador
+    ) -> bool:
+        return self.relacion.consistente(
+            predicho, self.observado(observacion), observador.tolerancia
+        )
+
     def verificar(
         self, hipotesis: HipotesisCandidata, observacion: Observacion, observador: Observador
     ) -> Veredicto:
-        observado: Valor = observacion.contenido
-        if observacion.valor is not None:
-            observado = observacion.valor
-        elif self.variable_observada and self.variable_observada in observacion.variables:
-            observado = observacion.variables[self.variable_observada]
+        observado = self.observado(observacion)
         predicho = self.proyeccion(hipotesis, observador)
         if predicho is None:
-            explica = False
+            relacion = Relacion.NEUTRAL
             justificacion = "la hipótesis no permite proyectar lo que vería este observador"
         else:
             explica = self.relacion.consistente(predicho, observado, observador.tolerancia)
+            relacion = Relacion.EXPLICA if explica else Relacion.CONTRADICE
             simbolo = "≈" if explica else "≉"
             justificacion = f"π({observador.id}) = {predicho} {simbolo} {observado}"
         return Veredicto(
             id_hipotesis=hipotesis.id_hipotesis,
             id_observacion=observacion.id,
-            explica=explica,
+            relacion=relacion,
             fuente=self.fuente,
             justificacion=justificacion,
         )

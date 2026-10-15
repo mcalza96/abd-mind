@@ -54,6 +54,10 @@ class ConfigRol(_Estricto):
     )
     temperatura: float | None = None
     max_tokens: int = Field(default=8000, gt=0)
+    razonamiento: Literal["desactivado", "minimo", "bajo", "medio", "alto"] | None = Field(
+        default=None,
+        description="Nivel de razonamiento interno; None deja el valor por defecto del proveedor",
+    )
 
     def modelos(self) -> list[str]:
         return [self.modelo, *([self.fallback] if self.fallback else [])]
@@ -63,6 +67,9 @@ class ConfigRoles(_Estricto):
     cortex: ConfigRol
     generadores: list[ConfigRol] = Field(min_length=1)
     verificador: ConfigRol
+    juez: ConfigRol | None = Field(
+        default=None, description="Juicio holístico (ADR-0016); por defecto, el del verificador"
+    )
     linea_base: list[ConfigRol] = Field(default_factory=list)
 
 
@@ -71,6 +78,26 @@ class ConfigPesos(_Estricto):
     beta: float = 10.0
     gamma: float = 1.0
     tau: float | None = None
+    lambda_residuo: float = Field(
+        default=1.0, ge=0.0, description="λ: peso del costo de atribuir hechos a error (09 §9.1)"
+    )
+    omega_derrota: float = Field(
+        default=0.95, gt=0.0, le=1.0, description="ω mínimo para que un hecho derrote solo"
+    )
+    delta_empate: float = Field(
+        default=1e-6, ge=0.0, description="δ: diferencia de score que cuenta como empate"
+    )
+    peso_esperable: float = Field(
+        default=0.5,
+        ge=0.0,
+        le=1.0,
+        description="g: peso en C de un hecho 'esperable' pero no predicho (ADR-0015, a priori)",
+    )
+    veredictos_fragil: int = Field(
+        default=1,
+        ge=0,
+        description="k_f: la respuesta es frágil si cambiar k_f veredictos de LLM la invierte",
+    )
 
 
 class ConfigPresupuestos(_Estricto):
@@ -79,6 +106,9 @@ class ConfigPresupuestos(_Estricto):
     reintentos_json: int = Field(default=2, ge=0)
     llamadas_por_operacion: int = Field(default=60, gt=0)
     llamadas_por_caso: int = Field(default=500, gt=0)
+    llamadas_paralelas: int = Field(
+        default=4, gt=0, description="Observaciones que se califican a la vez al evaluar"
+    )
 
 
 class Config(_Estricto):

@@ -1,7 +1,7 @@
 # Reglas invariantes del dominio financiero (experimento 5.4).
 # Solo lectura para el agente: se editan aquí y se revisan como cualquier cambio de código (ADR-0004).
 dominio: finanzas
-version: 2
+version: 3
 descripcion: >-
   Informes de analistas y otras fuentes sobre una empresa que se contradicen. Se busca el
   mecanismo económico que explica todos los hechos reportados.
@@ -18,6 +18,8 @@ variables:
   tendencia_volumen:
     descripcion: Tendencia del volumen de unidades vendidas
     valores: [alza, estable, baja]
+# Analistas y prensa sin calibración propia: pueden equivocarse (ADR-0009).
+confiabilidad_por_defecto: 0.9
 reglas:
   - id: tasa_descuento_no_negativa
     tipo: dura
