@@ -1,6 +1,6 @@
 # EXP-016 — ¿Los generadores recuperan la explicación verdadera en casos reales?
 
-- **Fecha:** 2026-10-15 · **Estado:** registrado
+- **Fecha:** 2026-10-15 · **Estado:** corrido
 - **Registro previo:** sí. Este commit va antes de preparar los datos y de generar.
 - **Origen:** [generación §2 y §6](../marco-teorico/generacion.md); la sonda ciega de los [escenarios G1–G7](../experimentos-mentales/09-escenarios-generacion.md#lectura-ciega-2026-10-15-la-generación-libre-encontró-todo), donde un modelo fuerte encontró la verdad en los siete sin operadores.
 
@@ -104,4 +104,73 @@ Un agente sin contexto, de una familia distinta a los generadores, **ciego a la 
 
 ## Resultado
 
-*(pendiente)*
+Datos, juicios e informe completo: [`datasets/abd-bench/recuperacion/`](../../datasets/abd-bench/recuperacion/informe.md).
+
+### Desviaciones del diseño (declaradas)
+
+1. **Cuatro casos quedaron fuera por la regla de saneamiento:** R05, R08, R11 y R15. Sus observaciones venían de fuentes fechadas el día de la resolución o después. Quedaron 11 casos:
+   - 8 en el análisis principal: R01, R02, R03, R07, R09, R12, R13 y R14;
+   - 2 con núcleo no inferible: R04 y R10;
+   - 1 trivial: R06.
+2. **Muse quedó sin datos en R14.** Las seis llamadas fallaron con un error 403 del proveedor: "Your access has been restricted due to repeated policy violations". No se reintentó. Muse se mide sobre 7 casos y DeepSeek sobre 8.
+3. **La muestra humana se estratificó** por la decisión del juez: 7 `sí`, 6 `parcial` y 7 `no`. Una muestra aleatoria simple habría tenido casi solo `no` y habría inflado el acuerdo.
+4. **Algunos núcleos que eligió el agente son genéricos o no son mecanismos.** En R14 el núcleo es "perdió el control en el toque, sin falla mecánica"; en R06, "la trazabilidad apuntaba a la lechuga". No se corrigieron, para no tocar la verdad de referencia después de fijarla.
+
+### Métrica primaria: núcleo@5, análisis principal
+
+| Modelo | Libre | Diversa |
+|---|---|---|
+| Muse 1.3 (7 casos × 3 corridas) | 18/21 = 86 % [65 %–95 %] | 19/21 = 90 % [71 %–97 %] |
+| DeepSeek V4.1 Flash (8 × 3) | 16/24 = 67 % [47 %–82 %] | 19/24 = 79 % [60 %–91 %] |
+| Referencia, modelo fuerte (8 × 1) | 6/8 = 75 % | — |
+
+**Libre, los dos modelos juntos:** 34/45 = **76 %**. Supera el umbral de 70 %.
+
+En la primera posición (núcleo@1) se acierta alrededor del 50 %. La causa verdadera suele aparecer entre los puestos 2 y 5. Con 10 candidatas, la recuperación sube al 79–95 %.
+
+**Núcleo no inferible (R04, R10):** 0 % en todas las condiciones, incluida la referencia.
+
+### Concordancia humana: **no concluyente**
+
+| Medida | Acuerdo |
+|---|---|
+| Exacto, en los tres niveles | **12/20 = 60 %** (κ = 0,40) |
+| `sí` frente a no-`sí`, que es lo que usa la métrica primaria | 17/20 = 85 % |
+| De los 7 `sí` del juez, el usuario confirmó | 6 |
+| De los 13 pares que el juez no marcó `sí`, el usuario marcó `sí` | 4 |
+
+**Veredicto formal.** El registro previo decía "si el acuerdo es menor a 70 %, el resultado se declara no concluyente", sin precisar qué acuerdo. Se aplica la lectura más estricta, el acuerdo exacto: **el resultado es no concluyente.** Elegir ahora la lectura favorable, el 85 %, sería decidir después de ver.
+
+**Lectura informativa, que no cambia el veredicto.** Casi todo el desacuerdo está en la frontera entre `parcial` y sus vecinos. Los `sí` del juez son confiables (6 de 7), y si algo, el juez es **más estricto** que el humano. No hay indicio de que la métrica primaria esté inflada.
+
+### Predicción frente a resultado
+
+| | Predicción | Resultado |
+|---|---|---|
+| núcleo@5 libre | ≈ 55 % | 76 % |
+| Efecto de la pregunta diversa | +10 puntos | +4 (Muse) y +12 (DeepSeek) |
+| Muse frente a DeepSeek | Parecidos | Muse, mejor |
+| No inferible | ≈ 30 % | 0 % |
+| Referencia sobre ambos | Sí | **No**: 75 %, por debajo de Muse |
+
+**Me equivoqué hacia el pesimismo sobre los generadores:** los subestimé.
+
+## Lo que dice sobre el pensamiento abductivo
+
+Es una lectura cualitativa, con n muy chico. Son hipótesis para las próximas historias, no conclusiones.
+
+1. **Cuando los hechos apuntan a la causa, a los modelos se les ocurre.** No en primer lugar, sino entre las cinco primeras. El momento débil no parece ser la conjetura, sino **ordenar**: casi la mitad de las veces la verdad no queda primera.
+2. **Donde la causa no está en los hechos, nadie llega.** Tampoco el modelo fuerte. Es el principio de contacto: falta una observación, no una pregunta ingeniosa.
+3. **Dos huecos concretos aparecen en los casos fallidos:**
+   - **Mecanismo físico en vez de decisión humana.** En R14 los modelos proponen cizalladura, hidroplaneo, colapso del tren o aves, pero no "la tripulación insistió en aterrizar con lluvia intensa y perdió las referencias", aunque los hechos traen la pista del vuelo transatlántico largo. En R04 proponen fallas de tubos, coque y fugas, pero no un error de operación en la secuencia de válvulas. **Los modelos prefieren explicaciones de equipos y física a explicaciones de agentes y procedimientos.**
+   - **Explicar el hecho equivocado.** En R10 lo sorprendente era que la agencia dijera que nunca hubo una demostración válida de eficacia. Los modelos explicaron casi siempre la hepatotoxicidad, que era el hecho más llamativo. Solo una candidata de Muse rozó el problema de integridad del ensayo. **Falló el primer momento de Peirce: elegir qué es lo sorprendente.**
+
+## Decisiones derivadas
+
+- **La premisa "la generación libre se queda en lo obvio" queda debilitada, no refutada:** el veredicto es no concluyente. Pero no hay evidencia a favor de construir operadores generales como primer paso.
+- **El foco pasa a dos momentos:**
+  - **la sorpresa:** elegir el explanandum correcto, como en R10;
+  - **el orden entre candidatas:** la verdad suele estar en el top 5, pero no primera.
+- **Dos operadores con evidencia propia** para la siguiente iteración: "¿qué **decidió** alguien, y por qué?" (agentes y procedimientos frente a equipos) y "¿cuál de estos hechos es el **verdaderamente sorprendente**?". Antes de construirlos se registra un experimento que pueda refutarlos.
+- **La rúbrica del juez debe afinar la frontera de `parcial`** antes de reutilizarse. La concordancia exacta de 60 % no basta.
+- **Muse:** antes de cualquier corrida nueva, hay que resolver con el proveedor el bloqueo por "infracciones repetidas de políticas".
