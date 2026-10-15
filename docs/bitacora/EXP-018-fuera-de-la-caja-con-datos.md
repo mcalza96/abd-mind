@@ -117,3 +117,13 @@ A pedido del usuario, que tiene dos agentes Hermes, se corren solo **S0** (sin s
 - **Construcción:** un agente sin contexto armó los 12 casos (9 no obvios, 3 de control) y su script de huella, que da OK en los 12. Declaró dos riesgos: dos casos tienen pistas en notas de texto, como en la vida real, y uno es un patrón conocido. El filtro de la respuesta promedio los vigila.
 - **Ajuste declarado del filtro:** en la prueba de humo, DeepSeek respondió "no se puede determinar con el extracto". Se agregó al mensaje: "El extracto es parcial: no tienes más datos. Aun así, da tu mejor respuesta… No respondas que faltan datos." El ajuste se hizo sobre un solo caso de control, antes de correr el filtro completo.
 - **Conteo:** como la clave ya existe, un agente sin contexto recibe las 10 respuestas de cada caso, la causa plantada y el señuelo, y cuenta en cuántas respuestas cada uno aparece como causa principal o como alternativa. "En la respuesta promedio" significa: causa principal en 3 o más de las 10.
+
+## Nota 2026-10-15 (3): resultado del filtro (antes de correr a los agentes)
+
+120 respuestas de DeepSeek, sin errores; conteo hecho por un agente sin contexto.
+
+- **No obvios:** 3 de los 9 tienen la causa plantada como causa principal en 7 a 10 de las 10 respuestas. **Salen del análisis principal.** Quedan **6**, justo el mínimo registrado, así que no se construyen más. En los 6 que quedan, la causa plantada es la principal en 0 o 1 de las 10.
+- **Controles:** los 3 están bien construidos (la causa obvia, que es la verdadera, es la principal en 10 de 10).
+- Los agentes reciben **los 12 casos**, para no delatar nada; los 3 excluidos se informan aparte.
+- La regla de decisión no cambia: 3 o más aciertos de diferencia, ahora sobre 6 casos. Es más exigente.
+- Qué carpetas salieron no se escribe aquí, porque el agente S2 tiene el repositorio. Está en la clave. Compromiso: [`compromiso-sha256.txt`](../../datasets/abd-bench/fuera-de-la-caja/compromiso-sha256.txt).
