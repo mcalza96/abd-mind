@@ -40,7 +40,7 @@ Lo que nadie sabe: **la lámpara del techo está torcida**. Proyecta el círculo
 
 ## Dónde se rompe
 
-1. **El monstruo gana porque la rigidez no está escrita como regla.** Si "el objeto es rígido" fuera una regla dura (K = 0 para quien la viole), el monstruo quedaría descartado sin apelación. Quedarían el cilindro y el cilindro elíptico **empatados**: cada uno culpa a un observador distinto. Ese empate es correcto. La teoría pide reglas duras ([postulado 2](../marco-teorico/02-postulados.md#postulado-2--invariante-causal)), pero si nadie las escribe, el motor premia acomodar el error.
+1. **El monstruo gana porque la rigidez no está escrita como regla.** Si "el objeto es rígido" fuera una regla dura (K = 0 para quien la viole), el monstruo quedaría descartado sin apelación. Quedarían el cilindro y el cilindro elíptico **empatados**: cada uno culpa a un observador distinto. Ese empate es correcto. La teoría pide reglas duras ([postulado 2](../historico/marco-teorico/02-postulados.md#postulado-2--invariante-causal)), pero si nadie las escribe, el motor premia acomodar el error.
 
 2. **La mayoría es una ilusión.** La intuición dice: "Olga y Sara coinciden, Tomás está solo, el que se equivoca es Tomás". Pero Olga no opina sobre la medida en disputa (de adelante hacia atrás); solo Sara y Tomás la miden. Es **uno contra uno**. Contar observadores en vez de contar evidencias **por medida** fabrica un consenso que no existe. Aquí el principio D11 (la confiabilidad no sale del acuerdo) protege, aunque la intuición proteste.
 

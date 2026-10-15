@@ -2,7 +2,7 @@
 
 - **Fecha:** 2026-10-15 · **Estado:** corrido
 - **Registro previo:** sí (este commit va antes del código)
-- **Origen:** [EXP-014](EXP-014-salas-en-codigo.md), [16, P3](../marco-teorico/16-fundamentos-desde-las-historias.md)
+- **Origen:** [EXP-014](EXP-014-salas-en-codigo.md), [16, P3](../historico/marco-teorico/16-fundamentos-desde-las-historias.md)
 
 ## Pregunta
 

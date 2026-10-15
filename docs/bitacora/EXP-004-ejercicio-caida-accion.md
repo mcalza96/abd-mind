@@ -2,7 +2,7 @@
 
 - **Fecha:** 2026-10-14 · **Estado:** cerrado
 - **Registro previo:** no aplica (ejercicio de papel)
-- **Commit / artefactos:** `2ee2226`; [10](../marco-teorico/10-validacion-caida-accion.md)
+- **Commit / artefactos:** `2ee2226`; [10](../historico/marco-teorico/10-validacion-caida-accion.md)
 
 ## Pregunta
 ¿El marco sirve para una pregunta financiera real y frecuente?

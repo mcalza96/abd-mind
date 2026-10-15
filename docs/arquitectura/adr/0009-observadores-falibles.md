@@ -4,7 +4,7 @@
 
 ## Contexto
 
-El motor trata cada observación como una proyección fiel salvo una tolerancia pequeña. Un error grosero (una errata, una etiqueta corrupta) produce sobreajuste ontológico —se inventan entidades para justificarlo— y derrotas espurias de hipótesis sólidas. Ver [09 §9.1](../../marco-teorico/09-robustez-epistemica.md#91-observadores-falibles-duhem-quine).
+El motor trata cada observación como una proyección fiel salvo una tolerancia pequeña. Un error grosero (una errata, una etiqueta corrupta) produce sobreajuste ontológico —se inventan entidades para justificarlo— y derrotas espurias de hipótesis sólidas. Ver [09 §9.1](../../historico/marco-teorico/09-robustez-epistemica.md#91-observadores-falibles-duhem-quine).
 
 ## Decisión
 

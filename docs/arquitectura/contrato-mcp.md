@@ -155,7 +155,7 @@ Verifica todas las hipótesis vivas contra todas las observaciones activas (reut
 }
 ```
 
-`expansion_sugerida` es `true` cuando el residuo de la mejor hipótesis coherente cuesta más que una entidad nueva ([09 §9.1.7](../marco-teorico/09-robustez-epistemica.md#917-disparo-de-la-expansión-ontológica)); con observadores infalibles equivale a que ninguna alcance $C = m$.
+`expansion_sugerida` es `true` cuando el residuo de la mejor hipótesis coherente cuesta más que una entidad nueva ([09 §9.1.7](../historico/marco-teorico/09-robustez-epistemica.md#917-disparo-de-la-expansión-ontológica)); con observadores infalibles equivale a que ninguna alcance $C = m$.
 
 Campos adicionales ([ADR-0009](adr/0009-observadores-falibles.md), [ADR-0010](adr/0010-subdeterminacion.md)):
 

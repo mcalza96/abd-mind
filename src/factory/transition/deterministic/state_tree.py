@@ -1,6 +1,6 @@
 """Árbol de hipótesis: consiliencia verificada, parsimonia contra vocabulario y derrotabilidad.
 
-Implementa docs/marco-teorico/03 §3.5–3.6 y las decisiones D1, D2 y D6:
+Implementa docs/historico/marco-teorico/03 §3.5–3.6 y las decisiones D1, D2 y D6:
 - C se cuenta con veredictos de un verificador, no con lo que declara la hipótesis.
 - P cuenta las entidades (declaradas o afirmadas en variables de tipo entidad) que no están en
   el vocabulario verificado V.

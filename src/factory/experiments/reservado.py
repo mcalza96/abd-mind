@@ -1,4 +1,4 @@
-"""Caso reservado (docs/marco-teorico/11 §11.6): diagnóstico de una bomba industrial.
+"""Caso reservado (docs/historico/marco-teorico/11 §11.6): diagnóstico de una bomba industrial.
 
 Se fijó antes de implementar la fase 4c y no se modifica para hacerlo pasar. Prueba
 propiedades generales del veredicto de tres valores, la respuesta contrastiva y el margen, en

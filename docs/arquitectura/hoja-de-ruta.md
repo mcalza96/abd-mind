@@ -15,7 +15,7 @@ Cada fase termina con algo que funciona y se puede probar. Ninguna fase depende 
 | 4c — Explicación en dominios abiertos | ✅ |
 | 5 — Servidor MCP | ✅ |
 | 5b — Rumbo A + C | Parcial: A1 hecha (EXP-013); el resto queda subordinado a la fase 5c |
-| **5c — Generación abductiva** | **En curso: marco teórico** ([17](../marco-teorico/17-generacion-abductiva.md)) |
+| **5c — Generación abductiva** | **En curso: marco teórico** ([17](../historico/marco-teorico/17-generacion-abductiva.md)) |
 | 6 — Integración con Hermes | Pendiente |
 | 7 — Benchmarks y calibración | Pendiente |
 
@@ -32,7 +32,7 @@ Cada fase termina con algo que funciona y se puede probar. Ninguna fase depende 
 - `contracts/abduction.py` tal como la especificación.
 - `organ/rule_engine.py` (versión de ejemplo de la especificación).
 - `transition/deterministic/ibe_evaluator.py` con score, umbral $\tau$ y desempate (D7).
-- `tests/units/test_ibe_evaluator.py`: gana el cilindro; $K=0 \Rightarrow -\infty$; desempate determinista; propiedad de $\beta$ ([04 §4.4](../marco-teorico/04-funcion-objetivo-ibe.md#44-propiedad-del-peso-de-coherencia)).
+- `tests/units/test_ibe_evaluator.py`: gana el cilindro; $K=0 \Rightarrow -\infty$; desempate determinista; propiedad de $\beta$ ([04 §4.4](../historico/marco-teorico/04-funcion-objetivo-ibe.md#44-propiedad-del-peso-de-coherencia)).
 
 **Término:** tests de la especificación pasan sin ningún LLM.
 
@@ -48,7 +48,7 @@ Notas de implementación: `seleccionar_mejor_explicacion` devuelve `None` si nin
 - Experimentos 5.1, 5.2 (con hipótesis fijas) y 5.3 como tests.
 - `rules/finanzas.yaml` con las tres reglas de la especificación (adelantado desde la fase 4 para probar el motor de reglas).
 
-**Término:** `abd-mind experimento cilindro|expansion|tercer-observador` reproduce las tablas de [05](../marco-teorico/05-experimentos-canonicos.md).
+**Término:** `abd-mind experimento cilindro|expansion|tercer-observador` reproduce las tablas de [05](../historico/marco-teorico/05-experimentos-canonicos.md).
 
 ## Fase 3 — Roles LLM del motor (OpenCode Go)
 
@@ -83,7 +83,7 @@ Notas de implementación:
 
 ## Fase 4b — Robustez epistémica
 
-Implementa [09 §9.1–9.2](../marco-teorico/09-robustez-epistemica.md), antes del servidor MCP porque cambia el contrato.
+Implementa [09 §9.1–9.2](../historico/marco-teorico/09-robustez-epistemica.md), antes del servidor MCP porque cambia el contrato.
 
 - Observadores falibles ([ADR-0009](adr/0009-observadores-falibles.md)): confiabilidad por observador y por dominio, score con consiliencia ponderada y residuo, derrota graduada, nuevo disparo de expansión, `atribuidas_a_error` en la evaluación.
 - Subdeterminación ([ADR-0010](adr/0010-subdeterminacion.md)): detección de empates, sin $H^*$ cuando los hay, operación `sugerir_observacion`.
@@ -92,7 +92,7 @@ Implementa [09 §9.1–9.2](../marco-teorico/09-robustez-epistemica.md), antes d
 **Término:** los experimentos sintéticos anteriores no cambian; los nuevos pasan; `finanzas-llm` informa el empate en lugar de elegir por id.
 
 Resultados:
-- `errata`: con ω = 0.3 el triángulo lateral queda como error del observador (el cilindro sigue vivo, en tensión, y no se expande la ontología); con ω ≥ 0.6 postular el tapón universal sale más barato que culpar al observador; con ω = 1 la derrota es inmediata, como en la versión base. Coincide con la tabla de [09 §9.1.6](../marco-teorico/09-robustez-epistemica.md#916-culpar-al-observador-o-ampliar-la-ontología).
+- `errata`: con ω = 0.3 el triángulo lateral queda como error del observador (el cilindro sigue vivo, en tensión, y no se expande la ontología); con ω ≥ 0.6 postular el tapón universal sale más barato que culpar al observador; con ω = 1 la derrota es inmediata, como en la versión base. Coincide con la tabla de [09 §9.1.6](../historico/marco-teorico/09-robustez-epistemica.md#916-culpar-al-observador-o-ampliar-la-ontología).
 - `empate`: con solo la vista cenital, esfera, cilindro, cono y elipsoide empatan; el sistema no elige y sugiere la vista frontal o lateral (4 clases); al agregarla gana el cilindro.
 - `finanzas-llm` (46 llamadas, ~7 min): los analistas usan ω = 0.9 del dominio y el comunicado oficial ω = 0.98, que sí derrota. Tras la expansión, cinco hipótesis empatan; el sistema lo informa y propone medir la evolución del precio efectivo medio, que las separa en 4 clases.
 
@@ -100,7 +100,7 @@ Después (propuestos en 09 §9.3–9.5): observadores correlacionados, observaci
 
 ## Fase 4c — Explicación en dominios abiertos
 
-Origen: el ejercicio mental de [10](../marco-teorico/10-validacion-caida-accion.md). Teoría en [11](../marco-teorico/11-explicacion-en-dominios-abiertos.md); ADR-0011 a ADR-0013.
+Origen: el ejercicio mental de [10](../historico/marco-teorico/10-validacion-caida-accion.md). Teoría en [11](../historico/marco-teorico/11-explicacion-en-dominios-abiertos.md); ADR-0011 a ADR-0013.
 
 1. Veredicto de tres valores y rol de la observación (B1, B2).
 2. Pregunta del caso, respuesta contrastiva y margen en veredictos (B3, B10).
@@ -122,7 +122,7 @@ Efecto visible: las hipótesis de un solo hecho (demanda, costos) ya no pagan re
 
 ### Complemento: verdad de cierre falible
 
-[12](../marco-teorico/12-verdad-y-entrenamiento.md) y ADR-0014: la verdad de cierre tiene fuente, ω e historial, y su estado puede ser `sin_verdad`, `tentativa`, `establecida` o `disputada`. Pendientes para después de la fase 5: mundos sintéticos con observadores sesgados, registro de anomalías de reglas y vocabulario retractable.
+[12](../historico/marco-teorico/12-verdad-y-entrenamiento.md) y ADR-0014: la verdad de cierre tiene fuente, ω e historial, y su estado puede ser `sin_verdad`, `tentativa`, `establecida` o `disputada`. Pendientes para después de la fase 5: mundos sintéticos con observadores sesgados, registro de anomalías de reglas y vocabulario retractable.
 
 ## Fase 5 — Servidor MCP
 
@@ -147,7 +147,7 @@ Notas:
 
 ## Fase 5b — Rumbo A + C
 
-Decisión de [14](../marco-teorico/14-rumbo-estado-y-proyeccion.md) y [ADR-0016](adr/0016-seleccion-holistica-y-proyeccion.md), después de EXP-010 y EXP-012.
+Decisión de [14](../historico/marco-teorico/14-rumbo-estado-y-proyeccion.md) y [ADR-0016](adr/0016-seleccion-holistica-y-proyeccion.md), después de EXP-010 y EXP-012.
 
 1. **A:** selección holística en dominios abiertos. Se comprueba en abd-bench que no degrada respecto de la línea base (experimento registrado).
 2. **A:** casos secuenciales para medir anclaje y revisión. Primero sintéticos derivados de las variantes; después, el conjunto S de la segunda investigación.
@@ -156,7 +156,7 @@ Decisión de [14](../marco-teorico/14-rumbo-estado-y-proyeccion.md) y [ADR-0016]
 
 ## Fase 5c — Generación abductiva (nuevo centro)
 
-Decisión del 2026-10-15: el objetivo es una IA a la que se le ocurran explicaciones no obvias ([17](../marco-teorico/17-generacion-abductiva.md)). La fase 5b no se descarta: sus piezas pasan a ser el filtro y la prueba de lo que se genera (17 §17.8).
+Decisión del 2026-10-15: el objetivo es una IA a la que se le ocurran explicaciones no obvias ([17](../historico/marco-teorico/17-generacion-abductiva.md)). La fase 5b no se descarta: sus piezas pasan a ser el filtro y la prueba de lo que se genera (17 §17.8).
 
 1. **Marco teórico:** documento 17, alineado con 01, el README, 16 y el glosario. Lectura ciega.
 2. **Escenarios:** un experimento mental por operador o grupo de operadores, cada uno con su lectura ciega. Cada escenario debe poder mostrar que el operador **no** ayuda.
@@ -174,7 +174,7 @@ Decisión del 2026-10-15: el objetivo es una IA a la que se le ocurran explicaci
 ## Fase 7 — Benchmarks y calibración
 
 - Casos más difíciles que el cilindro, porque la línea base ya resuelve el caso canónico: dataset de casos frontera documentados (encargo de investigación en [docs/investigacion](../investigacion/prompt-deep-research-casos-frontera.md)), con controles negativos y variantes ofuscadas contra la memorización.
-- Las cuatro pruebas del Plan Maestro ([05 §5.5](../marco-teorico/05-experimentos-canonicos.md#55-pruebas-que-derivan-de-estos-experimentos)) contra línea base.
+- Las cuatro pruebas del Plan Maestro ([05 §5.5](../historico/marco-teorico/05-experimentos-canonicos.md#55-pruebas-que-derivan-de-estos-experimentos)) contra línea base.
 - Sensibilidad a $\alpha$, $\gamma$, $\tau$.
 - Métrica de racionalización (declarado vs. verificado) por modelo.
 - Modo asíncrono si los casos reales lo requieren.

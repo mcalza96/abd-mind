@@ -4,7 +4,7 @@
 
 ## Contexto
 
-Cuando varias hipótesis empatan, el motor elegía la de menor identificador (D7). En `finanzas-llm` cuatro hipótesis distintas quedaron con score 15.0 y se informó una como "la mejor explicación": certeza fingida. Ver [09 §9.2](../../marco-teorico/09-robustez-epistemica.md#92-subdeterminación-y-abducción-activa).
+Cuando varias hipótesis empatan, el motor elegía la de menor identificador (D7). En `finanzas-llm` cuatro hipótesis distintas quedaron con score 15.0 y se informó una como "la mejor explicación": certeza fingida. Ver [09 §9.2](../../historico/marco-teorico/09-robustez-epistemica.md#92-subdeterminación-y-abducción-activa).
 
 ## Decisión
 

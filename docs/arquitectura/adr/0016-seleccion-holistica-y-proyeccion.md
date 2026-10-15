@@ -4,7 +4,7 @@
 
 ## Contexto
 
-En dominios abiertos, el score por suma de veredictos LLM rindió por debajo de un LLM en una sola llamada ([EXP-010](../../bitacora/EXP-010-juez-comparativo.md), [EXP-012](../../bitacora/EXP-012-bench-v2-perturbaciones-y-sin-respuesta.md)). Ver [14](../../marco-teorico/14-rumbo-estado-y-proyeccion.md).
+En dominios abiertos, el score por suma de veredictos LLM rindió por debajo de un LLM en una sola llamada ([EXP-010](../../bitacora/EXP-010-juez-comparativo.md), [EXP-012](../../bitacora/EXP-012-bench-v2-perturbaciones-y-sin-respuesta.md)). Ver [14](../../historico/marco-teorico/14-rumbo-estado-y-proyeccion.md).
 
 ## Decisión
 

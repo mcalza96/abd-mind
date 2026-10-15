@@ -1,6 +1,6 @@
 # Historia 1 — El cilindro
 
-Versión narrada del experimento canónico [05 §5.1](../marco-teorico/05-experimentos-canonicos.md#51-cilindro-latente). Se incluye para que la serie parta del mismo punto.
+Versión narrada del experimento canónico [05 §5.1](../historico/marco-teorico/05-experimentos-canonicos.md#51-cilindro-latente). Se incluye para que la serie parta del mismo punto.
 
 ## Escena
 

@@ -94,7 +94,7 @@ Desarrolladas en [09 — Robustez epistémica](09-robustez-epistemica.md).
 
 ### D11 — El observador es falible, y su confiabilidad no sale del consenso
 
-Cada observación pesa según la confiabilidad $\omega_i$ de su observador, y dejarla sin explicar cuesta $-\ln(1-\omega_i)$. $\omega_i$ viene de calibración independiente, historial en casos cerrados o el valor por defecto del dominio; nunca del acuerdo con los otros observadores del caso. ([ADR-0009](../arquitectura/adr/0009-observadores-falibles.md))
+Cada observación pesa según la confiabilidad $\omega_i$ de su observador, y dejarla sin explicar cuesta $-\ln(1-\omega_i)$. $\omega_i$ viene de calibración independiente, historial en casos cerrados o el valor por defecto del dominio; nunca del acuerdo con los otros observadores del caso. ([ADR-0009](../../arquitectura/adr/0009-observadores-falibles.md))
 
 ### D12 — La derrota es graduada
 
@@ -102,7 +102,7 @@ Solo una observación con $\omega \ge \omega_d$ derrota por sí sola a una hipó
 
 ### D13 — Un empate no se resuelve por el identificador
 
-Si varias hipótesis vivas y coherentes quedan a menos de $\delta$ del mejor score, no hay $H^*$. El sistema informa el empate y propone observaciones que separen a las candidatas (abducción activa). D7 sigue valiendo para ordenar, no para elegir. ([ADR-0010](../arquitectura/adr/0010-subdeterminacion.md))
+Si varias hipótesis vivas y coherentes quedan a menos de $\delta$ del mejor score, no hay $H^*$. El sistema informa el empate y propone observaciones que separen a las candidatas (abducción activa). D7 sigue valiendo para ordenar, no para elegir. ([ADR-0010](../../arquitectura/adr/0010-subdeterminacion.md))
 
 ### D14 — La parsimonia se mantiene lineal
 
@@ -120,7 +120,7 @@ Ver [11](11-explicacion-en-dominios-abiertos.md), que también fija un protocolo
 
 ### D15 — El veredicto tiene tres valores
 
-`explica` / `neutral` / `contradice`. Solo lo contradicho cuesta residuo o derrota. ([ADR-0011](../arquitectura/adr/0011-veredicto-ternario-y-explananda.md))
+`explica` / `neutral` / `contradice`. Solo lo contradicho cuesta residuo o derrota. ([ADR-0011](../../arquitectura/adr/0011-veredicto-ternario-y-explananda.md))
 
 ### D16 — Explanandum y evidencia
 
@@ -128,7 +128,7 @@ Solo los explananda exigen explicación; la evidencia neutral no pesa. Por defec
 
 ### D17 — La respuesta es contrastiva
 
-El caso puede declarar una pregunta. La respuesta se decide entre clases de hipótesis, no entre mecanismos. ([ADR-0012](../arquitectura/adr/0012-pregunta-y-margen.md))
+El caso puede declarar una pregunta. La respuesta se decide entre clases de hipótesis, no entre mecanismos. ([ADR-0012](../../arquitectura/adr/0012-pregunta-y-margen.md))
 
 ### D18 — Se informa el margen
 
@@ -136,11 +136,11 @@ El resultado lleva su margen en veredictos de LLM y se marca como frágil si un 
 
 ### D19 — Las predicciones no puntúan
 
-Sirven para vigilar y para cerrar el ciclo de calibración. ([ADR-0013](../arquitectura/adr/0013-predicciones.md))
+Sirven para vigilar y para cerrar el ciclo de calibración. ([ADR-0013](../../arquitectura/adr/0013-predicciones.md))
 
 ### D20 — La verdad de cierre es una observación
 
-Tiene observador, confiabilidad e historial; solo la `establecida` calibra. ([ADR-0014](../arquitectura/adr/0014-verdad-como-observacion.md), [12](12-verdad-y-entrenamiento.md))
+Tiene observador, confiabilidad e historial; solo la `establecida` calibra. ([ADR-0014](../../arquitectura/adr/0014-verdad-como-observacion.md), [12](12-verdad-y-entrenamiento.md))
 
 ### D21 — Datos sintéticos solo con verdad por construcción
 

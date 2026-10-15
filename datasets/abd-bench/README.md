@@ -16,7 +16,7 @@ Casos para poner a prueba el motor abductivo. El esquema está en `src/factory/b
 
 ## Cómo se usa
 
-**No es un conjunto de etiquetas para medir aciertos ni para entrenar** ([12 §12.2](../../docs/marco-teorico/12-verdad-y-entrenamiento.md#122-datos-sintéticos)). Sirve para encontrar dónde falla el motor.
+**No es un conjunto de etiquetas para medir aciertos ni para entrenar** ([12 §12.2](../../docs/historico/marco-teorico/12-verdad-y-entrenamiento.md#122-datos-sintéticos)). Sirve para encontrar dónde falla el motor.
 
 Cada caso separa:
 

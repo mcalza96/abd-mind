@@ -1,4 +1,4 @@
-"""Experimento 5.4 — Informes financieros contradictorios (docs/marco-teorico/05 §5.4).
+"""Experimento 5.4 — Informes financieros contradictorios (docs/historico/marco-teorico/05 §5.4).
 
 Recorre el motor de casos completo con LLM real: el córtex separa hechos de opiniones, el
 verificador LLM decide la consiliencia y las reglas del dominio descartan lo incoherente. Luego

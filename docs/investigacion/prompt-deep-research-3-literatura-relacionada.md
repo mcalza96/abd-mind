@@ -1,6 +1,6 @@
 # Prompt de investigación 3: literatura relacionada
 
-Tercer encargo de investigación. Busca qué se sabe ya sobre las hipótesis del [documento 15](../marco-teorico/15-forma-y-material.md) y su [evaluación externa](../marco-teorico/15-forma-y-material.md#1510-evaluación-externa-2026-10-15), antes de construir nada nuevo. Aplica las lecciones de la bitácora:
+Tercer encargo de investigación. Busca qué se sabe ya sobre las hipótesis del [documento 15](../historico/marco-teorico/15-forma-y-material.md) y su [evaluación externa](../historico/marco-teorico/15-forma-y-material.md#1510-evaluación-externa-2026-10-15), antes de construir nada nuevo. Aplica las lecciones de la bitácora:
 
 - pedir salida en un formato verificable (EXP-006);
 - pedir **también la evidencia en contra** (sesgo de confirmación).

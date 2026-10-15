@@ -1,4 +1,4 @@
-"""Motor de reglas: coherencia externa K (docs/marco-teorico/04, decisiones D3 y D4).
+"""Motor de reglas: coherencia externa K (docs/historico/marco-teorico/04, decisiones D3 y D4).
 
 Dos mecanismos:
 - `validar_predicados`: el simulador de la especificación, que busca palabras prohibidas en los

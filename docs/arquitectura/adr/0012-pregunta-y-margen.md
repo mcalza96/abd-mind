@@ -4,7 +4,7 @@
 
 ## Contexto
 
-El usuario pregunta algo contrastivo ("¿estructural o transitoria?"), no "¿qué mecanismo?". Un empate de mecanismos que dan la misma respuesta bloqueaba la respuesta. Además, una victoria por un solo veredicto LLM se presentaba igual que una victoria amplia. Ver [11 §11.3–11.4](../../marco-teorico/11-explicacion-en-dominios-abiertos.md).
+El usuario pregunta algo contrastivo ("¿estructural o transitoria?"), no "¿qué mecanismo?". Un empate de mecanismos que dan la misma respuesta bloqueaba la respuesta. Además, una victoria por un solo veredicto LLM se presentaba igual que una victoria amplia. Ver [11 §11.3–11.4](../../historico/marco-teorico/11-explicacion-en-dominios-abiertos.md).
 
 ## Decisión
 

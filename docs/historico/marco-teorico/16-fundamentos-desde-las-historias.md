@@ -2,9 +2,9 @@
 
 **Estado:** base epistemológica vigente, subordinada al objetivo del [documento 17](17-generacion-abductiva.md): sus principios describen cómo se **filtran y prueban** las conjeturas, no cómo se generan.
 
-**Estado anterior:** propuesta de nueva base. Reemplazaría como punto de partida a [02 — Postulados](02-postulados.md) y a la promesa del [README](README.md) ("el LLM propone, un backend determinista decide"). Ningún documento anterior se borra; este dice cuáles quedan subordinados.
+**Estado anterior:** propuesta de nueva base. Reemplazaría como punto de partida a [02 — Postulados](02-postulados.md) y a la promesa del [README](../../marco-teorico/README.md) ("el LLM propone, un backend determinista decide"). Ningún documento anterior se borra; este dice cuáles quedan subordinados.
 
-**Origen:** ocho [experimentos mentales](../experimentos-mentales/README.md), cada uno leído a ciegas por un agente sin contexto antes de escribir su análisis, y los 28 [axiomas](../experimentos-mentales/axiomas.md) que salieron de ellos. Los axiomas no se escribieron primero: cada uno lo exigió una historia.
+**Origen:** ocho [experimentos mentales](../../experimentos-mentales/README.md), cada uno leído a ciegas por un agente sin contexto antes de escribir su análisis, y los 28 [axiomas](../../experimentos-mentales/axiomas.md) que salieron de ellos. Los axiomas no se escribieron primero: cada uno lo exigió una historia.
 
 ## 16.1 Seis principios
 

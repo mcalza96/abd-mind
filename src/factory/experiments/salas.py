@@ -3,7 +3,7 @@
 Parte A: el motor actual (`ArbolHipotesis`) sobre salas con siluetas medidas. Las hipótesis
 llegan ya ajustadas a los datos, como las propondría un generador después de verlos.
 
-Parte B: prototipo de puntuación predictiva (docs/marco-teorico/16, P3). Cada hipótesis es una
+Parte B: prototipo de puntuación predictiva (marco vigente: principios, P3). Cada hipótesis es una
 familia con parámetros; cada observación se oculta, se ajustan los parámetros que satisfacen el
 máximo de las restantes y se mide la probabilidad de la oculta. Merlín, que se acomoda a todo,
 no predice nada.

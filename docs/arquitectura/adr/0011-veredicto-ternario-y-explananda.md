@@ -4,7 +4,7 @@
 
 ## Contexto
 
-El veredicto era booleano. "No explica" significaba a la vez "contradice" y "no dice nada". En dominios abiertos, un hecho neutral de fuente calibrada derrotaba a todas las hipótesis, y cada hecho no tratado cobraba el costo de suponerlo un error. Además, todo hecho se trataba como algo que hay que explicar. Ver [10](../../marco-teorico/10-validacion-caida-accion.md) (B1, B2) y [11 §11.1–11.2](../../marco-teorico/11-explicacion-en-dominios-abiertos.md).
+El veredicto era booleano. "No explica" significaba a la vez "contradice" y "no dice nada". En dominios abiertos, un hecho neutral de fuente calibrada derrotaba a todas las hipótesis, y cada hecho no tratado cobraba el costo de suponerlo un error. Además, todo hecho se trataba como algo que hay que explicar. Ver [10](../../historico/marco-teorico/10-validacion-caida-accion.md) (B1, B2) y [11 §11.1–11.2](../../historico/marco-teorico/11-explicacion-en-dominios-abiertos.md).
 
 ## Decisión
 

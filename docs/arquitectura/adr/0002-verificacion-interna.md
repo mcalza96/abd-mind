@@ -4,7 +4,7 @@
 
 ## Contexto
 
-Las decisiones D1 y D2 del marco teórico ([08](../../marco-teorico/08-decisiones-y-limitaciones.md)) exigen que la consiliencia $C$ y la parsimonia $P$ se calculen con una fuente **independiente del generador**. Con Hermes como agente, existe la tentación de pedirle al LLM de Hermes que diga qué observaciones explica cada hipótesis: sería más simple, pero el mismo modelo que propone estaría juzgando.
+Las decisiones D1 y D2 del marco teórico ([08](../../historico/marco-teorico/08-decisiones-y-limitaciones.md)) exigen que la consiliencia $C$ y la parsimonia $P$ se calculen con una fuente **independiente del generador**. Con Hermes como agente, existe la tentación de pedirle al LLM de Hermes que diga qué observaciones explica cada hipótesis: sería más simple, pero el mismo modelo que propone estaría juzgando.
 
 ## Decisión
 

@@ -4,7 +4,7 @@
 
 ## Contexto
 
-En el dominio abierto, el verificador por pares aceptó casi todo y P era autodeclarado ([EXP-008](../../bitacora/EXP-008-bench-motor-v01-v02.md)). Ver [13](../../marco-teorico/13-verificacion-comparativa.md).
+En el dominio abierto, el verificador por pares aceptó casi todo y P era autodeclarado ([EXP-008](../../bitacora/EXP-008-bench-motor-v01-v02.md)). Ver [13](../../historico/marco-teorico/13-verificacion-comparativa.md).
 
 ## Decisión
 

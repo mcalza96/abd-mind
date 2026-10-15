@@ -1,6 +1,6 @@
 """Contratos de la especificación: hipótesis candidata y su evaluación abductiva.
 
-Ver docs/marco-teorico/04-funcion-objetivo-ibe.md y docs/arquitectura/contrato-mcp.md.
+Ver docs/historico/marco-teorico/04-funcion-objetivo-ibe.md y docs/arquitectura/contrato-mcp.md.
 """
 
 from pydantic import BaseModel, Field

@@ -1,4 +1,4 @@
-"""Puntuación predictiva (docs/marco-teorico/16 P3, EXP-014, EXP-015). Sin IA.
+"""Puntuación predictiva (docs/historico/marco-teorico/16 P3, EXP-014, EXP-015). Sin IA.
 
 Una hipótesis vale lo que predice de lo no visto, no lo que acomoda de lo visto. Para cada
 observación y_i se la oculta, se ajustan los parámetros libres de la hipótesis con las demás y se

@@ -4,7 +4,7 @@
 
 ## Contexto
 
-IBE explica el pasado, pero preguntas como "¿vendrá un rebote?" son sobre el futuro. Además, sin casos cerrados con verdad conocida no hay forma de calibrar ω, δ ni k_f (L7). Ver [11 §11.5](../../marco-teorico/11-explicacion-en-dominios-abiertos.md).
+IBE explica el pasado, pero preguntas como "¿vendrá un rebote?" son sobre el futuro. Además, sin casos cerrados con verdad conocida no hay forma de calibrar ω, δ ni k_f (L7). Ver [11 §11.5](../../historico/marco-teorico/11-explicacion-en-dominios-abiertos.md).
 
 ## Decisión
 

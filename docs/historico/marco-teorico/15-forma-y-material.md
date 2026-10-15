@@ -1,6 +1,6 @@
 # 15 — Forma y material: qué puede aportar un motor hecho de juicios de LLM
 
-Revisión de la base del proyecto después de [EXP-001 a EXP-013](../bitacora/README.md). Surgió de dos objeciones del usuario:
+Revisión de la base del proyecto después de [EXP-001 a EXP-013](../../bitacora/README.md). Surgió de dos objeciones del usuario:
 
 1. **Delegar la variabilidad:** con la selección holística ([14](14-rumbo-estado-y-proyeccion.md)) la decisión la toma el modelo, no el motor.
 2. **Los ladrillos blancos:** combinar más juicios del modelo (varios jueces, varias muestras) tampoco cambia nada de fondo: "con 100 ladrillos blancos la pared no será roja".
@@ -142,6 +142,6 @@ Un agente sin contexto leyó solo este documento y lo evaluó de forma adversari
 
 1. **Análisis de errores caso a caso**, antes de seguir teorizando: en qué casos el motor falla y la llamada única acierta, y por qué (contexto perdido, verificador, agregación, etiqueta).
 2. **Ablación con el mismo modelo e igual cómputo:** llamada única, autoconsistencia y motor.
-3. **Investigación de literatura antes de construir** ([prompt](../investigacion/prompt-deep-research-3-literatura-relacionada.md)).
+3. **Investigación de literatura antes de construir** ([prompt](../../investigacion/prompt-deep-research-3-literatura-relacionada.md)).
 4. **Separar las dos propuestas de valor.** La forma (auditoría, trazabilidad) se evalúa con usuarios; el acierto, con bancos.
 5. **Probar 15.7 primero en dominios con verificación externa rápida:** tests de software, datos retenidos o simuladores ajenos al proyecto.

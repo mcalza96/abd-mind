@@ -9,7 +9,7 @@ Para cada caso:
 
 El motor nunca ve `solucion`, `verdad` ni `respuesta_inductiva_erronea`. La comparación con la
 verdad la hace este módulo después, y solo cuenta para la precisión cuando la verdad está
-`establecida` (docs/marco-teorico/12 §12.1). El resultado sirve para encontrar fallas, no
+`establecida` (docs/historico/marco-teorico/12 §12.1). El resultado sirve para encontrar fallas, no
 como puntaje (datasets/abd-bench/README.md).
 """
 

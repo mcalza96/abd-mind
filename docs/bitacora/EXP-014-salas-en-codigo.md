@@ -2,7 +2,7 @@
 
 - **Fecha:** 2026-10-15 · **Estado:** corrido
 - **Registro previo:** sí (este commit va antes del código)
-- **Origen:** [experimentos mentales](../experimentos-mentales/README.md), [16 §16.6](../marco-teorico/16-fundamentos-desde-las-historias.md#166-próximos-pasos)
+- **Origen:** [experimentos mentales](../experimentos-mentales/README.md), [16 §16.6](../historico/marco-teorico/16-fundamentos-desde-las-historias.md#166-próximos-pasos)
 
 ## Pregunta
 

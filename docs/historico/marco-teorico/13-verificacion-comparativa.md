@@ -1,13 +1,13 @@
 # 13 — Verificación comparativa y parsimonia juzgada
 
-Origen: [EXP-008](../bitacora/EXP-008-bench-motor-v01-v02.md). En el dominio abierto, el verificador LLM aceptó casi todo:
+Origen: [EXP-008](../../bitacora/EXP-008-bench-motor-v01-v02.md). En el dominio abierto, el verificador LLM aceptó casi todo:
 
 - 0 de 60 veredictos fueron `contradice`;
 - 2 a 4 tipos de causa empataron y el motor no decidió;
 - una hipótesis inmunizada ad hoc ("sin huella visual") recibió el mismo crédito que las demás;
 - las hipótesis declaraban sus propias entidades, y casi todas declaraban cero.
 
-**Advertencia:** la propuesta nace de dos casos. Se valida en los 18 casos del conjunto de pares que no la motivaron ([EXP-009](../bitacora/EXP-009-verificacion-comparativa.md)), con expectativas registradas antes de correr.
+**Advertencia:** la propuesta nace de dos casos. Se valida en los 18 casos del conjunto de pares que no la motivaron ([EXP-009](../../bitacora/EXP-009-verificacion-comparativa.md)), con expectativas registradas antes de correr.
 
 ## 13.1 Por qué falla la verificación absoluta
 
@@ -50,4 +50,4 @@ En el dominio sintético, P se contrasta con un vocabulario y con variables de t
 ## 13.4 Qué no resuelve
 
 - **El juez y el verificador siguen siendo LLM.** Pueden equivocarse de forma sistemática; el margen en veredictos (11 §11.4) sigue siendo la medida de cuánto depende el resultado de ellos.
-- **La pregunta del tipo de causa ya es fácil para la línea base** ([EXP-007](../bitacora/EXP-007-bench-linea-base.md)). Esta propuesta busca que el motor decida cuando la evidencia lo permite, no ganarle a la línea base en esa pregunta.
+- **La pregunta del tipo de causa ya es fácil para la línea base** ([EXP-007](../../bitacora/EXP-007-bench-linea-base.md)). Esta propuesta busca que el motor decida cuando la evidencia lo permite, no ganarle a la línea base en esa pregunta.

@@ -1,50 +1,19 @@
-# Marco Teórico — abd-mind
+# Marco teórico (vigente)
 
-Motor de razonamiento abductivo. **Objetivo (desde el 2026-10-15): una IA a la que se le ocurran explicaciones no obvias** ([17](17-generacion-abductiva.md)). La generación guiada por operadores abductivos es el centro; la selección por virtudes explicativas, la verificación y el registro son el filtro y la prueba de lo que se genera.
+**Objetivo:** una IA a la que se le ocurran explicaciones no obvias, y que sepa distinguirlas de las rebuscadas.
 
-Este directorio es la referencia conceptual del proyecto. Todo módulo de código debe poder rastrearse a una definición de aquí; si el código y este marco discrepan, se corrige uno de los dos de forma explícita (ver [08 — Decisiones](08-decisiones-y-limitaciones.md)).
+Este directorio es la referencia **vigente**. Se lee en este orden:
 
-## Índice
+| Documento | Qué contiene |
+|---|---|
+| [Tesis](tesis.md) | El problema, qué aprendimos y la tesis. Una página |
+| [Generación](generacion.md) | El centro: disparadores, operadores abductivos, el filtro entre lo no obvio y lo rebuscado, y cómo se mide |
+| [Principios](principios.md) | Seis principios para filtrar y probar conjeturas, y qué implementa hoy el motor |
+| [Formalización](formalizacion.md) | Lo que el código calcula: veredictos, puntuaciones, decisión, verdad |
+| [Glosario](glosario.md) | Términos y notación |
 
-| # | Documento | Contenido |
-|---|---|---|
-| 01 | [Problema y tesis](01-problema-y-tesis.md) | Por qué el aprendizaje supervisado tiene un techo y qué propone el proyecto |
-| 02 | [Postulados epistemológicos](02-postulados.md) | Mediación, invariante causal, ampliación abductiva |
-| 03 | [Formalización](03-formalizacion.md) | Espacios, operadores de proyección, problema inverso, expansión ontológica, derrotabilidad |
-| 04 | [Función objetivo IBE](04-funcion-objetivo-ibe.md) | Parsimonia, consiliencia, coherencia y el score abductivo, con sus propiedades |
-| 05 | [Experimentos canónicos](05-experimentos-canonicos.md) | Cilindro latente, expansión ontológica, caso financiero |
-| 06 | [Arquitectura](06-arquitectura.md) | Pipeline, frontera estocástico/determinista, contratos de datos |
-| 07 | [Estado del arte](07-estado-del-arte.md) | Cuatro pilares de la literatura y el vacío que ocupa el proyecto |
-| 08 | [Decisiones y limitaciones](08-decisiones-y-limitaciones.md) | Correcciones a la especificación original y límites asumidos |
-| 09 | [Robustez epistémica](09-robustez-epistemica.md) | Observadores falibles (Duhem-Quine), subdeterminación, correlación, tiempo, reglas falibles |
-| 10 | [Validación: caída de una acción](10-validacion-caida-accion.md) | Ejercicio mental con una pregunta financiera real y brechas encontradas |
-| 11 | [Explicación en dominios abiertos](11-explicacion-en-dominios-abiertos.md) | Veredicto de tres valores, explananda, pregunta del caso, margen, predicciones; protocolo contra el sobreajuste |
-| 12 | [Verdad y entrenamiento](12-verdad-y-entrenamiento.md) | Datos sintéticos válidos e inválidos, verdad de cierre falible, cuestionar lo establecido con contabilidad, circularidad |
-| 13 | [Verificación comparativa](13-verificacion-comparativa.md) | Calificar cada hecho contra todas las rivales; parsimonia juzgada por un tercero |
-| 14 | [Rumbo: estado y proyección](14-rumbo-estado-y-proyeccion.md) | Qué hace el motor tras EXP-010 y EXP-012: juicio holístico en dominios abiertos, verificación exacta donde hay estructura |
-| 15 | [Forma y material](15-forma-y-material.md) | Revisión de la base: un motor hecho de juicios de LLM aporta forma, no contenido; el aporte posible es el compromiso previo con el mundo |
-| 16 | [Fundamentos desde las historias](16-fundamentos-desde-las-historias.md) | **Propuesta de nueva base:** seis principios (mediación, ley, riesgo, subdeterminación, pregunta, contacto) derivados de los [experimentos mentales](../experimentos-mentales/README.md) |
-| 17 | [Generación abductiva](17-generacion-abductiva.md) | **Centro del marco:** la creatividad abductiva como cambio de marco; disparadores, operadores abductivos, filtro entre lo no obvio y lo rebuscado, y cómo se mide |
-| — | [Glosario](glosario.md) | Términos y notación |
+**Fuentes de los principios:** los [experimentos mentales](../experimentos-mentales/README.md) y la [bitácora](../bitacora/README.md).
 
-## Lectura rápida
+**Histórico:** las versiones anteriores del marco (documentos 01 a 17) están en [histórico](../historico/README.md). No se leen para trabajar, pero ahí está la derivación completa. Las referencias del código del tipo `NN §x` apuntan allí.
 
-1. Una etiqueta no es la verdad: es una **proyección** $y_i = \pi_{O_i}(S)$ del estado real $S$ a través del marco de un observador.
-2. Una abducción empieza con una **sorpresa**: una contradicción, una coincidencia, un residuo, una ausencia, o también un ajuste demasiado bueno ([17 §17.4](17-generacion-abductiva.md#174-los-disparadores-cuándo-hay-algo-que-explicar)).
-3. **Lo obvio no necesita un motor.** Una explicación no obvia aparece cuando se cambia la pregunta, no cuando se piden más muestras: los **operadores abductivos** ([17 §17.5](17-generacion-abductiva.md#175-catálogo-inicial-de-operadores-abductivos)) cambian el marco del generador.
-4. **Lo no obvio se separa de lo rebuscado** por lo que predice: una buena conjetura hace que los hechos sean "cosa corriente" y prohíbe algo ([EXP-015](../bitacora/EXP-015-puntuacion-predictiva-en-el-motor.md)).
-5. Toda conjetura dice **qué observación la pondría a prueba**, y queda registrada antes de mirar. Con el tiempo, el registro dice qué operadores aciertan.
-
-*Versión anterior (hasta el documento 15):* el LLM propone y un backend determinista decide con $\text{Score}(H) = \alpha C + \beta K - \gamma P$. Se conserva como filtro, no como centro ([16](16-fundamentos-desde-las-historias.md), [17 §17.8](17-generacion-abductiva.md#178-qué-pasa-con-lo-construido)).
-
-## Documentos fuente
-
-Este marco consolida y precisa cinco documentos de diseño entregados al inicio del proyecto:
-
-- *Plan Maestro: Arquitectura de Producto para Razonamiento Abductivo* (V3)
-- *Arquitectura de Razonamiento Abductivo en IA: Especificación Formal de Producto* (v1.0)
-- *Explicación de la Función Objetivo Abductiva (IBE)*
-- *Instrucciones de Implementación para Agente Codificador: Pipeline Abductivo*
-- *Epistemic Invariants, Observer-Dependent Labeling, and Abductive Learning in AI: A Critical Literature Synthesis*
-
-Donde este marco se aparta de esos documentos, la diferencia está justificada en [08](08-decisiones-y-limitaciones.md).
+**Regla:** si el código y este marco discrepan, se corrige uno de los dos de forma explícita. Antes de agregar un documento nuevo, se prefiere ampliar uno de estos cuatro.

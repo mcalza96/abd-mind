@@ -1,6 +1,6 @@
 # Historia 6 — La acción que cae
 
-Las historias 1 a 5 ocurren en una sala donde el objeto es rígido, las ventanas son independientes y la geometría liga las sombras. Esta historia lleva todo a la pregunta que motivó el proyecto ([10](../marco-teorico/10-validacion-caida-accion.md)): ¿la caída de una acción es estructural o vendrá un rebote? El objetivo es ver qué sobrevive fuera de la sala.
+Las historias 1 a 5 ocurren en una sala donde el objeto es rígido, las ventanas son independientes y la geometría liga las sombras. Esta historia lleva todo a la pregunta que motivó el proyecto ([10](../historico/marco-teorico/10-validacion-caida-accion.md)): ¿la caída de una acción es estructural o vendrá un rebote? El objetivo es ver qué sobrevive fuera de la sala.
 
 ## Escena
 
@@ -43,7 +43,7 @@ Las historias 1 a 5 ocurren en una sala donde el objeto es rígido, las ventanas
 
 ## Dónde se rompe
 
-1. **No hay ley, así que no hay contradicción.** En la sala, la geometría convertía las diferencias en contradicciones (A11). Aquí casi ninguna regla liga las sombras, y casi todo es compatible con casi todo. Estamos en la historia 2 con un conjunto infinito de explicaciones, sin la ventana que decide. Las pocas leyes que hay son contables (ventas × margen = utilidad bruta) o legales (una empresa no puede mantener una proyección que sabe falsa sin arriesgar una demanda). **Esas pocas leyes son la única parte donde el motor puede calcular en vez de opinar** (C, [14 §14.3](../marco-teorico/14-rumbo-estado-y-proyeccion.md#143-c-proyección-calculable-en-dominios-reales)).
+1. **No hay ley, así que no hay contradicción.** En la sala, la geometría convertía las diferencias en contradicciones (A11). Aquí casi ninguna regla liga las sombras, y casi todo es compatible con casi todo. Estamos en la historia 2 con un conjunto infinito de explicaciones, sin la ventana que decide. Las pocas leyes que hay son contables (ventas × margen = utilidad bruta) o legales (una empresa no puede mantener una proyección que sabe falsa sin arriesgar una demanda). **Esas pocas leyes son la única parte donde el motor puede calcular en vez de opinar** (C, [14 §14.3](../historico/marco-teorico/14-rumbo-estado-y-proyeccion.md#143-c-proyección-calculable-en-dominios-reales)).
 
 2. **Las ventanas son ecos.** El analista técnico no mira la empresa: mira a quienes compran y venden. El consenso bajó sus estimaciones **después** de la caída, así que en parte lee el precio. La prensa publica lo que circula en el mercado. Tres de los siete observadores miran, al menos en parte, a los otros observadores. Contarlos como evidencia independiente es la historia 3 a gran escala (A6).
 

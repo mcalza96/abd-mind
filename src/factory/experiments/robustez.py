@@ -1,4 +1,4 @@
-"""Experimentos de robustez epistémica (docs/marco-teorico/09, fase 4b). Sin LLM."""
+"""Experimentos de robustez epistémica (docs/historico/marco-teorico/09, fase 4b). Sin LLM."""
 
 from factory.config import Config, ConfigRol, ConfigRoles
 from factory.contracts.abduction import HipotesisCandidata

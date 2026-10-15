@@ -1,6 +1,6 @@
 # 14 — Rumbo: el motor como capa de estado y verificación exacta
 
-Decisión tomada con el usuario después de [EXP-010](../bitacora/EXP-010-juez-comparativo.md) y [EXP-012](../bitacora/EXP-012-bench-v2-perturbaciones-y-sin-respuesta.md). Opciones A + C.
+Decisión tomada con el usuario después de [EXP-010](../../bitacora/EXP-010-juez-comparativo.md) y [EXP-012](../../bitacora/EXP-012-bench-v2-perturbaciones-y-sin-respuesta.md). Opciones A + C.
 
 ## 14.1 Qué mostraron los experimentos
 

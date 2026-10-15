@@ -1,4 +1,4 @@
-"""Tronco determinista: Score(H) = α·C + β·K − γ·P (docs/marco-teorico/04-funcion-objetivo-ibe.md).
+"""Tronco determinista: Score(H) = α·C + β·K − γ·P (histórico 04).
 
 Sin IA. Por defecto C y P se toman de lo que declara la hipótesis, como en la especificación; el
 árbol de hipótesis inyecta en su lugar los valores verificados (decisiones D1 y D2).

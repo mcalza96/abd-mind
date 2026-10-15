@@ -1,4 +1,4 @@
-"""Proyecciones computables y relación de consistencia ≈ (docs/marco-teorico/03 §3.3, D5).
+"""Proyecciones computables y relación de consistencia ≈ (docs/historico/marco-teorico/03 §3.3, D5).
 
 El entorno sintético de sólidos actúa como "realidad" verificable: dado el sólido que afirma una
 hipótesis y la vista de un observador, la silueta se calcula sin ningún LLM.

@@ -31,7 +31,7 @@ El motor **se equivoca con todas sus garantías intactas**. Calculó bien cada s
 
 **Versión B, con Ada.** Ada usa `proponer_hipotesis` con el bicilindro. Ahora hay empate exacto, y la historia vuelve a ser la 2: el motor se abstiene y pide la ventana del costado.
 
-**Versión C, cien jueces en vez de uno.** Supongamos que el motor les pide a los cien que voten y se abstiene solo si no coinciden (lo que propuse antes del [documento 15](../marco-teorico/15-forma-y-material.md)). Los cien coinciden, y el motor responde "cilindro" con más confianza que en la versión A.
+**Versión C, cien jueces en vez de uno.** Supongamos que el motor les pide a los cien que voten y se abstiene solo si no coinciden (lo que propuse antes del [documento 15](../historico/marco-teorico/15-forma-y-material.md)). Los cien coinciden, y el motor responde "cilindro" con más confianza que en la versión A.
 
 ## Dónde se rompe
 

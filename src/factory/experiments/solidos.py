@@ -1,4 +1,4 @@
-"""Piezas comunes del entorno sintético de sólidos (docs/marco-teorico/05 §5.1–5.3)."""
+"""Piezas comunes del entorno sintético de sólidos (docs/historico/marco-teorico/05 §5.1–5.3)."""
 
 from factory.contracts.abduction import HipotesisCandidata
 from factory.contracts.observation import Observacion, Observador

@@ -2,7 +2,7 @@
 
 Cada caso separa lo que el motor puede ver (`observadores`, `observaciones`, `pregunta`) de lo
 que no debe ver (`solucion`, `verdad`, `respuesta_inductiva_erronea`). La verdad es una
-observación falible con fuente y confiabilidad, no una etiqueta (docs/marco-teorico/12 §12.1).
+observación falible con fuente y confiabilidad, no una etiqueta (histórico 12 §12.1).
 
 La pregunta es la misma para todos los casos: qué *tipo* de causa explica la discrepancia.
 Así el benchmark mide la clase de abducción (postular una entidad, culpar al observador,

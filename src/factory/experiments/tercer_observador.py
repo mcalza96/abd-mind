@@ -1,4 +1,4 @@
-"""Experimento 5.3 — Derrotabilidad: el tercer observador (docs/marco-teorico/05)."""
+"""Experimento 5.3 — Derrotabilidad: el tercer observador (docs/historico/marco-teorico/05)."""
 
 from factory.contracts.case import EstadoHipotesis
 from factory.experiments.base import ResultadoExperimento, tabla_hipotesis

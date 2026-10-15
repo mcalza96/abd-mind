@@ -2,7 +2,7 @@
 
 Historias concretas para construir la teoría **desde abajo**: de la situación al principio, no al revés. Cuando un principio se escribe primero y después se ilustra, el caso se elige para que el principio quede bien. Cuando la historia va primero, obliga a aceptar un principio, o muestra dónde falla el sentido común (y el nuestro).
 
-Origen: conversación del 2026-10-15, después del [documento 15](../marco-teorico/15-forma-y-material.md). El caso del cilindro aclaró más que cualquier formalización; la idea es repetir ese ejercicio.
+Origen: conversación del 2026-10-15, después del [documento 15](../historico/marco-teorico/15-forma-y-material.md). El caso del cilindro aclaró más que cualquier formalización; la idea es repetir ese ejercicio.
 
 ## Método
 
@@ -18,7 +18,7 @@ Cada historia tiene la misma estructura:
 
 ## Reglas
 
-1. **Un axioma entra solo si una historia lo exige.** Los postulados del [documento 02](../marco-teorico/02-postulados.md) se vuelven a derivar; los que ninguna historia exija quedan marcados como pendientes.
+1. **Un axioma entra solo si una historia lo exige.** Los postulados del [documento 02](../historico/marco-teorico/02-postulados.md) se vuelven a derivar; los que ninguna historia exija quedan marcados como pendientes.
 2. **Cada historia tiene que poder avergonzarnos.** Si en todas el motor sale bien parado, están mal elegidas.
 3. **Lectura ciega:** un agente sin contexto lee la escena y la pregunta y dice qué se rompe **antes** de ver nuestro análisis. Su lectura queda registrada al final de la historia.
 4. **Todas ocurren en el mismo mundo**, la sala del cilindro, que se complica de a poco. Así cada principio nuevo se apoya en los anteriores.

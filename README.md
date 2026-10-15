@@ -1,6 +1,6 @@
 # abd-mind
 
-Motor de razonamiento abductivo: un pipeline que separa percepción (LLM), generación de hipótesis (LLM), selección por virtudes explicativas (determinista) y verificación externa, para encontrar la causa latente que reconcilia observaciones contradictorias en lugar de promediarlas.
+Motor de razonamiento abductivo servido por MCP a Hermes Agent. **Objetivo:** una IA a la que se le ocurran explicaciones no obvias y que sepa distinguirlas de las rebuscadas ([tesis](docs/marco-teorico/tesis.md)). Hoy el motor mantiene el estado de cada caso, verifica, puntúa (por consiliencia o por predicción), detecta empates, sugiere qué observar y registra predicciones y verdades. La generación guiada por operadores abductivos está en diseño.
 
 ## Uso rápido
 
@@ -16,9 +16,10 @@ uv run pytest                        # tests
 uv run ruff check && uv run mypy     # lint y tipos
 ```
 
-Estado: fases 0–3 de la [hoja de ruta](docs/arquitectura/hoja-de-ruta.md): núcleo determinista, experimentos sintéticos y roles LLM (córtex, generadores, verificador) sobre OpenCode Go. La configuración de modelos está en [`config/abd-mind.example.yaml`](config/abd-mind.example.yaml).
+Estado: ver la [hoja de ruta](docs/arquitectura/hoja-de-ruta.md), fase 5c. La configuración de modelos está en [`config/abd-mind.example.yaml`](config/abd-mind.example.yaml).
 
 ## Documentación
 
-- [Marco teórico](docs/marco-teorico/README.md): problema, postulados, formalización, función objetivo IBE, experimentos canónicos, arquitectura, estado del arte y decisiones de diseño.
+- [Marco teórico](docs/marco-teorico/README.md): tesis, generación abductiva, principios y formalización (vigente).
+- [Bitácora](docs/bitacora/README.md): experimentos, con su registro previo, y lecciones.
 - [Arquitectura](docs/arquitectura/README.md): acoplamiento a Hermes Agent vía MCP, contrato de herramientas, interacción por Telegram, despliegue en el PC, ADRs y hoja de ruta.

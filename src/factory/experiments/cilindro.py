@@ -1,4 +1,4 @@
-"""Experimento 5.1 — Cilindro latente (docs/marco-teorico/05-experimentos-canonicos.md)."""
+"""Experimento 5.1 — Cilindro latente (histórico 05)."""
 
 from factory.experiments.base import ResultadoExperimento, tabla_hipotesis
 from factory.experiments.solidos import arbol_cilindro, hipotesis_solido

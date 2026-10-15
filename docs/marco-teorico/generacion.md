@@ -1,22 +1,8 @@
-# 17 — Generación abductiva: cómo se le ocurre a una IA lo no obvio
+# Generación abductiva
 
-**Estado:** nuevo centro del marco. Decisión tomada con el usuario el 2026-10-15: el objetivo es **una IA a la que se le ocurran explicaciones no obvias**. Lo construido no se descarta: se reordena alrededor de este documento (§17.8).
+Cómo se le ocurre a una IA lo no obvio: disparadores, operadores abductivos, el filtro entre lo no obvio y lo rebuscado, y cómo se mide. Es el centro del marco ([tesis](tesis.md)). La versión con su historia completa y la evaluación externa está en [histórico, 17](../historico/marco-teorico/17-generacion-abductiva.md).
 
-## 17.1 La desviación y el regreso
-
-[01 §1.4](01-problema-y-tesis.md#14-por-qué-un-llm-solo-no-basta) ya lo decía al inicio. Un LLM está sesgado hacia lo frecuente en su corpus, y las explicaciones abductivas valiosas suelen tener baja probabilidad a priori, así que la decodificación las poda. La arquitectura respondió **sacando la decisión del LLM**, y casi todo el trabajo posterior (documentos 04, 09, 11, 13 y 16, y EXP-007 a EXP-015) se dedicó a **elegir** entre hipótesis.
-
-Esa respuesta no atacaba el problema que el propio 1.4 había descrito. Si la explicación verdadera nunca se genera, ninguna selección la encuentra. La historia 3 lo mostró sin ambigüedad: con solo el cilindro propuesto, el motor se equivoca con todas sus garantías intactas.
-
-En términos de Peirce, la abducción tiene tres momentos:
-
-1. **La sorpresa:** "se observa el hecho sorprendente C".
-2. **La conjetura:** "pero si A fuera verdad, C sería cosa corriente".
-3. **La razón para seguir A:** cuál conjetura vale la pena probar y cómo.
-
-El proyecto trabajó casi solo el tercero. **El pensamiento abductivo vive en el segundo**, y depende del primero.
-
-## 17.2 Qué es "no obvio"
+## 1. Qué es "no obvio"
 
 Sea $G$ un generador (un LLM) que, ante los hechos $F$ y una manera de preguntar $q$, propone hipótesis con probabilidad $p_G(H \mid F, q)$.
 
@@ -34,21 +20,21 @@ Lo que se busca está en una sola esquina: **baja probabilidad para el generador
 
 **La conclusión más importante del documento 15 y de la historia 3:** pedir más muestras con la misma pregunta $q_0$ produce más de lo mismo. Cien jueces de igual formación dicen "cilindro" cien veces. Muestrear más no mueve la distribución; **cambiar la pregunta sí.**
 
-## 17.3 Tesis
+## 2. Tesis
 
 > **Una pregunta distinta encuentra lo que más muestras no encuentran.** Condicionar al generador con una pregunta que cambia su marco, $p_G(H \mid F, q_o)$, lleva probabilidad hacia explicaciones que con la pregunta habitual están en la cola. Llegar ahí subiendo la temperatura o pidiendo más muestras es muy ineficiente. Esas preguntas se pueden catalogar: son los **operadores abductivos**.
 
-Tres precisiones, que salen de la lectura ciega (§17.11):
+Tres precisiones, que salen de la lectura ciega (§10):
 
 1. **No es "cambio de marco *en vez de* muestreo".** Aplicar un operador sigue siendo muestrear, pero de otra distribución. La tesis es **empírica**: hay que mostrar que los operadores superan a las formas baratas de diversidad (temperatura alta, "propón hipótesis muy distintas entre sí", personas, *step-back*), no darlo por hecho.
 2. **Los operadores son genéricos.** Para cualquier H* existe una pregunta que la vuelve probable ("¿y si fuera H*?"). La tesis solo tiene contenido si cada operador **no depende de la respuesta** y se elige **sin conocerla**, a partir del disparador. Si no, es trampa.
-3. **Respecto de quién es "no obvio".** De un generador declarado, con una pregunta base, una decodificación y un número de muestras declarados (§17.2). Una explicación no obvia para un LLM puede ser obvia para un experto, y al revés.
+3. **Respecto de quién es "no obvio".** De un generador declarado, con una pregunta base, una decodificación y un número de muestras declarados (§1). Una explicación no obvia para un LLM puede ser obvia para un experto, y al revés.
 
-Esto resuelve una contradicción que el documento 15 dejó abierta (§15.10, punto 4). El marco necesita **pluralidad de marcos de observación**, y la implementación los colapsó en uno. Un operador abductivo es exactamente **un marco distinto aplicado al mismo modelo**. La pluralidad se puede producir a voluntad, y además se puede combinar con modelos de distinta formación (A8: diversidad para generar).
+Esto resuelve una contradicción que dejó abierta la revisión de la base (histórico 15 §15.10). El marco necesita **pluralidad de marcos de observación**, y la implementación los colapsó en uno. Un operador abductivo es exactamente **un marco distinto aplicado al mismo modelo**. La pluralidad se puede producir a voluntad, y además se puede combinar con modelos de distinta formación (A8: diversidad para generar).
 
-**Límite honesto (P6, [16 §16.1](16-fundamentos-desde-las-historias.md#p6--contacto-el-contenido-nuevo-entra-por-observaciones)):** un operador **saca a la superficie** lo que el modelo sabe y no dice. No agrega conocimiento del mundo. Si el modelo nunca supo de bicilindros, ninguna pregunta se lo hará proponer. La recombinación de lo conocido en una configuración nueva sí está a su alcance, y Peirce sostenía que de eso está hecha la mayoría de las ideas nuevas. No prometemos más que eso.
+**Límite honesto (P6, [principios, P6](principios.md#p6--contacto)):** un operador **saca a la superficie** lo que el modelo sabe y no dice. No agrega conocimiento del mundo. Si el modelo nunca supo de bicilindros, ninguna pregunta se lo hará proponer. La recombinación de lo conocido en una configuración nueva sí está a su alcance, y Peirce sostenía que de eso está hecha la mayoría de las ideas nuevas. No prometemos más que eso.
 
-## 17.4 Los disparadores: cuándo hay algo que explicar
+## 3. Los disparadores: cuándo hay algo que explicar
 
 Una abducción empieza con una sorpresa. Hoy el motor reconoce una sola: "ninguna hipótesis explica todo" (postulado 3). Las historias mostraron que hay más, y que la más peligrosa es la que **no parece sorpresa**:
 
@@ -69,7 +55,7 @@ El **ajuste demasiado bueno** es el disparador que corrige al postulado 3 (A7): 
 
 **Los disparadores se detectan de forma automática y se evalúan por separado.** Si los marca un humano, o quien escribió el caso, la información sobre la respuesta se filtra por ahí.
 
-## 17.5 Catálogo de operadores abductivos
+## 4. Catálogo de operadores abductivos
 
 ### Principio de construcción
 
@@ -116,7 +102,7 @@ Los ids de la primera versión se conservan.
 
 **Lo que falta definir:** la **política**, es decir, qué operadores aplicar ante qué disparador, en qué orden, cómo combinarlos (por ejemplo O6 con O14), con qué presupuesto y cuándo parar. Es la "economía de la investigación" de Peirce, y está por diseñar. Por ahora el catálogo dice qué preguntas existen, no cuáles hacer.
 
-## 17.6 Qué separa lo no obvio de lo rebuscado
+## 5. Qué separa lo no obvio de lo rebuscado
 
 Un operador produce hipótesis improbables a propósito. Sin un filtro, eso sería una fábrica de conspiraciones. La primera versión decía que el filtro ya existía. Era cierto solo en parte: el filtro tiene cuatro problemas, y aquí se rediseña.
 
@@ -131,13 +117,13 @@ Se definen tres medidas de una hipótesis:
 
 | Medida | Definición | Qué busca |
 |---|---|---|
-| **Novedad** | Frecuencia de aparición en la generación de referencia (§17.2), medida con semillas independientes | Que no sea lo obvio |
+| **Novedad** | Frecuencia de aparición en la generación de referencia (§1), medida con semillas independientes | Que no sea lo obvio |
 | **Valor explicativo** | Puntuación sobre hechos reservados, o predictiva con familias | Que no sea rebuscada |
 | **Costo de prueba** | Qué observación la separa de sus rivales y cuánto cuesta | Que valga la pena seguirla |
 
 **Riesgo de Goodhart:** si se optimiza la novedad, el sistema produce rarezas que pasan un filtro débil. Por eso la novedad nunca se premia sola: solo cuenta si viene con valor explicativo.
 
-## 17.7 Cómo se mide
+## 6. Cómo se mide
 
 La pregunta deja de ser "¿acierta la etiqueta?" y pasa a ser:
 
@@ -178,7 +164,7 @@ La primera versión de este diseño permitía que cualquier resultado positivo s
 
 **Qué falsaría la tesis:** con igual cómputo, la generación guiada por operadores no recupera más verdades no obvias que **la mejor línea base y que el placebo**, o las recupera solo a costa de más pistas falsas de las preregistradas.
 
-## 17.8 Qué pasa con lo construido
+## 7. Qué pasa con lo construido
 
 Nada se tira. Cambia su lugar en el ciclo:
 
@@ -189,20 +175,20 @@ disparador ──► operadores ──► hipótesis no obvias ──► filtro 
 
 | Pieza existente | Nuevo papel |
 |---|---|
-| Postulados y principios (02, 16) | Siguen siendo la epistemología: mediación, ley, riesgo, subdeterminación, pregunta y contacto |
+| Postulados y principios ([principios](principios.md)) | Siguen siendo la epistemología: mediación, ley, riesgo, subdeterminación, pregunta y contacto |
 | Expansión ontológica (postulado 3) | Pasa a ser **un** operador (O6), y se dispara también por ajuste demasiado bueno |
-| Consiliencia y puntuación predictiva (04, EXP-015) | El **filtro**: separan lo no obvio de lo rebuscado |
+| Consiliencia y puntuación predictiva ([formalización](formalizacion.md)) | El **filtro**: separan lo no obvio de lo rebuscado |
 | Verificación, derrota, sugerencia de observación | La **prueba** de la conjetura |
 | Selección holística (ADR-0016) | Sigue disponible donde no hay proyección |
-| Predicciones, verdad, registro (11, 12, historia 4) | Dicen, con el tiempo, **qué operadores** producen conjeturas que resultan ciertas |
+| Predicciones, verdad, registro ([formalización](formalizacion.md), historia 4) | Dicen, con el tiempo, **qué operadores** producen conjeturas que resultan ciertas |
 | Experimentos mentales | Fuente de operadores y de escenarios de prueba |
 | abd-bench, conjunto R | Bancos para medir la recuperación de verdades no obvias |
 
 **El último punto es nuevo.** El registro de predicciones resueltas, que antes servía para calificar jueces, sirve también para **calificar operadores**: cuáles producen conjeturas que después se confirman y en qué dominios. A largo plazo, eso es lo más parecido a que el sistema **aprenda a pensar abductivamente**.
 
-**Advertencia:** calificar operadores por resultados es un problema de bandido con recompensa escasa y muy demorada. Antes de prometerlo hay que estimar cuántos casos resueltos hacen falta para distinguir un operador útil de uno inútil. Hasta entonces, la calificación viene de los experimentos (§17.7), no del uso.
+**Advertencia:** calificar operadores por resultados es un problema de bandido con recompensa escasa y muy demorada. Antes de prometerlo hay que estimar cuántos casos resueltos hacen falta para distinguir un operador útil de uno inútil. Hasta entonces, la calificación viene de los experimentos (§6), no del uso.
 
-## 17.9 Antecedentes
+## 8. Antecedentes
 
 Ninguna de las piezas es nueva. Hay que revisarlas antes de construir:
 
@@ -221,33 +207,3 @@ Ninguna de las piezas es nueva. Hay que revisarlas antes de construir:
 
 Hay que verificarlo contra Schurz y contra la literatura reciente antes de afirmarlo.
 
-## 17.10 Próximos pasos acordados
-
-1. **Alinear la documentación:** 01, el README, 16, el glosario y la hoja de ruta (hecho).
-2. **Escenarios de desarrollo:** experimentos mentales por componente del esquema (§17.5), con el método de las historias 1 a 8 y su lectura ciega.
-   - Sirven para **construir y depurar** el catálogo, no para probarlo.
-   - Cada escenario debe poder mostrar que un operador **no** ayuda, o que el nulo (O20) era la respuesta.
-   - Al terminar, **el catálogo se congela**.
-3. **Plan del MCP:** detección de disparadores, generación guiada, filtro con hechos reservados y estado *prometedora*, medición de novedad y de recuperación.
-4. **Experimento central:** sobre salas nuevas escritas por un autor ciego, con preregistro, líneas base fuertes y placebo (§17.7).
-
-## 17.11 Evaluación externa (2026-10-15)
-
-Un agente sin contexto evaluó la primera versión de este documento. Veredicto: **sólida en lo operativo, mal formulada y menos nueva de lo que sugería**. Se aceptaron todos sus puntos. Esta versión ya los incorpora:
-
-| Crítica | Cambio |
-|---|---|
-| "Cambio de marco, no muestreo" es una falsa dicotomía | La tesis es empírica y se compara con formas baratas de diversidad (§17.3) |
-| La tesis es trivial si el operador depende de H* | Los operadores son genéricos y se eligen por el disparador (§17.3) |
-| "No obvio" depende del generador, la pregunta, la decodificación, N, la semilla y el juez | Todo eso se declara, y se usan semillas independientes (§17.2) |
-| Un filtro sobre los mismos hechos cuenta dos veces y premia a Merlín | Hechos reservados o validación con familias (§17.6) |
-| Un filtro duro mata a Wegener | Estado *prometedora* (§17.6) |
-| En dominios abiertos el filtro es circular | Juez de otra familia, ciego al operador; el filtro fuerte solo donde hay proyección o hechos reservados (§17.6) |
-| El catálogo es arbitrario, con huecos y solapamientos | Se deriva del esquema de una explicación; se agregan el nulo, la analogía, la escala, la heterogeneidad, la identidad, el umbral y la simetría; O11 pasa a la prueba (§17.5) |
-| Faltan disparadores | Fallo de predicción, cambio de régimen y anomalía de magnitud (§17.4) |
-| Banco de prueba igual al de desarrollo | Catálogo congelado y salas nuevas de un autor ciego (§17.7) |
-| Regresión a la media, k desigual, líneas base débiles, juez laxo | Semillas independientes, recall@k, líneas base fuertes, placebo, juez ciego con rúbrica (§17.7) |
-| Falta la política de aplicación | Declarada como problema abierto (§17.5) |
-| La calificación de operadores es un bandido con recompensa demorada | Advertencia en §17.8 |
-| Goodhart y sesgo hacia acertijos | §17.6 y casos científicos en §17.7 |
-| Falta Schurz (2008), el antecedente más cercano | §17.9 |

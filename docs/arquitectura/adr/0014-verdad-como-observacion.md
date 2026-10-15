@@ -4,7 +4,7 @@
 
 ## Contexto
 
-ADR-0013 permitía cerrar un caso con una `verdad` única que se trataba como cierta para calibrar. Eso repite el error que la tesis critica: tomar el reporte de un observador por el estado real. Ver [12 §12.1](../../marco-teorico/12-verdad-y-entrenamiento.md#121-la-verdad-de-cierre-es-una-observación).
+ADR-0013 permitía cerrar un caso con una `verdad` única que se trataba como cierta para calibrar. Eso repite el error que la tesis critica: tomar el reporte de un observador por el estado real. Ver [12 §12.1](../../historico/marco-teorico/12-verdad-y-entrenamiento.md#121-la-verdad-de-cierre-es-una-observación).
 
 ## Decisión
 
