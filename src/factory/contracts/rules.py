@@ -98,6 +98,14 @@ class ConjuntoReglas(BaseModel):
         ),
     )
 
+    puntuacion: Literal["consiliencia", "predictiva"] = Field(
+        default="consiliencia",
+        description=(
+            "Score de selección con proyección: consiliencia (04, 09) o predictiva, que puntúa "
+            "lo que la hipótesis predice de cada observación oculta (16 P3, EXP-015)"
+        ),
+    )
+
     def modo_seleccion(self) -> str:
         if self.seleccion is not None:
             return self.seleccion

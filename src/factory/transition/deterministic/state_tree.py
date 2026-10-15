@@ -19,6 +19,7 @@ expansión. Con un verificador de dos valores todo lo anterior se mantiene igual
 - Si varias hipótesis empatan (diferencia ≤ δ) no hay H*: el caso está subdeterminado.
 """
 
+from collections.abc import Callable
 from dataclasses import dataclass, field
 
 from pydantic import BaseModel, Field
@@ -45,7 +46,10 @@ from factory.transition.deterministic.ibe_evaluator import (
     clave_ranking,
     costo_error,
 )
+from factory.transition.deterministic.prediccion import Proyector, puntuar
 from factory.transition.deterministic.respuesta import CalculoRespuesta, clase_de
+
+UNIVERSO_POR_DEFECTO = 100
 
 
 class ResultadoArbol(BaseModel):
@@ -86,9 +90,26 @@ class ArbolHipotesis:
         delta_empate: float = 1e-6,
         pregunta: Pregunta | None = None,
         veredictos_fragil: int = 1,
+        puntuacion: str = "consiliencia",
+        proyector: Proyector | None = None,
+        universo: Callable[[Observacion, Observador], int] | None = None,
     ) -> None:
+        """`puntuacion`: 'consiliencia' (04, 09) o 'predictiva' (16 P3, EXP-015).
+
+        La predictiva necesita un `proyector`; si no se da, se usa el verificador cuando sabe
+        proyectar. `universo` da |Y_j|, el número de valores que podría reportar un observador.
+        """
+        if puntuacion not in ("consiliencia", "predictiva"):
+            raise ValueError(f"puntuación desconocida: {puntuacion}")
         self.evaluador = evaluador
         self.verificador = verificador
+        if proyector is None and hasattr(verificador, "predecir"):
+            proyector = verificador  # type: ignore[assignment]
+        if puntuacion == "predictiva" and proyector is None:
+            raise ValueError("la puntuación predictiva requiere un dominio con proyección")
+        self.puntuacion = puntuacion
+        self.proyector = proyector
+        self.universo = universo or self._universo
         if vocabulario is None:
             vocabulario = set(evaluador.rule_engine.reglas.vocabulario)
         self.vocabulario = {normalizar(v) for v in vocabulario}
@@ -239,6 +260,17 @@ class ArbolHipotesis:
             ),
             residuo=sum(residuo.values()),
         )
+        if self.proyector is not None:
+            predictivo = puntuar(
+                h,
+                [(o, self.observadores[o.observador_id], self.confiabilidad(o)) for o in activas],
+                self.proyector,
+                self.universo,
+            )
+            score_predictivo = predictivo.total - self.evaluador.gamma * evaluacion.parsimonia_p
+            evaluacion = evaluacion.model_copy(update={"score_predictivo": score_predictivo})
+            if self.puntuacion == "predictiva":
+                evaluacion = evaluacion.model_copy(update={"score_final": score_predictivo})
         return ResultadoEvaluacion(
             evaluacion=evaluacion,
             estado=registro.estado,
@@ -308,6 +340,14 @@ class ArbolHipotesis:
         return clase_de(dict(self.hipotesis(id_hipotesis).afirmaciones), self.pregunta)
 
     # --- interno --------------------------------------------------------------------------
+
+    def _universo(self, observacion: Observacion, observador: Observador) -> int:
+        """|Y_j|: valores de la variable observada si el dominio los declara cerrados."""
+        variable = getattr(self.proyector, "variable_observada", None)
+        definicion = self.evaluador.rule_engine.reglas.variables.get(variable or "")
+        if definicion is not None and definicion.valores:
+            return len(definicion.valores)
+        return UNIVERSO_POR_DEFECTO
 
     def _respuesta(self, coherentes: list[ResultadoEvaluacion]) -> Respuesta | None:
         calculo = CalculoRespuesta(

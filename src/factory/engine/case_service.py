@@ -723,6 +723,8 @@ class ServicioCasos:
             delta_empate=pesos.delta_empate,
             pregunta=registro.pregunta,
             veredictos_fragil=pesos.veredictos_fragil,
+            puntuacion=reglas.puntuacion,
+            proyector=base if isinstance(base, VerificadorProyeccion) else None,
         )
         arboles.append(arbol)
         ctx = _Contexto(

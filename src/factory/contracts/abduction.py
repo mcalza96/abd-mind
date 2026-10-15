@@ -50,6 +50,13 @@ class HipotesisCandidata(BaseModel):
             "Afirmaciones estructuradas variable → valor que evalúa el motor de reglas (D3)"
         ),
     )
+    parametros_libres: dict[str, list[Valor]] = Field(
+        default_factory=dict,
+        description=(
+            "Familia de hipótesis: variables que la hipótesis no fija y sus valores posibles. "
+            "La puntuación predictiva las ajusta a los datos (16 P3, EXP-014)"
+        ),
+    )
     predicciones: list[Prediccion] = Field(
         default_factory=list, description="Consecuencias futuras que espera (no puntúan)"
     )
@@ -65,3 +72,7 @@ class EvaluacionAbductiva(BaseModel):
     consiliencia_c: int
     coherencia_k: float
     score_final: float
+    score_predictivo: float | None = Field(
+        default=None,
+        description="Σ log p(y_i | y_−i, H) − γ·P, si el dominio permite proyectar (EXP-015)",
+    )

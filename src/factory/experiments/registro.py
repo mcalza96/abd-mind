@@ -5,6 +5,7 @@ from collections.abc import Callable
 from factory.config import Config
 from factory.experiments import (
     cilindro,
+    comparacion_puntuacion,
     con_llm,
     expansion,
     finanzas,
@@ -25,6 +26,7 @@ EXPERIMENTOS: dict[str, Callable[[], ResultadoExperimento]] = {
     "empate": robustez.empate,
     "reservado": reservado.ejecutar,
     "salas": salas.ejecutar,
+    "puntuacion": comparacion_puntuacion.ejecutar,
 }
 
 # Con LLM: requieren proveedor configurado.

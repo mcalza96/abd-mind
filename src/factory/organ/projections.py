@@ -75,14 +75,27 @@ class VerificadorProyeccion:
         # (p. ej. la que extrae el córtex de un texto libre).
         self.variable_observada = variable_observada
 
+    def observado(self, observacion: Observacion) -> Valor:
+        if observacion.valor is not None:
+            return observacion.valor
+        if self.variable_observada and self.variable_observada in observacion.variables:
+            return observacion.variables[self.variable_observada]
+        return observacion.contenido
+
+    def predecir(self, hipotesis: HipotesisCandidata, observador: Observador) -> Valor | None:
+        return self.proyeccion(hipotesis, observador)
+
+    def consistente(
+        self, predicho: Valor, observacion: Observacion, observador: Observador
+    ) -> bool:
+        return self.relacion.consistente(
+            predicho, self.observado(observacion), observador.tolerancia
+        )
+
     def verificar(
         self, hipotesis: HipotesisCandidata, observacion: Observacion, observador: Observador
     ) -> Veredicto:
-        observado: Valor = observacion.contenido
-        if observacion.valor is not None:
-            observado = observacion.valor
-        elif self.variable_observada and self.variable_observada in observacion.variables:
-            observado = observacion.variables[self.variable_observada]
+        observado = self.observado(observacion)
         predicho = self.proyeccion(hipotesis, observador)
         if predicho is None:
             relacion = Relacion.NEUTRAL
