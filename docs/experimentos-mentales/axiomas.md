@@ -14,7 +14,7 @@ Cada axioma cita la historia que lo exige. Son **candidatos**: siguen en pie mie
 | A8 | **Diversidad para generar, observación para decidir** | [3](03-los-cien-jueces.md) |
 | A11 | **La ley convierte la diferencia en contradicción.** El invariante es lo que hace detectable el error (deriva el postulado 2) | [5](05-la-lampara-torcida.md) |
 | A12 | **Ante una contradicción hay tres sospechosos: instrumento, ley y objeto,** y cada uno se descarta con su propia prueba. Se diagnostica por el conjunto mínimo de conflicto: quien no está en él queda exculpado. La regla también es sospechosa | [5](05-la-lampara-torcida.md) |
-| A13 | **Se cuentan evidencias por medida, no observadores.** Quien no mide la cantidad en disputa no vota; repetir una medida no disputada no compra votos | [5](05-la-lampara-torcida.md) |
+| A13 | **Se cuentan evidencias por medida, no observadores.** Repetir la misma ventana no son dos votos independientes. *Corregido por [EXP-014](../bitacora/EXP-014-salas-en-codigo.md):* quien no mide la cantidad en disputa **sí vota** a través de las hipótesis que ligan su medida con la disputada; una explicación que vuelve consecuencia lo que para su rival es coincidencia gana por eso | [5](05-la-lampara-torcida.md) |
 | A14 | **El error sistemático no se ve repitiendo: se ve calibrando.** La confiabilidad sale de la calibración y del historial, no del prestigio | [5](05-la-lampara-torcida.md) |
 | A15 | **Se puede observar al observador.** La observación que decide a veces apunta al instrumento | [5](05-la-lampara-torcida.md) |
 | A16 | **Las hipótesis auxiliares pagan según lo frecuentes que son.** Si absorber una contradicción con una entidad ad hoc cuesta menos que la contradicción, todo conflicto se lava | [5](05-la-lampara-torcida.md) |

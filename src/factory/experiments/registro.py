@@ -10,6 +10,7 @@ from factory.experiments import (
     finanzas,
     reservado,
     robustez,
+    salas,
     tercer_observador,
 )
 from factory.experiments.base import ResultadoExperimento
@@ -23,6 +24,7 @@ EXPERIMENTOS: dict[str, Callable[[], ResultadoExperimento]] = {
     "errata": robustez.errata,
     "empate": robustez.empate,
     "reservado": reservado.ejecutar,
+    "salas": salas.ejecutar,
 }
 
 # Con LLM: requieren proveedor configurado.

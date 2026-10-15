@@ -94,3 +94,10 @@ Principios que el agente propuso y que se adoptan:
 
 - **Diagnóstico por conflicto mínimo:** se identifica el conjunto mínimo de observaciones que no pueden ser ciertas a la vez, y quien no está en él queda exculpado. Es la técnica clásica de diagnóstico basado en modelos (Reiter; de Kleer y Williams). El motor no la tiene.
 - **Una hipótesis auxiliar de error cuesta según la frecuencia de ese tipo de error**, no un punto fijo.
+
+## Verificación en código (EXP-014, 2026-10-15)
+
+[EXP-014](../bitacora/EXP-014-salas-en-codigo.md) construyó esta sala en código. Confirmó los puntajes de esta historia: 9,85 para los rígidos, 13,27 para el monstruo y las auxiliares, y la inversión por prestigio. Corrigió dos cosas:
+
+1. **"La mayoría es una ilusión" (punto 2 de "Dónde se rompe") es solo parcialmente cierto.** Con una puntuación predictiva, Olga sí vota. Si el cuerpo es un cilindro, que Olga y Sara midan lo mismo es una consecuencia; si es elíptico, es una coincidencia. El cilindro supera al cilindro elíptico (2,0 contra 0,08), y la lámpara torcida supera a la pantalla de Sara (2,1 contra 1,2). El empate del motor actual es un defecto, no prudencia.
+2. **La variante de Pedro de la lectura ciega era falsa en su primera forma.** Si Pedro repite a Olga (frente), el empate se mantiene, porque las dos hipótesis lo explican. Si repite a Sara (costado), gana el cilindro. Esa segunda versión sí ilustra el problema: el motor cuenta dos veces la misma ventana.
