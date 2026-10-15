@@ -1,6 +1,6 @@
 # abd-mind
 
-Motor de razonamiento abductivo servido por MCP a Hermes Agent. **Objetivo:** una IA a la que se le ocurran explicaciones no obvias y que sepa distinguirlas de las rebuscadas ([tesis](docs/marco-teorico/tesis.md)). Hoy el motor mantiene el estado de cada caso, verifica, puntúa (por consiliencia o por predicción), detecta empates, sugiere qué observar y registra predicciones y verdades. La generación guiada por operadores abductivos está en diseño.
+Investigación sobre razonamiento abductivo para agentes. **Desde el 2026-10-15** lo que recibe el agente (Hermes) son una skill y unas líneas siempre activas ([`hermes/`](hermes/), [ADR-0017](docs/arquitectura/adr/0017-motor-como-investigacion-skills-como-producto.md)); el motor y su servidor MCP quedan como investigación. **Objetivo:** una IA a la que se le ocurran explicaciones no obvias y que sepa distinguirlas de las rebuscadas ([tesis](docs/marco-teorico/tesis.md)). El motor mantiene el estado de cada caso, verifica, puntúa (por consiliencia o por predicción), detecta empates, sugiere qué observar y registra predicciones y verdades. La generación guiada por operadores abductivos está en diseño.
 
 ## Uso rápido
 

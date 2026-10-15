@@ -1,5 +1,7 @@
 # Arquitectura — abd-mind
 
+> **Desde el 2026-10-15 ([ADR-0017](adr/0017-motor-como-investigacion-skills-como-producto.md)):** el motor y el MCP quedan como investigación. Lo que recibe el agente son una skill y unas líneas siempre activas, en [`hermes/`](../../hermes/). Lo que sigue describe el motor.
+
 Este directorio define **cómo** se construye el sistema descrito en el [marco teórico](../marco-teorico/README.md). Si un documento de aquí contradice al marco teórico, prevalece el marco, salvo que un ADR diga explícitamente lo contrario.
 
 ## Índice
@@ -33,6 +35,7 @@ Este directorio define **cómo** se construye el sistema descrito en el [marco t
 | [0014](adr/0014-verdad-como-observacion.md) | La verdad de cierre es una observación |
 | [0015](adr/0015-verificacion-comparativa.md) | Verificación comparativa y parsimonia juzgada |
 | [0016](adr/0016-seleccion-holistica-y-proyeccion.md) | Selección holística en dominios abiertos y proyección calculable |
+| [0017](adr/0017-motor-como-investigacion-skills-como-producto.md) | **El motor queda como investigación; lo que recibe el agente son skills** |
 
 ## Visión general
 
