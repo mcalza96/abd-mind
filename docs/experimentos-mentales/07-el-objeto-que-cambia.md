@@ -59,3 +59,32 @@ Incluso sin el error de Tomás, Merlín pierde contra el cilindro por un solo pu
 
 - **En el dominio exacto:** agregar la hipótesis de Merlín a la sala de la historia 5 y verificar que hoy gana. Después exigir a cada hipótesis su predicción para las ventanas no abiertas: Merlín no puede darla y queda fuera, o queda con una predicción repartida que pierde en el registro.
 - **En abd-bench:** contar cuántas hipótesis ganadoras de EXP-010 a EXP-013 no prohíben nada observable. Por ejemplo, las que no dejan una predicción concreta en `que_vigilar`.
+
+## Lectura ciega (2026-10-15)
+
+El agente sin contexto llegó al mismo diagnóstico: Merlín no prohíbe nada. Su verosimilitud queda repartida entre todos los datos posibles, como pasa con "Dios lo quiso así". Calculó el mismo puntaje (Merlín gana por unos 4 puntos) y agregó cuatro cosas que vale la pena registrar:
+
+1. **Una prueba que no se había visto: encender las tres lámparas a la vez.** Un solo cuerpo no puede tener tres formas en el mismo instante. También se puede cambiar a los observadores de ventana, porque "según quién mira" y "según la ventana" son hipótesis distintas.
+2. **El empate sin salida.** Si los datos fueran consistentes, Merlín y el cilindro empatarían (con P = 0), y el motor sugeriría mirar más. Pero **ninguna observación los separa**, porque Merlín se acomoda a cualquiera: el motor quedaría en un bucle sin fin. Es la historia 8 vista desde el lado de la hipótesis.
+3. **Los grados de libertad ajustados también son entidades.** Merlín ajusta una forma libre por cada ventana, así que su complejidad real crece con los datos. Contar entidades sintácticas no lo ve: "f = la silueta" tiene cero parámetros escritos. Hay que medirlo con una prueba predictiva, no contando.
+4. **Un remedio concreto: puntuar por predicción, no por explicación.**
+   - Se oculta una ventana, se predice desde las otras y se repite con cada ventana: validación dejando una fuera.
+   - El cilindro acota la sombra oculta; Merlín no predice nada y obtiene la peor puntuación.
+   - Se puntúa por log-verosimilitud predictiva, no por "explica sí o no".
+
+   Esto unifica A9 (comprometerse antes), A16 (las auxiliares pagan) y A24 (vale lo que prohíbe) en un solo mecanismo.
+
+**Riesgos del remedio**, señalados por el propio agente:
+
+- Penaliza fenómenos que de verdad dependen del observador cuando todavía no traen un mecanismo.
+- La hipótesis "el testigo se equivocó" puede volverse un comodín simétrico al de Merlín. Hay que limitarla: que diga qué medición falló, cómo comprobarlo y con qué frecuencia ocurre (A16).
+- En dominios abiertos, un LLM estima mal las verosimilitudes.
+
+**La versión legítima de Merlín** trae dos cosas:
+
+- **un canal causal identificable:** un sensor, el calor de la lámpara, el tiempo entre mediciones, la conciencia de ser observado;
+- **una función de dependencia fijada de antemano**, que arriesga predicciones. Por ejemplo, que la forma cambie al tapar el sensor.
+
+Precisa A25.
+
+**Problema de la historia:** como en la 5, los datos son imposibles para cualquier sólido rígido con proyección paralela, así que la escena fabrica la situación en que el acomodo gana. Es deliberado, porque eso es lo que ocurre con un observador que se equivoca. Pero hay que decirlo.

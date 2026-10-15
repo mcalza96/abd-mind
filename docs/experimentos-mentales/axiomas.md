@@ -25,6 +25,11 @@ Cada axioma cita la historia que lo exige. Son **candidatos**: siguen en pie mie
 | A21 | **Donde el objeto es el veredicto de otros jueces con información y dinero (un mercado), solo aporta contenido lo que no está en ese veredicto;** sin eso, el valor es disciplina | [6](06-la-accion-que-cae.md) |
 | A22 | **Las causas pueden sumarse.** Cuando no son excluyentes, la compuesta siempre explica todo; compararlas exige estimar cuánto aporta cada una, no solo si está | [6](06-la-accion-que-cae.md) |
 | A23 | **Antes de esperar, buscar la ventana transversal:** el mismo observador visto en otros objetos (amplía A15) | [6](06-la-accion-que-cae.md) |
+| A24 | **Una hipótesis vale lo que prohíbe.** Se puntúa por lo que predice de lo no visto (validación dejando una ventana fuera), no por lo que acomoda de lo visto. Los grados de libertad ajustados cuentan como entidades | [7](07-el-objeto-que-cambia.md) |
+| A25 | **"Depende de quién mire" se admite con un canal causal y una dependencia fijada de antemano;** se prueba mirando sin que el objeto lo sepa, o todos a la vez | [7](07-el-objeto-que-cambia.md) |
+| A26 | **Identificabilidad.** Algunas preguntas no se resuelven con ninguna ventana de la clase disponible; el motor lo dice en vez de seguir sugiriendo ventanas | [8](08-el-hueco-interior.md) |
+| A27 | **Ampliar instrumentos, no solo hipótesis.** Cuando la pregunta no es identificable, falta otro tipo de observador | [8](08-el-hueco-interior.md) |
+| A28 | **Mientras no se pueda saber, se acota.** Se informa la cota segura y, aparte, la apuesta más probable; la parsimonia no es neutral frente a la pregunta (empuja a un extremo) | [8](08-el-hueco-interior.md) |
 | A9 | **El compromiso previo no hace acertar en un caso;** produce el registro para saber en quién confiar cuando falta la ventana. **No decidir no exime de apostar:** se declaran probabilidades antes de mirar, aunque no se decida | [4](04-el-sobre-cerrado.md) |
 | A10 | **El registro sirve solo si es completo, graduado, independiente y extenso,** y se compara contra la tasa base, no contra el azar | [4](04-el-sobre-cerrado.md) |
 
@@ -53,3 +58,6 @@ Cada axioma cita la historia que lo exige. Son **candidatos**: siguen en pie mie
 | — | Separar causa y desenlace; estimar lo que el precio ya descuenta (A17, A21) |
 | — | Hipótesis que se suman, con aporte estimado (A22) |
 | — | Sugerir observaciones transversales que estén disponibles hoy, no solo esperar (A23) |
+| Puntúa por observaciones explicadas | Puntuar por predicción de lo no visto (A24) |
+| Expande solo ante una anomalía | Expansión dirigida a la pregunta: buscar compatibles que respondan distinto (A7, A28) |
+| Avisa si no encuentra una ventana que separe | Declarar no identificabilidad y proponer otra modalidad (A26, A27) |
