@@ -7,7 +7,7 @@ description: Resolver discrepancias entre observadores o informes contradictorio
 
 > Borrador. Se finaliza en la fase 6 de la hoja de ruta (`docs/arquitectura/hoja-de-ruta.md`).
 
-Tienes acceso a las herramientas MCP del servidor `abd-mind`. El motor decide qué explicación es mejor; tú conversas, registras la evidencia, aportas hipótesis y comunicas los resultados.
+Tienes acceso a las herramientas MCP del servidor `abd-mind`. El motor lleva el estado del caso, verifica cada hipótesis contra cada hecho, compara las explicaciones, te dice qué observación las separa y registra predicciones. Tú registras la evidencia, aportas hipótesis, buscas las observaciones que faltan y comunicas los resultados.
 
 ## Cuándo usarlo
 
