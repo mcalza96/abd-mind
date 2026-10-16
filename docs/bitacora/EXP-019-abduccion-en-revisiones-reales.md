@@ -112,6 +112,13 @@ Antes de las 62 corridas, 2 casos fuera del conjunto × 2 condiciones. Los 21 re
 - **Procedimiento por corrida:** clon nuevo por corrida y por condición, porque el agente puede escribir en el clon. Lleva `npm ci` antes de correr: el PM trabajaba con dependencias instaladas, y el tiempo de instalación no cuenta en los minutos. La configuración es nueva en cada corrida. Se usa `--permission-mode bypassPermissions` con reglas que niegan `Read` en `~/.claude`, los dos clones de `portafolio` y este repositorio, además de `gh` y WebFetch a github.com. Bash puede igual leer fuera del clon o consultar GitHub, que tiene el futuro del repositorio. Por eso se audita cada ruta y cada URL del registro de herramientas, y una corrida que toque la respuesta se anula.
 - **Autenticación:** con `CLAUDE_CONFIG_DIR` vacío, `claude -p` responde «Not logged in», porque en macOS la sesión vive en el llavero. Hace falta un token que genere el usuario. El agente no lo ve.
 
+## Nota — 2026-10-15, piloto previo con FIG-24 (sin resultados vistos)
+
+- **Qué cambia:** el usuario pidió probar primero con FIG-24, antes de UI-47 y BUS-7, usando el login normal de la CLI porque el token todavía no existe. FIG-24 **es uno de los 21 casos**. Se decidió antes de ver el resultado: **esta corrida no cuenta y FIG-24 sigue en los 21**. La corrida completa usa sesiones nuevas y el juez es de otra familia.
+- **Caso:** FIG-24 en `4ecb6d6`, el padre del commit del rebote (`c33f48f`). El ticket está en IN REVIEW con `Rebotes 0`. La frase de la clave para el grep es «la leyenda miente».
+- **Configuración, que no es la registrada (no aislada):** login normal, con `--setting-sources project,local` (sin los ajustes, plugins ni hooks del usuario), `--strict-mcp-config` sin servidores y `--no-session-persistence`. Con esas fuentes el `CLAUDE.md` global no se carga solo. Va por `--append-system-prompt-file`, o sea como parte del system prompt y no como `CLAUDE.md` (S0 `916cf000…fe33`, S1 `a5410c8f…5b7d`). La skill de S1 va en un plugin de la sesión (`--plugin-dir`) y se llama `exp019-s1:abduccion`, con SHA-256 `03d33798…d48f`. En las dos condiciones se ven `dataviz` y las skills integradas de Claude Code. `~/.claude` sigue legible por Bash: se niega `Read` y se audita.
+- **Entorno:** se corre con `env -i`, porque el proceso hereda variables de la app de escritorio que impiden autenticar.
+
 ## Resultado
 
 *(pendiente)*
