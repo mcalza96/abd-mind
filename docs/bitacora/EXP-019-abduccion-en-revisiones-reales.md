@@ -119,6 +119,11 @@ Antes de las 62 corridas, 2 casos fuera del conjunto × 2 condiciones. Los 21 re
 - **Configuración, que no es la registrada (no aislada):** login normal, con `--setting-sources project,local` (sin los ajustes, plugins ni hooks del usuario), `--strict-mcp-config` sin servidores y `--no-session-persistence`. Con esas fuentes el `CLAUDE.md` global no se carga solo. Va por `--append-system-prompt-file`, o sea como parte del system prompt y no como `CLAUDE.md` (S0 `916cf000…fe33`, S1 `a5410c8f…5b7d`). La skill de S1 va en un plugin de la sesión (`--plugin-dir`) y se llama `exp019-s1:abduccion`, con SHA-256 `03d33798…d48f`. En las dos condiciones se ven `dataviz` y las skills integradas de Claude Code. `~/.claude` sigue legible por Bash: se niega `Read` y se audita.
 - **Entorno:** se corre con `env -i`, porque el proceso hereda variables de la app de escritorio que impiden autenticar.
 
+## Nota — 2026-10-16, modelo y permisos (sin resultados vistos)
+
+- **Modelo: Opus 5.5 (`claude-opus-5-5`) en las dos condiciones, en todo el experimento, piloto incluido.** Reemplaza a Sonnet 5.5. Lo decidió el usuario. Según los commits del PM, Opus 5.5 firmó la mayoría de los rebotes: UI-57, DATA-14, UI-47, FIG-24 y los de FIG-1 a FIG-12. Sonnet 5.5 firmó los de FIG-9, FIG-10, FIG-19, FIG-23, FIG-26 y FIG-37.
+- **Permisos: lista de permitidos en vez de `bypassPermissions`.** El clasificador de auto mode bloqueó lanzar agentes con `bypassPermissions` sin supervisión. Se permiten `Read`, `Grep`, `Glob`, `Edit`, `Write`, `Skill`, `TodoWrite`, `WebSearch`, `WebFetch`, y en Bash: `npm`, `npx`, `node`, `git`, `python3`, `ls`, `cat`, `head`, `tail`, `wc`, `grep`, `find`, `shasum`, `diff`, `sed` y `jq`. Siguen las reglas que niegan, y lo que no está en la lista se niega sin preguntar. Se registra cuántas herramientas se negaron por corrida: si la lista le quita al agente algo que el PM usaba, se ve ahí.
+
 ## Resultado
 
 *(pendiente)*
