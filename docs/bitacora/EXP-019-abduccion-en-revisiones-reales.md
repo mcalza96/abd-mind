@@ -104,6 +104,14 @@ Antes de las 62 corridas, 2 casos fuera del conjunto × 2 condiciones. Los 21 re
 - **Producción cambió desde cada caso:** afecta a las dos condiciones por igual, pero puede bajar el acierto de ambas.
 - **La línea siempre activa puede no disparar la skill** en una verificación. Es parte de lo que se mide: se registra en cuántas corridas de S1 se cargó la skill.
 
+## Nota — 2026-10-15, antes del piloto (sin resultados vistos)
+
+- **Universo de controles: 67, no 105.** La cifra de 105 no se pudo reproducir. Hay 132 tickets archivados con `Rebotes 0`, pero muchos los cerró o retiró el dueño sin verificación del PM. El usuario eligió el universo de 67: archivados, con `Rebotes 0`, con una sección de verificación, revisión o cierre del PM, y sin «retirado» ni «sin efecto» en el Estado. Script y salida en [`EXP-019/sorteo.py`](EXP-019/sorteo.py) y [`EXP-019/sorteo.txt`](EXP-019/sorteo.txt), sobre `portafolio` en `a5f18c6`. Controles sorteados (semilla `20261015`): ASK-2, ASK-3, ASK-5, FIG-30, FIG-33, INFRA-6, PAT-19, UI-38, UI-45 y UI-49. Control del piloto (semilla `20261016`, entre los 57 restantes): **BUS-7**.
+- **Casos del piloto:** UI-47 en `bd5f471` y BUS-7 en `c33f48f`. En los dos, el ticket está en IN REVIEW con `Rebotes 0`.
+- **Skill:** `hermes/skills/abduccion/SKILL.md` en `48d109a`, con SHA-256 `4e8c04c6…786de`. El archivo instalado en S1 no tiene la sección «Cómo responder» ni la línea de `red-abductiva`, y su SHA-256 es `03d33798…d48f`. `CLAUDE.md`: S0 `916cf000…fe33` (copia del global) y S1 `a5410c8f…5b7d` (con la línea siempre activa al final).
+- **Procedimiento por corrida:** clon nuevo por corrida y por condición, porque el agente puede escribir en el clon. Lleva `npm ci` antes de correr: el PM trabajaba con dependencias instaladas, y el tiempo de instalación no cuenta en los minutos. La configuración es nueva en cada corrida. Se usa `--permission-mode bypassPermissions` con reglas que niegan `Read` en `~/.claude`, los dos clones de `portafolio` y este repositorio, además de `gh` y WebFetch a github.com. Bash puede igual leer fuera del clon o consultar GitHub, que tiene el futuro del repositorio. Por eso se audita cada ruta y cada URL del registro de herramientas, y una corrida que toque la respuesta se anula.
+- **Autenticación:** con `CLAUDE_CONFIG_DIR` vacío, `claude -p` responde «Not logged in», porque en macOS la sesión vive en el llavero. Hace falta un token que genere el usuario. El agente no lo ve.
+
 ## Resultado
 
 *(pendiente)*
