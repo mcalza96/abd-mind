@@ -124,6 +124,24 @@ Antes de las 62 corridas, 2 casos fuera del conjunto × 2 condiciones. Los 21 re
 - **Modelo: Opus 5.5 (`claude-opus-5-5`) en las dos condiciones, en todo el experimento, piloto incluido.** Reemplaza a Sonnet 5.5. Lo decidió el usuario. Según los commits del PM, Opus 5.5 firmó la mayoría de los rebotes: UI-57, DATA-14, UI-47, FIG-24 y los de FIG-1 a FIG-12. Sonnet 5.5 firmó los de FIG-9, FIG-10, FIG-19, FIG-23, FIG-26 y FIG-37.
 - **Permisos: lista de permitidos en vez de `bypassPermissions`.** El clasificador de auto mode bloqueó lanzar agentes con `bypassPermissions` sin supervisión. Se permiten `Read`, `Grep`, `Glob`, `Edit`, `Write`, `Skill`, `TodoWrite`, `WebSearch`, `WebFetch`, y en Bash: `npm`, `npx`, `node`, `git`, `python3`, `ls`, `cat`, `head`, `tail`, `wc`, `grep`, `find`, `shasum`, `diff`, `sed` y `jq`. Siguen las reglas que niegan, y lo que no está en la lista se niega sin preguntar. Se registra cuántas herramientas se negaron por corrida: si la lista le quita al agente algo que el PM usaba, se ve ahí.
 
+## Piloto con FIG-24 — 2026-10-16 (no cuenta)
+
+| | S0 | S1 |
+|---|---|---|
+| Veredicto | Rebota | Rebota |
+| Defecto de la clave (la leyenda no calza con las marcas) | Lo nombra como **defecto menor** (muestras idénticas; el punto «después» es verde o rojo) | Lo nombra como **problema menor** (las dos muestras con el mismo color) |
+| Defecto principal que propone | El rótulo final tapa su tramo en las filas que bajan, medido | El mismo, medido, más «faltan las capturas» |
+| ¿Cargó la skill? | — | **No.** Estaba disponible y no la invocó ni la mencionó |
+| Herramientas negadas | 4 | 14 |
+| Minutos | 2,0 | 5,1 |
+| Costo equivalente en API | US$ 0,61 | US$ 0,99 |
+| Tokens frescos (entrada + creación de caché + salida) | 50,0 mil | 69,8 mil (+40 %) |
+
+- **Aislamiento:** en los dos clones, 0 commits posteriores al caso, 0 objetos inalcanzables y la frase de la clave 0 veces. Ninguna herramienta tocó `~/.claude`, los repositorios originales ni GitHub. Las dos corridas escribieron fuera del clon: S0 en `/tmp/fig24-check`, y S1 hizo worktrees que después borró.
+- **La lista de permitidos estorba.** Niega los comandos compuestos (`&&`, `;`, `cd`, `mkdir`, `ln`, `cp`). Los dos agentes rodearon el problema y corrieron `tsc` y la suite, pero S1 perdió 14 llamadas en eso. Hay que corregirlo antes de la corrida completa.
+- **La línea siempre activa no disparó la skill** en una verificación, que es justo el caso que nombra. Es la lección 14 otra vez: ofrecer no es usar.
+- **Posible defecto que el PM no vio:** las dos condiciones encontraron, por separado y con medición, que el rótulo final tapa el tramo cuando la fila baja. Lo adjudica el usuario.
+
 ## Resultado
 
 *(pendiente)*
