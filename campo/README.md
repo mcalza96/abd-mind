@@ -42,6 +42,8 @@ Archivo `campo/notas/AAAA-MM-DD-dominio-tema.md`:
 ## Evidencia
 <cada cifra con su fuente o con la consulta y su salida literal; nada estimado de memoria>
 
+En «Evidencia» marca con **decisiva** la cifra o el hecho que decide la conclusión y dale su fuente primaria —el regulador, el filing, el operador del dato o el comunicado de la empresa— con URL; un resumen de buscador o de un LLM («grounding», «AI overview») sirve como pista, nunca como evidencia de una cifra **decisiva**. Si no se encontró la primaria, escribe «primaria no encontrada» y baja la confianza.
+
 ## Conclusión
 <la explicación, la confianza y qué la cambiaría>
 
