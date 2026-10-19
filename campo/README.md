@@ -34,7 +34,7 @@ Archivo `campo/notas/AAAA-MM-DD-dominio-tema.md`:
 <qué hecho había que explicar y por qué ese>
 
 ## Hipótesis
-| Hipótesis | Familia | Qué predecía distinto | Resultado de la comprobación |
+| Hipótesis | Familia | Qué predice distinto de la obvia (antes de mirar) | Resultado de la comprobación |
 |---|---|---|---|
 | <la obvia> | | | |
 | <rival> | | | |
@@ -51,6 +51,8 @@ Archivo `campo/notas/AAAA-MM-DD-dominio-tema.md`:
 ## Lo que aprendí del método
 <qué funcionó, qué faltó en la skill, una familia de rivales o una comprobación que no estaba, un error propio. "Nada nuevo" también vale>
 ```
+
+En «Qué predice distinto de la obvia (antes de mirar)» escribe solo algo que la obvia prohíba o haga improbable, idealmente con número o fecha; si no hay nada así, escribe «nada distinto: sobra o es la misma» (cf. «Contra lo rebuscado»); lo que no distingue de la obvia se cierra como `no separada`, nunca como `sobrevive`. Ejemplo: SPRC H1 predice cierre sobre 3,00 frente a H2 que predice precio que gravita a 1,50.
 
 En «Resultado de la comprobación» usa solo `refutada` (lo predicho no se vio), `sobrevive` (lo predicho distinto de la obvia se vio), `no separada` (compatible pero no la distingue de otra, nómbrala) o `sin comprobar` (di qué dato falta), seguido de la cifra que lo decide; «apoya» solo no vale. Ejemplo: H1 predecía cierre sobre 3,00; cerró en 1,695 → `refutada`.
 
