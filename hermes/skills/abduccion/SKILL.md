@@ -36,6 +36,7 @@ Lo normal no es que falte imaginación: la causa verdadera suele estar entre las
 - Cada pieza no vista (un actor oculto, un error conveniente, una conspiración) es una deuda. Se paga con una comprobación, no con plausibilidad.
 - Que todo calce no prueba nada: busca rivales también entonces. Pero tampoco contradigas la obvia por contradecirla.
 - Diez fuentes que repiten la misma fuente cuentan como una.
+- La cifra que decide se comprueba en su fuente primaria; un resumen de buscador es una pista, no una fuente.
 
 ## Cómo responder (corto, para Telegram)
 
