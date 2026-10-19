@@ -5,7 +5,7 @@
 
 ## Lo sorprendente
 
-Hernán preguntó lo mismo 3 veces con otras palabras (voltaje → tiempo → voltaje aconsejado).
+El técnico preguntó lo mismo 3 veces con otras palabras (voltaje → tiempo → voltaje aconsejado).
 Las respuestas correctas SÍ se dieron en el chat (14,2 kV fábrica / 8,5-10 terreno; 1 min; 10 kV).
 Pero en el registro MTC2-041 y 042 quedaron `abierta` sin respuesta, y MTC2-043 quedó
 `respondida` sin `Fuente:`. El conocimiento estaba; el trámite no se cerró.
