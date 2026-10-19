@@ -44,7 +44,7 @@ activo; eso refutaría H-mecanismo.
 
 ## Predicciones
 
-- P-20261019-02
+- P-20261019-14
 
 ## Lo que aprendí del método
 

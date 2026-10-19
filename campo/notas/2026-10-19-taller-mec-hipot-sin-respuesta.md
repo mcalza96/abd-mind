@@ -41,7 +41,7 @@ truncó después (no hay indicios).
 
 ## Predicciones
 
-- P-20261019-01
+- P-20261019-13
 
 ## Lo que aprendí del método
 

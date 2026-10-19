@@ -1,5 +1,6 @@
 ---
 name: abduccion
+version: 1
 description: Usar ante cualquier pregunta de por qué pasó algo, una anomalía, un diagnóstico, una caída o un alza que nadie explica, datos que no cuadran, o una decisión que depende de cuál es la causa.
 ---
 
@@ -12,7 +13,7 @@ Lo normal no es que falte imaginación: la causa verdadera suele estar entre las
 1. **¿Qué es lo sorprendente de verdad?** Lista los hechos y elige el que hay que explicar, que no siempre es el más llamativo. Señales: dos datos que no pueden ser ciertos a la vez; una coincidencia; un hecho que queda suelto o que se atribuye a "error"; algo que falta; algo que calza demasiado bien (un 0 % exacto, todos de acuerdo); una relación que se rompe en una fecha; un efecto esperable pero de un tamaño raro. Si la pregunta mezcla "por qué pasó" con "qué va a pasar", sepáralas.
 2. **Escribe la explicación obvia como hipótesis**, sea la que trae el usuario o la más frecuente, con lo que predice. No es la respuesta por defecto. Tampoco es sospechosa por ser obvia.
 3. **Genera rivales de familias distintas** (lista abajo). Al menos tres, y al menos una en la que alguien **decidió** algo. Antes de cerrar, pregúntate: "¿qué otra cosa produciría exactamente estos mismos datos?".
-4. **Para cada rival, busca qué predice distinto de la obvia**: la comprobación que las separa. Escribe qué esperas ver con cada una **antes de mirar**. Ejemplo: ante "¿el equipo pierde más por el entrenador nuevo?", ¿pierde también contra rivales débiles? ¿Cambió el calendario, por ejemplo con más partidos de visita? ¿Hubo un quiebre en la fecha del cambio o venía de antes?
+4. **Para cada rival, busca qué predice distinto de la obvia**: la comprobación que las separa. Escribe qué esperas ver con cada una **antes de mirar**. «Distinto» quiere decir algo que la obvia prohíbe, no algo que la rival permite. Ejemplo: ante "¿el equipo pierde más por el entrenador nuevo?", ¿pierde también contra rivales débiles? ¿Cambió el calendario, por ejemplo con más partidos de visita? ¿Hubo un quiebre en la fecha del cambio o venía de antes?
 5. **Ve a mirar.** Usa las herramientas: corre el cálculo en Python, abre el archivo o el registro, busca en la web la fuente primaria, compara con otros periodos, lugares o grupos. Empieza por la comprobación barata que más separa. Si no tienes los datos, pídeselos al usuario diciendo exactamente cuál y por qué.
 6. **Decide por lo que cada hipótesis predijo, no por lo que acomoda.** Una hipótesis que explica todo después de los hechos, o que agrega piezas no vistas sin pagarlas con una prueba, pierde. Si la obvia sobrevive a las comprobaciones, dila sin rodeos: eso también es un resultado.
 7. **Si no se puede decidir**, no elijas la menos mala. Di qué observación lo resolvería y cuánto cuesta. Una rival no obvia que no está refutada queda como **prometedora**, junto con su prueba; no se descarta ni gana sin ella. Si ningún dato disponible puede separarlas, dilo y di qué tipo de dato faltaría.
@@ -36,11 +37,12 @@ Lo normal no es que falte imaginación: la causa verdadera suele estar entre las
 - Cada pieza no vista (un actor oculto, un error conveniente, una conspiración) es una deuda. Se paga con una comprobación, no con plausibilidad.
 - Que todo calce no prueba nada: busca rivales también entonces. Pero tampoco contradigas la obvia por contradecirla.
 - Diez fuentes que repiten la misma fuente cuentan como una.
+- La cifra que decide se comprueba en su fuente primaria; un resumen de buscador es una pista, no una fuente.
 
 ## Cómo responder (corto, para Telegram)
 
-1. **Explicación:** la causa, en una o dos frases. Responde la pregunta del usuario.
-2. **Rivales descartadas:** cada una con la comprobación que la descartó, en una línea.
+1. **Explicación:** la causa, en una o dos frases. Responde la pregunta del usuario. Si son varias causas, di cuánto aporta cada una y con qué lo estimaste.
+2. **Rivales:** cada una en una línea como `refutada`, `sobrevive` o `no separada` (di de cuál no se distingue), con la comprobación que la separó.
 3. **Confianza:** alta, media o baja, con un número aproximado y lo que se apoya en algo que no comprobaste.
 4. **Qué cambiaría la conclusión:** la observación concreta que, si aparece, te haría pasar a otra hipótesis.
 

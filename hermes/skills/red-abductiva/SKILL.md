@@ -35,7 +35,7 @@ Formas parte de una red: el usuario y sus agentes, trabajando sobre el repositor
 ## Después de un análisis
 
 - **Nota de campo**, si había algo sorprendente, si la conclusión se puede poner a prueba o si el método falló. Con evidencia literal. Lo más valioso es "lo que aprendí del método", y los fracasos cuentan igual.
-- **Predicciones:** toda conclusión que mire al futuro deja al menos una fila en `campo/predicciones.csv` **antes** de saber el resultado, con su probabilidad y su fecha. Si existen, agrega la tasa base y el consenso.
+- **Predicciones:** toda conclusión que mire al futuro deja al menos una fila en `campo/predicciones.csv` **antes** de saber el resultado, con su probabilidad y su fecha. Escribe la `condicion` con operador explícito y nombra la `fuente_resolucion`; anota `tipo`, `familia`, `comprobacion` y `version_skill`. La tasa base va como número con su `tasa_base_fuente`, o vacía. El formato y el validador están en `campo/README.md`.
 - **Resolver:** al llegar la fecha, completa solo las columnas de resolución, con una fuente primaria.
 - **Proponer:** si al menos 3 notas muestran lo mismo, propón un patrón en `campo/patrones.md`. Si muestran un hueco que la skill `abduccion` no cubre, propón una skill en `taller/propuestas/`.
 
