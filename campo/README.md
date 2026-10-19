@@ -107,7 +107,7 @@ python3 .github/scripts/validar_predicciones.py campo/predicciones.csv
 
 Cada mes, o cada 20 predicciones resueltas, un agente:
 
-1. Calcula las métricas de [EXP-020](../docs/bitacora/EXP-020-calibracion-de-apuestas.md) por `tipo` y por `version_skill`, con los parámetros que fija ese registro: Brier skill score contra la tasa base y contra el consenso, y la brecha de calibración. Las 9 filas anteriores al 2026-10-20 son piloto y no entran.
+1. Calcula las métricas de [EXP-020](../docs/bitacora/EXP-020-calibracion-de-apuestas.md) por `tipo` y por `version_skill`, con los parámetros que fija ese registro: Brier skill score contra la tasa base y contra el consenso, y la brecha de calibración. Las filas anteriores al 2026-10-20 son piloto y no entran.
 2. Lista los **patrones candidatos**: lo que se repite en "lo que aprendí del método" y en las resoluciones.
 3. Escribe el resumen en una nota `campo/notas/AAAA-MM-DD-revision.md` y se lo envía al usuario.
 

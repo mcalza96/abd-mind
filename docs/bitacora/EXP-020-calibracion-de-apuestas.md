@@ -18,7 +18,7 @@
   - **Ciclo lento, de calibración:** este experimento. Dice **si** la skill sirve para apostar, no **qué** cambiar.
 - **La tasa base no la puede elegir el que apuesta.** Si el agente fija la vara, puede hacer apuestas fáciles y parecer bueno. En el piloto ninguna `tasa_base` es un número: son frases («rebote técnico acotado»), así que hasta hoy el Brier contra la tasa base no se podía calcular.
 - **Cambiar la skill después de ver resultados es la lección 2 de esta bitácora.** Cada predicción lleva la versión de la skill con que se hizo, y una versión se juzga solo con sus propias predicciones.
-- **Los dominios por activo no llegan nunca a 30.** El piloto tiene 9 predicciones en 4 dominios, de 2 o 3 cada uno. Se evalúa por **tipo de apuesta**, una lista cerrada y corta; el activo queda en `dominio`.
+- **Los dominios por activo no llegan nunca a 30.** El piloto tiene 18 predicciones en 5 dominios, y el más grande junta 9. Se evalúa por **tipo de apuesta**, una lista cerrada y corta; el activo queda en `dominio`.
 
 ## Diseño
 
@@ -26,7 +26,7 @@
 
 Una fila de `campo/predicciones.csv` con `fecha` ≥ 2026-10-20, `tipo` distinto de `otro` y `resultado` en `0` o `1`. Las `anulada` se cuentan y se informan, pero no entran.
 
-**Piloto, excluido:** las 9 filas anteriores (P-20261015-01 a -06 y P-20261019-01 a -03). Se resuelven igual, con las reglas de `campo/`, pero no cuentan.
+**Piloto, excluido:** las 18 filas anteriores al corte (P-20261015-01 a -06 y P-20261019-01 a -12). Se resuelven igual, con las reglas de `campo/`, pero no cuentan.
 
 ### Tipos
 
