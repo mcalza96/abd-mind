@@ -1,5 +1,6 @@
 ---
 name: abduccion
+version: 1
 description: Usar ante cualquier pregunta de por qué pasó algo, una anomalía, un diagnóstico, una caída o un alza que nadie explica, datos que no cuadran, o una decisión que depende de cuál es la causa.
 ---
 

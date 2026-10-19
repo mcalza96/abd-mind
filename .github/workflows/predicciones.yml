@@ -1,0 +1,20 @@
+name: predicciones
+
+on:
+  pull_request:
+    paths:
+      - campo/predicciones.csv
+      - .github/scripts/validar_predicciones.py
+      - hermes/skills/abduccion/SKILL.md
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Lo predicho en la rama base
+        run: git show "origin/${{ github.base_ref }}:campo/predicciones.csv" > "$RUNNER_TEMP/base.csv"
+      - name: Validar contra EXP-020
+        run: python3 .github/scripts/validar_predicciones.py campo/predicciones.csv --base "$RUNNER_TEMP/base.csv"
