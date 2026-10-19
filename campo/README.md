@@ -52,6 +52,10 @@ Archivo `campo/notas/AAAA-MM-DD-dominio-tema.md`:
 <qué funcionó, qué faltó en la skill, una familia de rivales o una comprobación que no estaba, un error propio. "Nada nuevo" también vale>
 ```
 
+En «Resultado de la comprobación» usa solo `refutada` (lo predicho no se vio), `sobrevive` (lo predicho distinto de la obvia se vio), `no separada` (compatible pero no la distingue de otra, nómbrala) o `sin comprobar` (di qué dato falta), seguido de la cifra que lo decide; «apoya» solo no vale. Ejemplo que separa: la nota SPRC del 2026-10-15.
+
+En «Conclusión», si combinas 2 o más causas, di cuánto aporta cada una y con qué comprobación lo estimaste (por ejemplo «CXMT ~1/3 de la caída; macro ~2/3, porque los no-memoria cayeron X %»); si no se puede estimar, escribe «aporte sin estimar» y qué haría falta.
+
 **Cuándo no escribir:** respuestas triviales, o análisis sin sorpresa ni predicción. Una nota que no enseña nada es ruido.
 
 ## Predicciones

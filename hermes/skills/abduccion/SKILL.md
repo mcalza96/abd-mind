@@ -39,8 +39,8 @@ Lo normal no es que falte imaginación: la causa verdadera suele estar entre las
 
 ## Cómo responder (corto, para Telegram)
 
-1. **Explicación:** la causa, en una o dos frases. Responde la pregunta del usuario.
-2. **Rivales descartadas:** cada una con la comprobación que la descartó, en una línea.
+1. **Explicación:** la causa, en una o dos frases. Responde la pregunta del usuario. Si son varias causas, di cuánto aporta cada una y con qué lo estimaste.
+2. **Rivales descartadas:** cada una en una línea como `refutada`, `sobrevive` o `no separada` (di de cuál no se distingue), con la comprobación que la separó.
 3. **Confianza:** alta, media o baja, con un número aproximado y lo que se apoya en algo que no comprobaste.
 4. **Qué cambiaría la conclusión:** la observación concreta que, si aparece, te haría pasar a otra hipótesis.
 
