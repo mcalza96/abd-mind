@@ -1,3 +1,5 @@
 id,fecha,nota,dominio,afirmacion,probabilidad,resolver_el,tasa_base,consenso,resultado,resuelta_el,fuente_resultado
 P-20261015-01,2026-10-15,campo/notas/2026-10-15-bolsas-asia-cxmt-caida-corea-japon.md,bolsas Asia,"KOSPI cierra el 16-oct-2026 sobre 5.554 con rebote intradiario de al menos +2% desde el minimo",0.6,2026-10-16,rebote parcial tras halt por sobreventa,rebote tecnico acotado,,,,
 P-20261015-02,2026-10-15,campo/notas/2026-10-15-bolsas-asia-cxmt-caida-corea-japon.md,bolsas Asia,"Samsung confirma el 29-oct-2026 guia y precios firmes de memoria sin recorte",0.65,2026-10-29,guia intacta segun TrendForce y MS,precios firmes hasta 2027,,,,
+P-20261027-01,2026-10-27,campo/notas/2026-10-27-web-portafolio-carga.md,web,El p75 de /portafolio en prod en los 14 dias tras el deploy es menor que en los 14 dias previos (Vercel Analytics o linea [portafolio] con PORTAFOLIO_TIEMPOS=1),0.7,2026-11-10,0.5 azar direccional,,,,
+P-20261027-02,2026-10-27,campo/notas/2026-10-27-web-portafolio-carga.md,web,"Cero regresiones reportadas en /portafolio al 2026-11-03 (skeleton sin sesion, pestana Movimientos, caja por moneda)",0.85,2026-11-03,0.5 sin informacion,,,,
